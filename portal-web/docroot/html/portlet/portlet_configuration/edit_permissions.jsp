@@ -301,7 +301,7 @@ definePermissionsURL.setRefererPlid(plid);
 
 				String name = role.getName();
 
-				if (!name.equals(RoleConstants.ADMINISTRATOR) && !name.equals(RoleConstants.ORGANIZATION_ADMINISTRATOR) && !name.equals(RoleConstants.ORGANIZATION_OWNER) && !name.equals(RoleConstants.OWNER) && !name.equals(RoleConstants.SITE_ADMINISTRATOR) && !name.equals(RoleConstants.SITE_OWNER) && RolePermissionUtil.contains(permissionChecker, role.getRoleId(), ActionKeys.DEFINE_PERMISSIONS)) {
+				if (!name.equals(RoleConstants.ADMINISTRATOR) && !name.equals(RoleConstants.ORGANIZATION_ADMINISTRATOR) && !name.equals(RoleConstants.ORGANIZATION_OWNER) && !name.equals(RoleConstants.OWNER) && !name.equals(RoleConstants.SITE_ADMINISTRATOR) && !name.equals(RoleConstants.SITE_OWNER) && !role.isTeam() && RolePermissionUtil.contains(permissionChecker, role.getRoleId(), ActionKeys.DEFINE_PERMISSIONS)) {
 					definePermissionsURL.setParameter("roleId", String.valueOf(role.getRoleId()));
 
 					definePermissionsHREF = definePermissionsURL.toString();
@@ -315,7 +315,7 @@ definePermissionsURL.setRefererPlid(plid);
 					<liferay-ui:icon
 						iconCssClass="<%= RolesAdminUtil.getIconCssClass(role) %>"
 						label="<%= true %>"
-						message="<%= HtmlUtil.escape(role.getTitle(locale)) %>"
+						message="<%= role.getTitle(locale) %>"
 					/>
 				</liferay-ui:search-container-column-text>
 
@@ -382,7 +382,16 @@ definePermissionsURL.setRefererPlid(plid);
 						String actionSeparator = Validator.isNotNull(preselectedMsg) ? ActionUtil.PRESELECTED : ActionUtil.ACTION;
 						%>
 
-						<input <%= checked ? "checked" : StringPool.BLANK %> class="<%= Validator.isNotNull(preselectedMsg) ? "lfr-checkbox-preselected" : StringPool.BLANK %>" data-message="<%= dataMessage %>" <%= disabled ? "disabled" : StringPool.BLANK %> id="<%= FriendlyURLNormalizerUtil.normalize(role.getName()) + actionSeparator + action %>" name="<%= renderResponse.getNamespace() + role.getRoleId() + actionSeparator + action %>" type="checkbox" />
+						<c:choose>
+							<c:when test="<%= name.equals(RoleConstants.GUEST) && action.equals(ActionKeys.VIEW) %>">
+								<input id="<%= FriendlyURLNormalizerUtil.normalize(role.getName()) + actionSeparator + action %>" name="<%= renderResponse.getNamespace() + role.getRoleId() + actionSeparator + action %>" type="hidden" value="<%= true %>" />
+
+								<input checked="checked" disabled="disabled" id='<%= renderResponse.getNamespace() + "guestViewPlaceholder" %>' type="checkbox" />
+							</c:when>
+							<c:otherwise>
+								<input <%= checked ? "checked" : StringPool.BLANK %> class="<%= Validator.isNotNull(preselectedMsg) ? "lfr-checkbox-preselected" : StringPool.BLANK %>" data-message="<%= dataMessage %>" <%= disabled ? "disabled" : StringPool.BLANK %> id="<%= FriendlyURLNormalizerUtil.normalize(role.getName()) + actionSeparator + action %>" name="<%= renderResponse.getNamespace() + role.getRoleId() + actionSeparator + action %>" type="checkbox" />
+							</c:otherwise>
+						</c:choose>
 					</liferay-ui:search-container-column-text>
 
 				<%
@@ -400,16 +409,14 @@ definePermissionsURL.setRefererPlid(plid);
 	</aui:form>
 </div>
 
-<aui:script use="aui-base">
-	A.one('#<portlet:namespace />fm').delegate(
+<aui:script sandbox="<%= true %>">
+	$('#<portlet:namespace />fm').on(
 		'mouseover',
+		'.lfr-checkbox-preselected',
 		function(event) {
-			var currentTarget = event.currentTarget;
+			var currentTarget = $(event.currentTarget);
 
-			Liferay.Portal.ToolTip.show(this, currentTarget.attr('data-message'));
-
-			return false;
-		},
-		'.lfr-checkbox-preselected'
+			Liferay.Portal.ToolTip.show(currentTarget, currentTarget.data('message'));
+		}
 	);
 </aui:script>

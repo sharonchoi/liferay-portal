@@ -23,18 +23,11 @@ import com.liferay.portal.fabric.status.JMXProxyUtil.SetAttributeProcessCallable
 import com.liferay.portal.kernel.concurrent.DefaultNoticeableFuture;
 import com.liferay.portal.kernel.concurrent.NoticeableFuture;
 import com.liferay.portal.kernel.process.ProcessCallable;
-import com.liferay.portal.kernel.process.ProcessChannel;
 import com.liferay.portal.kernel.process.ProcessException;
-import com.liferay.portal.kernel.test.CodeCoverageAssertor;
+import com.liferay.portal.kernel.test.rule.CodeCoverageAssertor;
+import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.ReflectionUtil;
-import com.liferay.portal.test.AdviseWith;
-import com.liferay.portal.test.runners.AspectJMockingNewClassLoaderJUnitTestRunner;
-import com.liferay.portal.util.test.RandomTestUtil;
-
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.embedded.EmbeddedChannel;
 
 import java.io.Serializable;
 
@@ -50,7 +43,6 @@ import java.lang.reflect.Method;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 import javax.management.AttributeNotFoundException;
 import javax.management.InstanceNotFoundException;
@@ -60,25 +52,20 @@ import javax.management.ObjectName;
 import javax.management.openmbean.CompositeData;
 import javax.management.openmbean.CompositeDataSupport;
 
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 /**
  * @author Shuyang Zhou
  */
-@RunWith(AspectJMockingNewClassLoaderJUnitTestRunner.class)
 public class JMXProxyUtilTest {
 
 	@ClassRule
-	public static CodeCoverageAssertor codeCoverageAssertor =
-		new CodeCoverageAssertor();
+	public static final CodeCoverageAssertor codeCoverageAssertor =
+		CodeCoverageAssertor.INSTANCE;
 
 	@Before
 	public void setUp() throws Exception {
@@ -589,112 +576,6 @@ public class JMXProxyUtilTest {
 		Assert.assertEquals(newName, _testClass.getName());
 	}
 
-	@AdviseWith(adviceClasses = RPCUtilAdvice.class)
-	@Test
-	public void testToProcessCallableExecutorChannel() throws ProcessException {
-		EmbeddedChannel embeddedChannel = new EmbeddedChannel(
-			new ChannelInitializer<Channel>() {
-
-				@Override
-				protected void initChannel(Channel channel) {
-				}
-
-			});
-
-		ProcessCallableExecutor processCallableExecutor =
-			JMXProxyUtil.toProcessCallableExecutor(embeddedChannel);
-
-		ProcessCallable<Serializable> processCallable =
-			new ProcessCallable<Serializable>() {
-
-				@Override
-				public Serializable call() {
-					return null;
-				}
-
-			};
-
-		Assert.assertNull(processCallableExecutor.execute(processCallable));
-		Assert.assertSame(embeddedChannel, RPCUtilAdvice.getChannel());
-		Assert.assertSame(processCallable, RPCUtilAdvice.getProcessCallable());
-	}
-
-	@Test
-	public void testToProcessCallableExecutorProcessChannel()
-		throws ProcessException {
-
-		final AtomicReference<ProcessCallable<?>> atomicReference =
-			new AtomicReference<ProcessCallable<?>>();
-
-		ProcessChannel<Serializable> processChannel =
-			new ProcessChannel<Serializable>() {
-
-				@Override
-				public NoticeableFuture<Serializable>
-					getProcessNoticeableFuture() {
-
-					return null;
-				}
-
-				@Override
-				public <V extends Serializable> NoticeableFuture<V> write(
-					ProcessCallable<V> processCallable) {
-
-					atomicReference.set(processCallable);
-
-					return null;
-				}
-
-			};
-
-		ProcessCallableExecutor processCallableExecutor =
-			JMXProxyUtil.toProcessCallableExecutor(processChannel);
-
-		ProcessCallable<Serializable> processCallable =
-			new ProcessCallable<Serializable>() {
-
-				@Override
-				public Serializable call() {
-					return null;
-				}
-
-			};
-
-		Assert.assertNull(processCallableExecutor.execute(processCallable));
-		Assert.assertSame(processCallable, atomicReference.get());
-	}
-
-	@Aspect
-	public static class RPCUtilAdvice {
-
-		public static Channel getChannel() {
-			return _channel;
-		}
-
-		public static ProcessCallable<?> getProcessCallable() {
-			return _processCallable;
-		}
-
-		@Around(
-			"execution(public static com.liferay.portal.kernel.concurrent." +
-				"NoticeableFuture com.liferay.portal.fabric.netty.rpc." +
-					"RPCUtil.execute(io.netty.channel.Channel, com.liferay." +
-						"portal.kernel.process.ProcessCallable)) && args(" +
-							"channel, processCallable)")
-		public Object execute(
-			Channel channel, ProcessCallable<?> processCallable) {
-
-			_channel = channel;
-			_processCallable = processCallable;
-
-			return null;
-		}
-
-		private static Channel _channel;
-		private static ProcessCallable<?> _processCallable;
-
-	}
-
 	public interface TestClassMXBean {
 
 		public String doSomething(String s);
@@ -839,7 +720,7 @@ public class JMXProxyUtilTest {
 				ProcessCallable<V> processCallable) {
 
 				DefaultNoticeableFuture<V> defaultNoticeableFuture =
-					new DefaultNoticeableFuture<V>();
+					new DefaultNoticeableFuture<>();
 
 				try {
 					defaultNoticeableFuture.set(processCallable.call());

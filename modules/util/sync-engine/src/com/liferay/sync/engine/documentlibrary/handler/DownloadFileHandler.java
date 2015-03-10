@@ -15,8 +15,9 @@
 package com.liferay.sync.engine.documentlibrary.handler;
 
 import com.liferay.sync.engine.documentlibrary.event.Event;
+import com.liferay.sync.engine.documentlibrary.util.FileEventUtil;
 import com.liferay.sync.engine.filesystem.Watcher;
-import com.liferay.sync.engine.filesystem.WatcherRegistry;
+import com.liferay.sync.engine.filesystem.util.WatcherRegistry;
 import com.liferay.sync.engine.model.SyncAccount;
 import com.liferay.sync.engine.model.SyncFile;
 import com.liferay.sync.engine.service.SyncAccountService;
@@ -37,6 +38,7 @@ import java.nio.file.StandardCopyOption;
 
 import java.util.List;
 
+import org.apache.commons.io.input.CountingInputStream;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -57,13 +59,13 @@ public class DownloadFileHandler extends BaseHandler {
 
 	@Override
 	public void handleException(Exception e) {
-		_logger.error(e.getMessage(), e);
-
 		if (!(e instanceof HttpResponseException)) {
 			super.handleException(e);
 
 			return;
 		}
+
+		_logger.error(e.getMessage(), e);
 
 		HttpResponseException hre = (HttpResponseException)e;
 
@@ -84,45 +86,68 @@ public class DownloadFileHandler extends BaseHandler {
 			return;
 		}
 
-		SyncFile syncFile = (SyncFile)getParameterValue("syncFile");
+		SyncFile syncFile = getLocalSyncFile();
 
-		SyncFileService.deleteSyncFile(syncFile, false);
+		if ((Boolean)getParameterValue("patch")) {
+			FileEventUtil.downloadFile(getSyncAccountId(), syncFile);
+		}
+		else {
+			SyncFileService.deleteSyncFile(syncFile, false);
+		}
 	}
 
 	@Override
-	protected void doHandleResponse(HttpResponse httpResponse)
+	public boolean handlePortalException(String exception) throws Exception {
+		SyncFile syncFile = getLocalSyncFile();
+
+		if (exception.equals(
+				"com.liferay.portlet.documentlibrary." +
+					"NoSuchFileVersionException") &&
+			(Boolean)getParameterValue("patch")) {
+
+			if (_logger.isDebugEnabled()) {
+				_logger.debug(
+					"Handling exception {} file path {}", exception,
+					syncFile.getFilePathName());
+			}
+
+			FileEventUtil.downloadFile(getSyncAccountId(), syncFile);
+
+			return true;
+		}
+
+		if (exception.equals(
+				"com.liferay.portlet.documentlibrary." +
+					"NoSuchFileEntryException") ||
+			exception.equals(
+				"com.liferay.portlet.documentlibrary.NoSuchFileException")) {
+
+			if (_logger.isDebugEnabled()) {
+				_logger.debug(
+					"Handling exception {} file path {}", exception,
+					syncFile.getFilePathName());
+			}
+
+			SyncFileService.deleteSyncFile(syncFile, false);
+
+			return true;
+		}
+
+		return super.handlePortalException(exception);
+	}
+
+	protected void copyFile(
+			SyncFile syncFile, Path filePath, InputStream inputStream)
 		throws Exception {
-
-		Header header = httpResponse.getFirstHeader("Sync-JWT");
-
-		if (header != null) {
-			Session session = SessionManager.getSession(getSyncAccountId());
-
-			session.setToken(header.getValue());
-		}
-
-		InputStream inputStream = null;
-
-		SyncFile syncFile = (SyncFile)getParameterValue("syncFile");
-
-		syncFile = SyncFileService.fetchSyncFile(syncFile.getSyncFileId());
-
-		if (syncFile.getState() == SyncFile.STATE_UNSYNCED) {
-			return;
-		}
-
-		Path filePath = Paths.get(syncFile.getFilePathName());
 
 		Watcher watcher = WatcherRegistry.getWatcher(getSyncAccountId());
 
 		List<String> downloadedFilePathNames =
 			watcher.getDownloadedFilePathNames();
 
+		downloadedFilePathNames.add(filePath.toString());
+
 		try {
-			HttpEntity httpEntity = httpResponse.getEntity();
-
-			inputStream = httpEntity.getContent();
-
 			SyncAccount syncAccount = SyncAccountService.fetchSyncAccount(
 				getSyncAccountId());
 
@@ -130,7 +155,9 @@ public class DownloadFileHandler extends BaseHandler {
 				syncAccount.getFilePathName(), ".data",
 				String.valueOf(syncFile.getSyncFileId()));
 
-			if (Files.exists(filePath)) {
+			boolean exists = Files.exists(filePath);
+
+			if (exists) {
 				Files.copy(
 					filePath, tempFilePath,
 					StandardCopyOption.REPLACE_EXISTING);
@@ -147,22 +174,25 @@ public class DownloadFileHandler extends BaseHandler {
 
 			downloadedFilePathNames.add(filePath.toString());
 
-			Files.move(
-				tempFilePath, filePath, StandardCopyOption.ATOMIC_MOVE,
-				StandardCopyOption.REPLACE_EXISTING);
-
-			if (syncFile.getFileKey() == null) {
-				syncFile.setUiEvent(SyncFile.UI_EVENT_DOWNLOADED_NEW);
-			}
-			else {
+			if (exists) {
 				syncFile.setUiEvent(SyncFile.UI_EVENT_DOWNLOADED_UPDATE);
 			}
+			else {
+				syncFile.setUiEvent(SyncFile.UI_EVENT_DOWNLOADED_NEW);
+			}
+
+			FileUtil.writeFileKey(
+				tempFilePath, String.valueOf(syncFile.getSyncFileId()));
+
+			FileUtil.setModifiedTime(tempFilePath, syncFile.getModifiedTime());
+
+			FileUtil.moveFile(tempFilePath, filePath);
 
 			syncFile.setState(SyncFile.STATE_SYNCED);
 
 			SyncFileService.update(syncFile);
 
-			SyncFileService.updateFileKeySyncFile(syncFile);
+			IODeltaUtil.checksums(syncFile);
 		}
 		catch (FileSystemException fse) {
 			downloadedFilePathNames.remove(filePath.toString());
@@ -176,12 +206,70 @@ public class DownloadFileHandler extends BaseHandler {
 				SyncFileService.update(syncFile);
 			}
 		}
+	}
+
+	@Override
+	protected void doHandleResponse(HttpResponse httpResponse)
+		throws Exception {
+
+		Header errorHeader = httpResponse.getFirstHeader("Sync-Error");
+
+		if (errorHeader != null) {
+			handleSiteDeactivatedException();
+		}
+
+		final Session session = SessionManager.getSession(getSyncAccountId());
+
+		Header tokenHeader = httpResponse.getFirstHeader("Sync-JWT");
+
+		if (tokenHeader != null) {
+			session.setToken(tokenHeader.getValue());
+		}
+
+		InputStream inputStream = null;
+
+		SyncFile syncFile = getLocalSyncFile();
+
+		if (isUnsynced(syncFile)) {
+			return;
+		}
+
+		Path filePath = Paths.get(syncFile.getFilePathName());
+
+		try {
+			HttpEntity httpEntity = httpResponse.getEntity();
+
+			inputStream = new CountingInputStream(httpEntity.getContent()) {
+
+				@Override
+				protected synchronized void afterRead(int n) {
+					session.incrementDownloadedBytes(n);
+
+					super.afterRead(n);
+				}
+
+			};
+
+			copyFile(syncFile, filePath, inputStream);
+		}
 		finally {
 			StreamUtil.cleanUp(inputStream);
 		}
 	}
 
-	private static Logger _logger = LoggerFactory.getLogger(
+	protected boolean isUnsynced(SyncFile syncFile) {
+		syncFile = SyncFileService.fetchSyncFile(syncFile.getSyncFileId());
+
+		if ((syncFile == null) ||
+			(syncFile.getState() == SyncFile.STATE_UNSYNCED)) {
+
+			return true;
+		}
+
+		return false;
+	}
+
+	private static final Logger _logger = LoggerFactory.getLogger(
 		DownloadFileHandler.class);
 
 }

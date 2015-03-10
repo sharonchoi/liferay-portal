@@ -17,11 +17,13 @@
 <%@ include file="/html/portlet/journal/init.jsp" %>
 
 <%
-JournalArticle article = (JournalArticle)request.getAttribute(WebKeys.JOURNAL_ARTICLE);
+JournalArticle article = ActionUtil.getArticle(request);
 
 long groupId = BeanParamUtil.getLong(article, request, "groupId", scopeGroupId);
 
 Group group = GroupLocalServiceUtil.fetchGroup(groupId);
+
+boolean changeStructure = GetterUtil.getBoolean(request.getAttribute("edit_article.jsp-changeStructure"));
 %>
 
 <c:choose>
@@ -33,10 +35,11 @@ Group group = GroupLocalServiceUtil.fetchGroup(groupId);
 	<c:otherwise>
 
 		<%
-		String defaultLanguageId = (String)request.getAttribute("edit_article.jsp-defaultLanguageId");
-		String toLanguageId = (String)request.getAttribute("edit_article.jsp-toLanguageId");
-
 		String layoutUuid = BeanParamUtil.getString(article, request, "layoutUuid");
+
+		if (changeStructure && (article != null)) {
+			layoutUuid = article.getLayoutUuid();
+		}
 
 		Layout selLayout = null;
 
@@ -65,7 +68,7 @@ Group group = GroupLocalServiceUtil.fetchGroup(groupId);
 		<h3><liferay-ui:message key="display-page" /><liferay-ui:icon-help message="default-display-page-help" /></h3>
 
 		<div id="<portlet:namespace />pagesContainer">
-			<aui:input id="pagesContainerInput" name="layoutUuid" type="hidden" value="<%= layoutUuid %>" />
+			<aui:input id="pagesContainerInput" ignoreRequestValue="<%= true %>" name="layoutUuid" type="hidden" value="<%= layoutUuid %>" />
 
 			<div class="display-page-item-container <%= Validator.isNull(layoutBreadcrumb) ? "hide" : StringPool.BLANK %>" id="<portlet:namespace />displayPageItemContainer">
 				<span class="display-page-item">
@@ -104,19 +107,19 @@ Group group = GroupLocalServiceUtil.fetchGroup(groupId);
 		</c:if>
 
 		<liferay-portlet:renderURL portletName="<%= PortletKeys.DOCUMENT_SELECTOR %>" varImpl="documentSelectorURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
-			<portlet:param name="struts_action" value="/document_selector/view" />
+			<portlet:param name="mvcPath" value="/view.jsp" />
 			<portlet:param name="tabs1Names" value="pages" />
 			<portlet:param name="groupId" value="<%= String.valueOf(scopeGroupId) %>" />
 			<portlet:param name="checkContentDisplayPage" value="true" />
 			<portlet:param name="eventName" value='<%= renderResponse.getNamespace() + "selectDisplayPage" %>' />
 		</liferay-portlet:renderURL>
 
-		<aui:script use="aui-base">
-			var displayPageItemContainer = A.one('#<portlet:namespace />displayPageItemContainer');
-			var displayPageNameInput = A.one('#<portlet:namespace />displayPageNameInput');
-			var pagesContainerInput = A.one('#<portlet:namespace />pagesContainerInput');
+		<aui:script sandbox="<%= true %>">
+			var displayPageItemContainer = $('#<portlet:namespace />displayPageItemContainer');
+			var displayPageNameInput = $('#<portlet:namespace />displayPageNameInput');
+			var pagesContainerInput = $('#<portlet:namespace />pagesContainerInput');
 
-			A.one('#<portlet:namespace />chooseDisplayPage').on(
+			$('#<portlet:namespace />chooseDisplayPage').on(
 				'click',
 				function(event) {
 					Liferay.Util.selectEntity(
@@ -136,18 +139,18 @@ Group group = GroupLocalServiceUtil.fetchGroup(groupId);
 
 							displayPageNameInput.html(event.layoutpath);
 
-							displayPageItemContainer.show();
+							displayPageItemContainer.removeClass('hide');
 						}
 					);
 				}
 			);
 
-			A.one('#<portlet:namespace />displayPageItemRemove').on(
+			$('#<portlet:namespace />displayPageItemRemove').on(
 				'click',
 				function(event) {
 					pagesContainerInput.val('');
 
-					displayPageItemContainer.hide();
+					displayPageItemContainer.addClass('hide');
 				}
 			);
 		</aui:script>

@@ -16,6 +16,8 @@ package com.liferay.sync.engine.documentlibrary.event;
 
 import com.liferay.sync.engine.documentlibrary.handler.Handler;
 import com.liferay.sync.engine.documentlibrary.handler.MoveFolderHandler;
+import com.liferay.sync.engine.model.SyncFile;
+import com.liferay.sync.engine.service.SyncFileService;
 
 import java.util.Map;
 
@@ -35,9 +37,21 @@ public class MoveFolderEvent extends BaseEvent {
 		return _handler;
 	}
 
+	@Override
+	protected void processRequest() throws Exception {
+		SyncFile syncFile = (SyncFile)getParameterValue("syncFile");
+
+		syncFile.setState(SyncFile.STATE_IN_PROGRESS);
+		syncFile.setUiEvent(SyncFile.UI_EVENT_MOVED_LOCAL);
+
+		SyncFileService.update(syncFile);
+
+		processAsynchronousRequest();
+	}
+
 	private static final String _URL_PATH =
 		"/sync-web.syncdlobject/move-folder";
 
-	private Handler<Void> _handler;
+	private final Handler<Void> _handler;
 
 }

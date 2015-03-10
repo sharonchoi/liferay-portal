@@ -24,7 +24,7 @@ String eventName = ParamUtil.getString(request, "eventName", renderResponse.getN
 
 PortletURL portletURL = renderResponse.createRenderURL();
 
-portletURL.setParameter("struts_action", "/journal/select_version");
+portletURL.setParameter("mvcPath", "/html/portlet/journal/select_version.jsp");
 portletURL.setParameter("redirect", currentURL);
 portletURL.setParameter("groupId", String.valueOf(groupId));
 portletURL.setParameter("articleId", articleId);
@@ -86,6 +86,6 @@ portletURL.setParameter("sourceVersion", String.valueOf(sourceVersion));
 	</liferay-ui:search-container>
 </aui:form>
 
-<aui:script use="aui-base">
+<aui:script>
 	Liferay.Util.selectEntityHandler('#<portlet:namespace />selectVersionFm', '<%= HtmlUtil.escapeJS(eventName) %>');
 </aui:script>

@@ -20,12 +20,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.liferay.sync.engine.documentlibrary.event.Event;
 import com.liferay.sync.engine.model.SyncAccount;
 import com.liferay.sync.engine.model.SyncFile;
-import com.liferay.sync.engine.service.SyncAccountService;
 import com.liferay.sync.engine.service.SyncFileService;
 import com.liferay.sync.engine.session.Session;
 import com.liferay.sync.engine.session.SessionManager;
+import com.liferay.sync.engine.util.ConnectionRetryUtil;
+import com.liferay.sync.engine.util.FileUtil;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -48,6 +48,149 @@ public class BaseJSONHandler extends BaseHandler {
 
 	public BaseJSONHandler(Event event) {
 		super(event);
+	}
+
+	@Override
+	public String getException(String response) {
+		ObjectMapper objectMapper = new ObjectMapper();
+
+		JsonNode responseJsonNode = null;
+
+		try {
+			response = StringEscapeUtils.unescapeJava(response);
+
+			responseJsonNode = objectMapper.readTree(response);
+		}
+		catch (Exception e) {
+			return "";
+		}
+
+		JsonNode errorJsonNode = responseJsonNode.get("error");
+
+		if (errorJsonNode == null) {
+			JsonNode exceptionJsonNode = responseJsonNode.get("exception");
+
+			if (exceptionJsonNode == null) {
+				return "";
+			}
+
+			return exceptionJsonNode.asText();
+		}
+
+		JsonNode typeJsonNode = null;
+
+		JsonNode rootCauseJsonNode = responseJsonNode.get("rootCause");
+
+		if (rootCauseJsonNode != null) {
+			typeJsonNode = rootCauseJsonNode.get("type");
+		}
+		else {
+			typeJsonNode = errorJsonNode.get("type");
+		}
+
+		return typeJsonNode.asText();
+	}
+
+	@Override
+	public boolean handlePortalException(String exception) throws Exception {
+		if (exception.isEmpty()) {
+			return false;
+		}
+
+		if (!ConnectionRetryUtil.retryInProgress(getSyncAccountId()) &&
+			_logger.isDebugEnabled()) {
+
+			_logger.debug("Handling exception {}", exception);
+		}
+
+		if (exception.equals("com.liferay.portal.DuplicateLockException")) {
+			SyncFile syncFile = getLocalSyncFile();
+
+			syncFile.setState(SyncFile.STATE_ERROR);
+			syncFile.setUiEvent(SyncFile.UI_EVENT_DUPLICATE_LOCK);
+
+			SyncFileService.update(syncFile);
+		}
+		else if (exception.equals(
+					"com.liferay.portal.kernel.upload.UploadException") ||
+				 exception.contains("SizeLimitExceededException")) {
+
+			SyncFile syncFile = getLocalSyncFile();
+
+			syncFile.setState(SyncFile.STATE_ERROR);
+			syncFile.setUiEvent(SyncFile.UI_EVENT_EXCEEDED_SIZE_LIMIT);
+
+			SyncFileService.update(syncFile);
+		}
+		else if (exception.equals(
+					"com.liferay.portal.security.auth.PrincipalException")) {
+
+			SyncFile syncFile = getLocalSyncFile();
+
+			syncFile.setState(SyncFile.STATE_ERROR);
+			syncFile.setUiEvent(SyncFile.UI_EVENT_INVALID_PERMISSIONS);
+
+			SyncFileService.update(syncFile);
+		}
+		else if (exception.equals(
+					"com.liferay.portlet.documentlibrary.FileNameException") ||
+				 exception.equals(
+					"com.liferay.portlet.documentlibrary." +
+						"FolderNameException")) {
+
+			SyncFile syncFile = getLocalSyncFile();
+
+			syncFile.setState(SyncFile.STATE_ERROR);
+			syncFile.setUiEvent(SyncFile.UI_EVENT_INVALID_FILE_NAME);
+
+			SyncFileService.update(syncFile);
+		}
+		else if (exception.equals(
+					"com.liferay.portlet.documentlibrary." +
+						"NoSuchFileEntryException")) {
+
+			SyncFile syncFile = getLocalSyncFile();
+
+			Path filePath = Paths.get(syncFile.getFilePathName());
+
+			FileUtil.deleteFile(filePath);
+
+			SyncFileService.deleteSyncFile(syncFile, false);
+		}
+		else if (exception.equals(
+					"com.liferay.sync.SyncServicesUnavailableException")) {
+
+			retryServerConnection(
+				SyncAccount.UI_EVENT_SYNC_SERVICES_NOT_ACTIVE);
+		}
+		else if (exception.equals(
+					"com.liferay.sync.SyncSiteUnavailableException")) {
+
+			handleSiteDeactivatedException();
+		}
+		else if (exception.equals(
+					"com.liferay.portal.kernel.jsonwebservice." +
+						"NoSuchJSONWebServiceException") ||
+				 exception.equals("java.lang.RuntimeException")) {
+
+			retryServerConnection(SyncAccount.UI_EVENT_SYNC_WEB_MISSING);
+		}
+		else if (exception.equals("Authenticated access required") ||
+				 exception.equals("java.lang.SecurityException")) {
+
+			throw new HttpResponseException(
+				HttpStatus.SC_UNAUTHORIZED, "Authenticated access required");
+		}
+		else {
+			SyncFile syncFile = getLocalSyncFile();
+
+			syncFile.setState(SyncFile.STATE_ERROR);
+			syncFile.setUiEvent(SyncFile.UI_EVENT_NONE);
+
+			SyncFileService.update(syncFile);
+		}
+
+		return true;
 	}
 
 	@Override
@@ -96,50 +239,10 @@ public class BaseJSONHandler extends BaseHandler {
 		}
 
 		if (_logger.isTraceEnabled()) {
-			_logger.trace("Handling response {}", response);
+			logResponse(response);
 		}
 
 		processResponse(response);
-	}
-
-	protected String getException(String response) {
-		ObjectMapper objectMapper = new ObjectMapper();
-
-		JsonNode responseJsonNode = null;
-
-		try {
-			response = StringEscapeUtils.unescapeJava(response);
-
-			responseJsonNode = objectMapper.readTree(response);
-		}
-		catch (Exception e) {
-			return "";
-		}
-
-		JsonNode errorJsonNode = responseJsonNode.get("error");
-
-		if (errorJsonNode == null) {
-			JsonNode exceptionJsonNode = responseJsonNode.get("exception");
-
-			if (exceptionJsonNode == null) {
-				return "";
-			}
-
-			return exceptionJsonNode.asText();
-		}
-
-		JsonNode typeJsonNode = null;
-
-		JsonNode rootCauseJsonNode = responseJsonNode.get("rootCause");
-
-		if (rootCauseJsonNode != null) {
-			typeJsonNode = rootCauseJsonNode.get("type");
-		}
-		else {
-			typeJsonNode = errorJsonNode.get("type");
-		}
-
-		return typeJsonNode.asText();
 	}
 
 	protected String getResponseString(HttpResponse httpResponse)
@@ -150,118 +253,14 @@ public class BaseJSONHandler extends BaseHandler {
 		return EntityUtils.toString(httpEntity);
 	}
 
-	protected boolean handlePortalException(String exception) throws Exception {
-		if (exception.equals("")) {
-			return false;
-		}
+	protected void logResponse(String response) {
+		Class<?> clazz = getClass();
 
-		if (_logger.isDebugEnabled()) {
-			_logger.debug("Handling exception {}", exception);
-		}
-
-		if (exception.equals("com.liferay.portal.DuplicateLockException")) {
-			SyncFile syncFile = (SyncFile)getParameterValue("syncFile");
-
-			syncFile.setState(SyncFile.STATE_ERROR);
-			syncFile.setUiEvent(SyncFile.UI_EVENT_DUPLICATE_LOCK);
-
-			SyncFileService.update(syncFile);
-		}
-		else if (exception.equals(
-					"com.liferay.portal.kernel.upload.UploadException") ||
-				 exception.contains("SizeLimitExceededException")) {
-
-			SyncFile syncFile = (SyncFile)getParameterValue("syncFile");
-
-			syncFile.setState(SyncFile.STATE_ERROR);
-			syncFile.setUiEvent(SyncFile.UI_EVENT_EXCEEDED_SIZE_LIMIT);
-
-			SyncFileService.update(syncFile);
-		}
-		else if (exception.equals(
-					"com.liferay.portal.security.auth.PrincipalException")) {
-
-			SyncFile syncFile = (SyncFile)getParameterValue("syncFile");
-
-			syncFile.setState(SyncFile.STATE_ERROR);
-			syncFile.setUiEvent(SyncFile.UI_EVENT_INVALID_PERMISSIONS);
-
-			SyncFileService.update(syncFile);
-		}
-		else if (exception.equals(
-					"com.liferay.portlet.documentlibrary.FileNameException") ||
-				 exception.equals(
-					"com.liferay.portlet.documentlibrary." +
-						"FolderNameException")) {
-
-			SyncFile syncFile = (SyncFile)getParameterValue("syncFile");
-
-			syncFile.setState(SyncFile.STATE_ERROR);
-			syncFile.setUiEvent(SyncFile.UI_EVENT_INVALID_FILE_NAME);
-
-			SyncFileService.update(syncFile);
-		}
-		else if (exception.equals(
-					"com.liferay.portlet.documentlibrary." +
-						"NoSuchFileEntryException")) {
-
-			SyncFile syncFile = (SyncFile)getParameterValue("syncFile");
-
-			Path filePath = Paths.get(syncFile.getFilePathName());
-
-			Files.deleteIfExists(filePath);
-
-			SyncFileService.deleteSyncFile(syncFile);
-		}
-		else if (exception.equals(
-					"com.liferay.sync.SyncServicesUnavailableException")) {
-
-			SyncAccount syncAccount = SyncAccountService.fetchSyncAccount(
-				getSyncAccountId());
-
-			syncAccount.setState(SyncAccount.STATE_DISCONNECTED);
-			syncAccount.setUiEvent(
-				SyncAccount.UI_EVENT_SYNC_SERVICES_NOT_ACTIVE);
-
-			SyncAccountService.update(syncAccount);
-
-			retryServerConnection();
-		}
-		else if (exception.equals(
-					"com.liferay.portal.kernel.jsonwebservice." +
-						"NoSuchJSONWebServiceException") ||
-				 exception.equals("java.lang.RuntimeException")) {
-
-			SyncAccount syncAccount = SyncAccountService.fetchSyncAccount(
-				getSyncAccountId());
-
-			syncAccount.setState(SyncAccount.STATE_DISCONNECTED);
-			syncAccount.setUiEvent(SyncAccount.UI_EVENT_SYNC_WEB_MISSING);
-
-			SyncAccountService.update(syncAccount);
-
-			retryServerConnection();
-		}
-		else if (exception.equals("java.lang.SecurityException")) {
-			throw new HttpResponseException(
-				HttpStatus.SC_UNAUTHORIZED, "Authenticated access required");
-		}
-		else {
-			SyncFile syncFile = (SyncFile)getParameterValue("syncFile");
-
-			syncFile.setState(SyncFile.STATE_ERROR);
-			syncFile.setUiEvent(SyncFile.UI_EVENT_DEFAULT);
-
-			SyncFileService.update(syncFile);
-		}
-
-		return true;
+		_logger.trace(
+			"Handling response {} {}", clazz.getSimpleName(), response);
 	}
 
-	protected void processResponse(String response) throws Exception {
-	}
-
-	private static Logger _logger = LoggerFactory.getLogger(
+	private static final Logger _logger = LoggerFactory.getLogger(
 		BaseJSONHandler.class);
 
 }

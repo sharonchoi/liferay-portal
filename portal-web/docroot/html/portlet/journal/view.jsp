@@ -20,7 +20,7 @@
 String navigation = ParamUtil.getString(request, "navigation");
 String browseBy = ParamUtil.getString(request, "browseBy");
 
-JournalFolder folder = (JournalFolder)request.getAttribute(WebKeys.JOURNAL_FOLDER);
+JournalFolder folder = ActionUtil.getFolder(request);
 
 long folderId = BeanParamUtil.getLong(folder, request, "folderId", JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID);
 
@@ -70,13 +70,13 @@ request.setAttribute("view.jsp-folderId", String.valueOf(folderId));
 			<%
 			PortletURL portletURL = liferayPortletResponse.createRenderURL();
 
-			portletURL.setParameter("struts_action", "/journal/edit_article");
 			portletURL.setParameter("folderId", String.valueOf(folderId));
 			%>
 
 			<aui:form action="<%= portletURL.toString() %>" method="get" name="fm">
-				<aui:input name="<%= Constants.CMD %>" type="hidden" />
+				<aui:input name="<%= ActionRequest.ACTION_NAME %>" type="hidden" />
 				<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
+				<aui:input name="groupId" type="hidden" value="<%= scopeGroupId %>" />
 				<aui:input name="folderIds" type="hidden" />
 				<aui:input name="articleIds" type="hidden" />
 				<aui:input name="newFolderId" type="hidden" />
@@ -104,22 +104,13 @@ request.setAttribute("view.jsp-folderId", String.valueOf(folderId));
 </div>
 
 <aui:script>
-	Liferay.provide(
-		window,
-		'<portlet:namespace />toggleActionsButton',
-		function() {
-			var A = AUI();
+	function <portlet:namespace />toggleActionsButton() {
+		var form = AUI.$(document.<portlet:namespace />fm);
 
-			var actionsButton = A.one('#<portlet:namespace />actionsButtonContainer');
+		var hide = (Liferay.Util.listCheckedExcept(form, '<portlet:namespace /><%= RowChecker.ALL_ROW_IDS %>').length == 0);
 
-			var hide = (Liferay.Util.listCheckedExcept(document.<portlet:namespace />fm, '<portlet:namespace /><%= RowChecker.ALL_ROW_IDS %>').length == 0);
-
-			if (actionsButton) {
-				actionsButton.toggle(!hide);
-			}
-		},
-		['liferay-util-list-fields']
-	);
+		AUI.$('#<portlet:namespace />actionsButtonContainer').toggleClass('hide', hide);
+	}
 
 	<portlet:namespace />toggleActionsButton();
 </aui:script>
@@ -131,14 +122,14 @@ request.setAttribute("view.jsp-folderId", String.valueOf(folderId));
 			displayStyle: '<%= HtmlUtil.escapeJS(journalDisplayContext.getDisplayStyle()) %>',
 			move: {
 				allRowIds: '<%= RowChecker.ALL_ROW_IDS %>',
-				editEntryUrl: '<portlet:actionURL><portlet:param name="struts_action" value="/journal/edit_entry" /></portlet:actionURL>',
+				editEntryUrl: '<portlet:actionURL />',
 				folderIdHashRegEx: /#.*&?<portlet:namespace />folderId=([\d]+)/i,
 				folderIdRegEx: /&?<portlet:namespace />folderId=([\d]+)/i,
 				form: {
 					method: 'POST',
 					node: A.one(document.<portlet:namespace />fm)
 				},
-				moveEntryRenderUrl: '<portlet:renderURL><portlet:param name="struts_action" value="/journal/move_entry" /><portlet:param name="redirect" value="<%= currentURL %>" /></portlet:renderURL>',
+				moveEntryRenderUrl: '<portlet:renderURL><portlet:param name="mvcPath" value="/html/portlet/journal/move_entries.jsp" /><portlet:param name="redirect" value="<%= currentURL %>" /></portlet:renderURL>',
 				trashLinkId: '<%= TrashUtil.isTrashEnabled(scopeGroupId) ? "_" + PortletKeys.CONTROL_PANEL_MENU + "_portlet_" + PortletKeys.TRASH : StringPool.BLANK %>',
 				updateable: true
 			},

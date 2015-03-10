@@ -14,7 +14,7 @@
 
 package com.liferay.network.utilities.web.portlet;
 
-import com.liferay.network.utilities.web.upgrade.NetworkUtilitiesUpgrade;
+import com.liferay.network.utilities.web.upgrade.NetworkUtilitiesWebUpgrade;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 
 import javax.portlet.Portlet;
@@ -23,8 +23,8 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 /**
-* @author Peter Fellwock
-*/
+ * @author Peter Fellwock
+ */
 @Component(
 	immediate = true,
 	property = {
@@ -35,7 +35,6 @@ import org.osgi.service.component.annotations.Reference;
 		"com.liferay.portlet.private-session-attributes=false",
 		"com.liferay.portlet.render-weight=0",
 		"com.liferay.portlet.remoteable=true",
-		"com.liferay.portlet.struts-path=network_utilities",
 		"javax.portlet.display-name=Network Utilities",
 		"javax.portlet.expiration-cache=0",
 		"javax.portlet.init-param.template-path=/",
@@ -48,8 +47,8 @@ import org.osgi.service.component.annotations.Reference;
 public class NetworkUtilitiesPortlet extends MVCPortlet {
 
 	@Reference(unbind = "-")
-	protected void setNetworkUtilitiesUpgrade(
-		NetworkUtilitiesUpgrade networkUtilitiesUpgrade) {
+	protected void setNetworkUtilitiesWebUpgrade(
+		NetworkUtilitiesWebUpgrade networkUtilitiesWebUpgrade) {
 	}
 
 }

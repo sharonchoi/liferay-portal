@@ -24,7 +24,6 @@ import com.liferay.sync.engine.service.SyncSiteService;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -62,7 +61,7 @@ public class GetSyncDLObjectUpdateEvent extends BaseEvent {
 		syncSite = SyncSiteService.fetchSyncSite(
 			syncSite.getGroupId(), syncSite.getSyncAccountId());
 
-		if (syncSite.getRemoteSyncTime() == 0) {
+		if (syncSite.getRemoteSyncTime() == -1) {
 			String filePathName = syncSite.getFilePathName();
 
 			SyncFile syncFile = SyncFileService.fetchSyncFile(filePathName);
@@ -71,13 +70,15 @@ public class GetSyncDLObjectUpdateEvent extends BaseEvent {
 				Files.createDirectories(Paths.get(filePathName));
 
 				SyncFileService.addSyncFile(
-					null, null, null, filePathName, null, filePathName, 0,
+					null, null, null, filePathName, null, syncSite.getName(), 0,
 					syncSite.getGroupId(), SyncFile.STATE_SYNCED,
 					syncSite.getSyncAccountId(), SyncFile.TYPE_SYSTEM);
 			}
 		}
 
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = getParameters();
+
+		parameters.clear();
 
 		parameters.put("companyId", syncSite.getCompanyId());
 		parameters.put("lastAccessTime", syncSite.getRemoteSyncTime());
@@ -89,6 +90,6 @@ public class GetSyncDLObjectUpdateEvent extends BaseEvent {
 	private static final String _URL_PATH =
 		"/sync-web.syncdlobject/get-sync-dl-object-update";
 
-	private Handler<Void> _handler;
+	private final Handler<Void> _handler;
 
 }

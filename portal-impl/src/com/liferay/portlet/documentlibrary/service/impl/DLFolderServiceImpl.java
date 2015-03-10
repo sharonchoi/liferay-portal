@@ -24,9 +24,10 @@ import com.liferay.portal.model.Lock;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.ServiceContext;
-import com.liferay.portlet.documentlibrary.DLSettings;
+import com.liferay.portlet.documentlibrary.DLGroupServiceSettings;
 import com.liferay.portlet.documentlibrary.NoSuchFolderException;
 import com.liferay.portlet.documentlibrary.model.DLFolder;
+import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.documentlibrary.model.impl.DLFolderImpl;
 import com.liferay.portlet.documentlibrary.service.base.DLFolderServiceBaseImpl;
 import com.liferay.portlet.documentlibrary.service.permission.DLFolderPermission;
@@ -95,7 +96,7 @@ public class DLFolderServiceImpl extends DLFolderServiceBaseImpl {
 			return Collections.emptyList();
 		}
 
-		QueryDefinition<?> queryDefinition = new QueryDefinition<Object>(
+		QueryDefinition<?> queryDefinition = new QueryDefinition<>(
 			status, start, end, null);
 
 		return dlFolderFinder.filterFindFE_FS_ByG_F(
@@ -113,8 +114,7 @@ public class DLFolderServiceImpl extends DLFolderServiceBaseImpl {
 			return 0;
 		}
 
-		QueryDefinition<?> queryDefinition = new QueryDefinition<Object>(
-			status);
+		QueryDefinition<?> queryDefinition = new QueryDefinition<>(status);
 
 		return dlFolderFinder.filterCountFE_FS_ByG_F(
 			groupId, folderId, queryDefinition);
@@ -131,8 +131,7 @@ public class DLFolderServiceImpl extends DLFolderServiceBaseImpl {
 			return 0;
 		}
 
-		QueryDefinition<?> queryDefinition = new QueryDefinition<Object>(
-			status);
+		QueryDefinition<?> queryDefinition = new QueryDefinition<>(status);
 
 		return dlFolderFinder.filterCountFE_FS_ByG_F_M(
 			groupId, folderId, mimeTypes, queryDefinition);
@@ -226,7 +225,7 @@ public class DLFolderServiceImpl extends DLFolderServiceBaseImpl {
 			return Collections.emptyList();
 		}
 
-		QueryDefinition<?> queryDefinition = new QueryDefinition<Object>(
+		QueryDefinition<?> queryDefinition = new QueryDefinition<>(
 			status, start, end, (OrderByComparator<Object>)obc);
 
 		return dlFolderFinder.filterFindF_FE_FS_ByG_F_M_M(
@@ -246,7 +245,7 @@ public class DLFolderServiceImpl extends DLFolderServiceBaseImpl {
 			return Collections.emptyList();
 		}
 
-		QueryDefinition<?> queryDefinition = new QueryDefinition<Object>(
+		QueryDefinition<?> queryDefinition = new QueryDefinition<>(
 			status, start, end, (OrderByComparator<Object>)obc);
 
 		return dlFolderFinder.filterFindF_FE_FS_ByG_F_M_M(
@@ -265,8 +264,7 @@ public class DLFolderServiceImpl extends DLFolderServiceBaseImpl {
 			return 0;
 		}
 
-		QueryDefinition<?> queryDefinition = new QueryDefinition<Object>(
-			status);
+		QueryDefinition<?> queryDefinition = new QueryDefinition<>(status);
 
 		return dlFolderFinder.filterCountF_FE_FS_ByG_F_M_M(
 			groupId, folderId, null, includeMountFolders, queryDefinition);
@@ -284,8 +282,7 @@ public class DLFolderServiceImpl extends DLFolderServiceBaseImpl {
 			return 0;
 		}
 
-		QueryDefinition<?> queryDefinition = new QueryDefinition<Object>(
-			status);
+		QueryDefinition<?> queryDefinition = new QueryDefinition<>(status);
 
 		return dlFolderFinder.filterCountF_FE_FS_ByG_F_M_M(
 			groupId, folderId, mimeTypes, includeMountFolders, queryDefinition);
@@ -335,9 +332,10 @@ public class DLFolderServiceImpl extends DLFolderServiceBaseImpl {
 			return Collections.emptyList();
 		}
 
-		DLSettings dlSettings = DLSettings.getInstance(groupId);
+		DLGroupServiceSettings dlGroupServiceSettings =
+			DLGroupServiceSettings.getInstance(groupId);
 
-		if (dlSettings.isShowHiddenMountFolders()) {
+		if (dlGroupServiceSettings.isShowHiddenMountFolders()) {
 			return dlFolderPersistence.filterFindByG_M_P(
 				groupId, true, parentFolderId, start, end, obc);
 		}
@@ -409,7 +407,7 @@ public class DLFolderServiceImpl extends DLFolderServiceBaseImpl {
 			long groupId, long folderId, boolean recurse)
 		throws PortalException {
 
-		List<Long> folderIds = new ArrayList<Long>();
+		List<Long> folderIds = new ArrayList<>();
 
 		getSubfolderIds(folderIds, groupId, folderId, recurse);
 
@@ -520,11 +518,37 @@ public class DLFolderServiceImpl extends DLFolderServiceBaseImpl {
 		dlFolderLocalService.unlockFolder(folderId, lockUuid);
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by more general {@link
+	 *             #updateFolder(long, String, String, long, List, int,
+	 *             ServiceContext)}
+	 */
+	@Deprecated
 	@Override
 	public DLFolder updateFolder(
 			long folderId, String name, String description,
 			long defaultFileEntryTypeId, List<Long> fileEntryTypeIds,
 			boolean overrideFileEntryTypes, ServiceContext serviceContext)
+		throws PortalException {
+
+		int restrictionType = DLFolderConstants.RESTRICTION_TYPE_INHERIT;
+
+		if (overrideFileEntryTypes) {
+			restrictionType =
+				DLFolderConstants.
+					RESTRICTION_TYPE_FILE_ENTRY_TYPES_AND_WORKFLOW;
+		}
+
+		return dlFolderLocalService.updateFolder(
+			folderId, name, description, defaultFileEntryTypeId,
+			fileEntryTypeIds, restrictionType, serviceContext);
+	}
+
+	@Override
+	public DLFolder updateFolder(
+			long folderId, String name, String description,
+			long defaultFileEntryTypeId, List<Long> fileEntryTypeIds,
+			int restrictionType, ServiceContext serviceContext)
 		throws PortalException {
 
 		DLFolderPermission.check(
@@ -535,7 +559,7 @@ public class DLFolderServiceImpl extends DLFolderServiceBaseImpl {
 
 		return dlFolderLocalService.updateFolder(
 			folderId, name, description, defaultFileEntryTypeId,
-			fileEntryTypeIds, overrideFileEntryTypes, serviceContext);
+			fileEntryTypeIds, restrictionType, serviceContext);
 	}
 
 	@Override

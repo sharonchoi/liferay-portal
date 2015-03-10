@@ -15,14 +15,15 @@
 package com.liferay.sync.engine.service;
 
 import com.liferay.sync.engine.BaseTestCase;
-import com.liferay.sync.engine.model.SyncAccount;
 import com.liferay.sync.engine.model.SyncFile;
 import com.liferay.sync.engine.model.SyncSite;
 import com.liferay.sync.engine.util.FileUtil;
-import com.liferay.sync.engine.util.SyncFileTestUtil;
-import com.liferay.sync.engine.util.SyncSiteTestUtil;
+import com.liferay.sync.engine.util.test.SyncFileTestUtil;
+import com.liferay.sync.engine.util.test.SyncSiteTestUtil;
 
-import org.junit.After;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -31,51 +32,37 @@ import org.junit.Test;
  */
 public class SyncAccountServiceTest extends BaseTestCase {
 
-	@After
-	@Override
-	public void tearDown() throws Exception {
-		super.tearDown();
-
-		SyncAccountService.deleteSyncAccount(_syncAccount.getSyncAccountId());
-	}
-
 	@Test
 	public void testAddAccount() throws Exception {
-		SyncAccount syncAccount = SyncAccountService.addSyncAccount(
-			filePathName, "test@liferay.com", 1, "test", "test", 5, null, false,
-			"http://localhost:8080");
-
-		_syncAccount = SyncAccountService.fetchSyncAccount(
+		syncAccount = SyncAccountService.fetchSyncAccount(
 			syncAccount.getSyncAccountId());
 
-		Assert.assertNotNull(_syncAccount);
+		Assert.assertNotNull(syncAccount);
 	}
 
 	@Test
 	public void testSetFilePathName() throws Exception {
-		_syncAccount = SyncAccountService.addSyncAccount(
-			filePathName, "test@liferay.com", 1, "test", "test", 5, null, false,
-			"http://localhost:8080");
-
 		SyncSite syncSite = SyncSiteTestUtil.addSyncSite(
 			10158, FileUtil.getFilePathName(filePathName, "test-site"), 10185,
-			_syncAccount.getSyncAccountId());
+			syncAccount.getSyncAccountId());
 
 		SyncFile syncFile = SyncFileTestUtil.addFileSyncFile(
 			FileUtil.getFilePathName(syncSite.getFilePathName(), "test.txt"), 0,
-			_syncAccount.getSyncAccountId());
+			syncAccount.getSyncAccountId());
 
-		String targetFilePathName =
-			FileUtil.getFilePathName(
-				System.getProperty("user.home"), "liferay-sync-test2");
+		String targetFilePathName = FileUtil.getFilePathName(
+			System.getProperty("user.home"), "liferay-sync-test2");
 
 		SyncAccountService.setFilePathName(
-			_syncAccount.getSyncAccountId(), targetFilePathName);
+			syncAccount.getSyncAccountId(), targetFilePathName);
+
+		Assert.assertNull(SyncFileService.fetchSyncFile(filePathName));
+		Assert.assertNotNull(SyncFileService.fetchSyncFile(targetFilePathName));
 
 		syncSite = SyncSiteService.fetchSyncSite(syncSite.getSyncSiteId());
 
 		Assert.assertEquals(
-			FileUtil.getFilePathName(targetFilePathName + "test-site"),
+			FileUtil.getFilePathName(targetFilePathName, "test-site"),
 			syncSite.getFilePathName());
 
 		syncFile = SyncFileService.fetchSyncFile(syncFile.getSyncFileId());
@@ -84,8 +71,8 @@ public class SyncAccountServiceTest extends BaseTestCase {
 			FileUtil.getFilePathName(
 				targetFilePathName, "test-site", "test.txt"),
 			syncFile.getFilePathName());
-	}
 
-	private SyncAccount _syncAccount;
+		Files.deleteIfExists(Paths.get(targetFilePathName));
+	}
 
 }
