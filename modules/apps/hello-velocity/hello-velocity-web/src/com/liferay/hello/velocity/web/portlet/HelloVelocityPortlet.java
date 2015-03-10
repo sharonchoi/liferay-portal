@@ -14,7 +14,7 @@
 
 package com.liferay.hello.velocity.web.portlet;
 
-import com.liferay.hello.velocity.web.upgrade.HelloVelocityUpgrade;
+import com.liferay.hello.velocity.web.upgrade.HelloVelocityWebUpgrade;
 import com.liferay.portal.kernel.template.StringTemplateResource;
 import com.liferay.portal.kernel.template.Template;
 import com.liferay.portal.kernel.template.TemplateConstants;
@@ -32,8 +32,8 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 /**
-* @author Peter Fellwock
-*/
+ * @author Peter Fellwock
+ */
 @Component(
 	immediate = true,
 	property = {
@@ -43,7 +43,6 @@ import org.osgi.service.component.annotations.Reference;
 		"com.liferay.portlet.private-session-attributes=false",
 		"com.liferay.portlet.remoteable=true",
 		"com.liferay.portlet.render-weight=50",
-		"com.liferay.portlet.struts-path=hello_velocity",
 		"com.liferay.portlet.use-default-template=true",
 		"javax.portlet.display-name=Hello Velocity",
 		"javax.portlet.expiration-cache=0",
@@ -91,8 +90,8 @@ public class HelloVelocityPortlet extends VelocityPortlet {
 	}
 
 	@Reference(unbind = "-")
-	protected void setHelloVelocityUpgrade(
-		HelloVelocityUpgrade helloVelocityUpgrade) {
+	protected void setHelloVelocityWebUpgrade(
+		HelloVelocityWebUpgrade helloVelocityWebUpgrade) {
 	}
 
 }

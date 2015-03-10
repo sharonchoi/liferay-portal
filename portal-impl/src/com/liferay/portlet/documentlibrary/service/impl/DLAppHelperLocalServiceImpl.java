@@ -33,26 +33,26 @@ import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.repository.model.RepositoryModel;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
-import com.liferay.portal.kernel.transaction.TransactionCommitCallbackRegistryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
-import com.liferay.portal.kernel.workflow.WorkflowThreadLocal;
 import com.liferay.portal.model.Lock;
+import com.liferay.portal.model.UserConstants;
 import com.liferay.portal.repository.liferayrepository.model.LiferayFileEntry;
 import com.liferay.portal.repository.liferayrepository.model.LiferayFileVersion;
 import com.liferay.portal.repository.liferayrepository.model.LiferayFolder;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.util.GroupSubscriptionCheckSubscriptionSender;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.SubscriptionSender;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetLink;
 import com.liferay.portlet.asset.model.AssetLinkConstants;
-import com.liferay.portlet.documentlibrary.DLSettings;
+import com.liferay.portlet.documentlibrary.DLGroupServiceSettings;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFileEntryConstants;
 import com.liferay.portlet.documentlibrary.model.DLFileEntryType;
@@ -63,10 +63,9 @@ import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.documentlibrary.model.DLSyncConstants;
 import com.liferay.portlet.documentlibrary.service.base.DLAppHelperLocalServiceBaseImpl;
+import com.liferay.portlet.documentlibrary.service.permission.DLPermission;
 import com.liferay.portlet.documentlibrary.social.DLActivityKeys;
 import com.liferay.portlet.documentlibrary.util.DLAppHelperThreadLocal;
-import com.liferay.portlet.documentlibrary.util.DLProcessorRegistryUtil;
-import com.liferay.portlet.documentlibrary.util.DLUtil;
 import com.liferay.portlet.documentlibrary.util.comparator.FileVersionVersionComparator;
 import com.liferay.portlet.social.model.SocialActivityConstants;
 import com.liferay.portlet.trash.model.TrashEntry;
@@ -81,7 +80,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.Callable;
 
 /**
  * Provides the local service helper for the document library application.
@@ -97,43 +95,15 @@ public class DLAppHelperLocalServiceImpl
 			ServiceContext serviceContext)
 		throws PortalException {
 
-		if (DLAppHelperThreadLocal.isEnabled()) {
-			updateAsset(
-				userId, fileEntry, fileVersion,
-				serviceContext.getAssetCategoryIds(),
-				serviceContext.getAssetTagNames(),
-				serviceContext.getAssetLinkEntryIds());
-
-			if (PropsValues.DL_FILE_ENTRY_COMMENTS_ENABLED) {
-				mbMessageLocalService.addDiscussionMessage(
-					fileEntry.getUserId(), fileEntry.getUserName(),
-					fileEntry.getGroupId(), DLFileEntryConstants.getClassName(),
-					fileEntry.getFileEntryId(),
-					WorkflowConstants.ACTION_PUBLISH);
-			}
-		}
-
-		boolean previousEnabled = WorkflowThreadLocal.isEnabled();
-
 		if (!DLAppHelperThreadLocal.isEnabled()) {
-			WorkflowThreadLocal.setEnabled(false);
+			return;
 		}
 
-		try {
-			if (fileVersion instanceof LiferayFileVersion) {
-				DLUtil.startWorkflowInstance(
-					userId, (DLFileVersion)fileVersion.getModel(),
-					DLSyncConstants.EVENT_ADD, serviceContext);
-			}
-		}
-		finally {
-			if (!DLAppHelperThreadLocal.isEnabled()) {
-				WorkflowThreadLocal.setEnabled(previousEnabled);
-			}
-		}
-
-		if (DLAppHelperThreadLocal.isEnabled()) {
-			registerDLProcessorCallback(fileEntry, null);
+		if (PropsValues.DL_FILE_ENTRY_COMMENTS_ENABLED) {
+			mbMessageLocalService.addDiscussionMessage(
+				fileEntry.getUserId(), fileEntry.getUserName(),
+				fileEntry.getGroupId(), DLFileEntryConstants.getClassName(),
+				fileEntry.getFileEntryId(), WorkflowConstants.ACTION_PUBLISH);
 		}
 	}
 
@@ -239,46 +209,40 @@ public class DLAppHelperLocalServiceImpl
 
 	@Override
 	public void deleteFileEntry(FileEntry fileEntry) throws PortalException {
-		if (DLAppHelperThreadLocal.isEnabled()) {
-
-			// Subscriptions
-
-			subscriptionLocalService.deleteSubscriptions(
-				fileEntry.getCompanyId(), DLFileEntryConstants.getClassName(),
-				fileEntry.getFileEntryId());
-
-			// File previews
-
-			DLProcessorRegistryUtil.cleanUp(fileEntry);
-
-			// File ranks
-
-			dlFileRankLocalService.deleteFileRanksByFileEntryId(
-				fileEntry.getFileEntryId());
-
-			// File shortcuts
-
-			dlFileShortcutLocalService.deleteFileShortcuts(
-				fileEntry.getFileEntryId());
-
-			// Asset
-
-			assetEntryLocalService.deleteEntry(
-				DLFileEntryConstants.getClassName(),
-				fileEntry.getFileEntryId());
-
-			// Message boards
-
-			mbMessageLocalService.deleteDiscussionMessages(
-				DLFileEntryConstants.getClassName(),
-				fileEntry.getFileEntryId());
-
-			// Ratings
-
-			ratingsStatsLocalService.deleteStats(
-				DLFileEntryConstants.getClassName(),
-				fileEntry.getFileEntryId());
+		if (!DLAppHelperThreadLocal.isEnabled()) {
+			return;
 		}
+
+		// Subscriptions
+
+		subscriptionLocalService.deleteSubscriptions(
+			fileEntry.getCompanyId(), DLFileEntryConstants.getClassName(),
+			fileEntry.getFileEntryId());
+
+		// File ranks
+
+		dlFileRankLocalService.deleteFileRanksByFileEntryId(
+			fileEntry.getFileEntryId());
+
+		// File shortcuts
+
+		dlFileShortcutLocalService.deleteFileShortcuts(
+			fileEntry.getFileEntryId());
+
+		// Asset
+
+		assetEntryLocalService.deleteEntry(
+			DLFileEntryConstants.getClassName(), fileEntry.getFileEntryId());
+
+		// Message boards
+
+		mbMessageLocalService.deleteDiscussionMessages(
+			DLFileEntryConstants.getClassName(), fileEntry.getFileEntryId());
+
+		// Ratings
+
+		ratingsStatsLocalService.deleteStats(
+			DLFileEntryConstants.getClassName(), fileEntry.getFileEntryId());
 	}
 
 	@Override
@@ -301,6 +265,7 @@ public class DLAppHelperLocalServiceImpl
 			repositoryLocalService.getLocalRepositoryImpl(repositoryId);
 
 		List<FileEntry> fileEntries = localRepository.getRepositoryFileEntries(
+			UserConstants.USER_ID_DEFAULT,
 			DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, QueryUtil.ALL_POS,
 			QueryUtil.ALL_POS, null);
 
@@ -512,8 +477,8 @@ public class DLAppHelperLocalServiceImpl
 
 				// Folders, file entries, and file shortcuts
 
-				QueryDefinition<?> queryDefinition =
-					new QueryDefinition<Object>(WorkflowConstants.STATUS_ANY);
+				QueryDefinition<?> queryDefinition = new QueryDefinition<>(
+					WorkflowConstants.STATUS_ANY);
 
 				List<Object> foldersAndFileEntriesAndFileShortcuts =
 					dlFolderLocalService.
@@ -882,9 +847,8 @@ public class DLAppHelperLocalServiceImpl
 
 				// Folders, file entries, and file shortcuts
 
-				QueryDefinition<?> queryDefinition =
-					new QueryDefinition<Object>(
-						WorkflowConstants.STATUS_IN_TRASH);
+				QueryDefinition<?> queryDefinition = new QueryDefinition<>(
+					WorkflowConstants.STATUS_IN_TRASH);
 
 				List<Object> foldersAndFileEntriesAndFileShortcuts =
 					dlFolderLocalService.
@@ -1063,7 +1027,7 @@ public class DLAppHelperLocalServiceImpl
 
 		// Folders, file entries, and file shortcuts
 
-		QueryDefinition<?> queryDefinition = new QueryDefinition<Object>(
+		QueryDefinition<?> queryDefinition = new QueryDefinition<>(
 			WorkflowConstants.STATUS_IN_TRASH);
 
 		List<Object> foldersAndFileEntriesAndFileShortcuts =
@@ -1289,8 +1253,6 @@ public class DLAppHelperLocalServiceImpl
 			updateAsset(
 				userId, fileEntry, destinationFileVersion, assetClassPk);
 		}
-
-		registerDLProcessorCallback(fileEntry, sourceFileVersion);
 	}
 
 	@Override
@@ -1308,8 +1270,6 @@ public class DLAppHelperLocalServiceImpl
 			serviceContext.getAssetCategoryIds(),
 			serviceContext.getAssetTagNames(),
 			serviceContext.getAssetLinkEntryIds());
-
-		registerDLProcessorCallback(fileEntry, sourceFileVersion);
 	}
 
 	@Override
@@ -1436,7 +1396,7 @@ public class DLAppHelperLocalServiceImpl
 				// Subscriptions
 
 				notifySubscribers(
-					latestFileVersion,
+					userId, latestFileVersion,
 					(String)workflowContext.get(WorkflowConstants.CONTEXT_URL),
 					serviceContext);
 			}
@@ -1589,7 +1549,7 @@ public class DLAppHelperLocalServiceImpl
 			dlFileVersions, new FileVersionVersionComparator());
 
 		List<ObjectValuePair<Long, Integer>> dlFileVersionStatusOVPs =
-			new ArrayList<ObjectValuePair<Long, Integer>>();
+			new ArrayList<>();
 
 		if ((dlFileVersions != null) && !dlFileVersions.isEmpty()) {
 			dlFileVersionStatusOVPs = getDlFileVersionStatuses(dlFileVersions);
@@ -1725,7 +1685,7 @@ public class DLAppHelperLocalServiceImpl
 
 			// Folders, file entries, and file shortcuts
 
-			QueryDefinition<?> queryDefinition = new QueryDefinition<Object>(
+			QueryDefinition<?> queryDefinition = new QueryDefinition<>(
 				WorkflowConstants.STATUS_IN_TRASH);
 
 			List<Object> foldersAndFileEntriesAndFileShortcuts =
@@ -1790,7 +1750,7 @@ public class DLAppHelperLocalServiceImpl
 
 		// Folders, file entries, and file shortcuts
 
-		QueryDefinition<?> queryDefinition = new QueryDefinition<Object>(
+		QueryDefinition<?> queryDefinition = new QueryDefinition<>(
 			WorkflowConstants.STATUS_ANY);
 
 		List<Object> foldersAndFileEntriesAndFileShortcuts =
@@ -1825,8 +1785,7 @@ public class DLAppHelperLocalServiceImpl
 		List<DLFileVersion> dlFileVersions) {
 
 		List<ObjectValuePair<Long, Integer>> dlFileVersionStatusOVPs =
-			new ArrayList<ObjectValuePair<Long, Integer>>(
-				dlFileVersions.size());
+			new ArrayList<>(dlFileVersions.size());
 
 		for (DLFileVersion dlFileVersion : dlFileVersions) {
 			int status = dlFileVersion.getStatus();
@@ -1836,8 +1795,7 @@ public class DLAppHelperLocalServiceImpl
 			}
 
 			ObjectValuePair<Long, Integer> dlFileVersionStatusOVP =
-				new ObjectValuePair<Long, Integer>(
-					dlFileVersion.getFileVersionId(), status);
+				new ObjectValuePair<>(dlFileVersion.getFileVersionId(), status);
 
 			dlFileVersionStatusOVPs.add(dlFileVersionStatusOVP);
 		}
@@ -1872,7 +1830,7 @@ public class DLAppHelperLocalServiceImpl
 	}
 
 	protected void notifySubscribers(
-			FileVersion fileVersion, String entryURL,
+			long creatorUserId, FileVersion fileVersion, String entryURL,
 			ServiceContext serviceContext)
 		throws PortalException {
 
@@ -1880,14 +1838,14 @@ public class DLAppHelperLocalServiceImpl
 			return;
 		}
 
-		DLSettings dlSettings = DLSettings.getInstance(
-			fileVersion.getGroupId());
+		DLGroupServiceSettings dlGroupServiceSettings =
+			DLGroupServiceSettings.getInstance(fileVersion.getGroupId());
 
 		if (serviceContext.isCommandAdd() &&
-			dlSettings.isEmailFileEntryAddedEnabled()) {
+			dlGroupServiceSettings.isEmailFileEntryAddedEnabled()) {
 		}
 		else if (serviceContext.isCommandUpdate() &&
-				 dlSettings.isEmailFileEntryUpdatedEnabled()) {
+				 dlGroupServiceSettings.isEmailFileEntryUpdatedEnabled()) {
 		}
 		else {
 			return;
@@ -1895,19 +1853,23 @@ public class DLAppHelperLocalServiceImpl
 
 		String entryTitle = fileVersion.getTitle();
 
-		String fromName = dlSettings.getEmailFromName();
-		String fromAddress = dlSettings.getEmailFromAddress();
+		String fromName = dlGroupServiceSettings.getEmailFromName();
+		String fromAddress = dlGroupServiceSettings.getEmailFromAddress();
 
 		Map<Locale, String> localizedSubjectMap = null;
 		Map<Locale, String> localizedBodyMap = null;
 
 		if (serviceContext.isCommandUpdate()) {
-			localizedSubjectMap = dlSettings.getEmailFileEntryUpdatedSubject();
-			localizedBodyMap = dlSettings.getEmailFileEntryUpdatedBody();
+			localizedSubjectMap =
+				dlGroupServiceSettings.getEmailFileEntryUpdatedSubject();
+			localizedBodyMap =
+				dlGroupServiceSettings.getEmailFileEntryUpdatedBody();
 		}
 		else {
-			localizedSubjectMap = dlSettings.getEmailFileEntryAddedSubject();
-			localizedBodyMap = dlSettings.getEmailFileEntryAddedBody();
+			localizedSubjectMap =
+				dlGroupServiceSettings.getEmailFileEntryAddedSubject();
+			localizedBodyMap =
+				dlGroupServiceSettings.getEmailFileEntryAddedBody();
 		}
 
 		FileEntry fileEntry = fileVersion.getFileEntry();
@@ -1927,7 +1889,9 @@ public class DLAppHelperLocalServiceImpl
 			folderName = folder.getName();
 		}
 
-		SubscriptionSender subscriptionSender = new SubscriptionSender();
+		SubscriptionSender subscriptionSender =
+			new GroupSubscriptionCheckSubscriptionSender(
+				DLPermission.RESOURCE_NAME);
 
 		DLFileEntry dlFileEntry = (DLFileEntry)fileEntry.getModel();
 
@@ -1944,6 +1908,7 @@ public class DLAppHelperLocalServiceImpl
 			"[$DOCUMENT_TYPE$]",
 			dlFileEntryType.getName(serviceContext.getLocale()),
 			"[$DOCUMENT_URL$]", entryURL, "[$FOLDER_NAME$]", folderName);
+		subscriptionSender.setCreatorUserId(creatorUserId);
 		subscriptionSender.setContextUserPrefix("DOCUMENT");
 		subscriptionSender.setEntryTitle(entryTitle);
 		subscriptionSender.setEntryURL(entryURL);
@@ -1971,15 +1936,15 @@ public class DLAppHelperLocalServiceImpl
 		subscriptionSender.setUserId(fileVersion.getUserId());
 
 		subscriptionSender.addPersistedSubscribers(
-			Folder.class.getName(), fileVersion.getGroupId());
+			DLFolder.class.getName(), fileVersion.getGroupId());
 
 		if (folder != null) {
 			subscriptionSender.addPersistedSubscribers(
-				Folder.class.getName(), folder.getFolderId());
+				DLFolder.class.getName(), folder.getFolderId());
 
 			for (Long ancestorFolderId : folder.getAncestorFolderIds()) {
 				subscriptionSender.addPersistedSubscribers(
-					Folder.class.getName(), ancestorFolderId);
+					DLFolder.class.getName(), ancestorFolderId);
 			}
 		}
 
@@ -1999,23 +1964,6 @@ public class DLAppHelperLocalServiceImpl
 			DLFileEntry.class.getName(), fileEntry.getFileEntryId());
 
 		subscriptionSender.flushNotificationsAsync();
-	}
-
-	protected void registerDLProcessorCallback(
-		final FileEntry fileEntry, final FileVersion fileVersion) {
-
-		TransactionCommitCallbackRegistryUtil.registerCallback(
-			new Callable<Void>() {
-
-				@Override
-				public Void call() throws Exception {
-					DLProcessorRegistryUtil.trigger(
-						fileEntry, fileVersion, true);
-
-					return null;
-				}
-
-			});
 	}
 
 	protected <T extends RepositoryModel<T>> void triggerRepositoryEvent(

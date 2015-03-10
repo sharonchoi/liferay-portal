@@ -18,7 +18,7 @@ import aQute.bnd.annotation.metatype.Configurable;
 
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.xsl.content.web.configuration.XSLContentConfiguration;
-import com.liferay.xsl.content.web.upgrade.XSLContentUpgrade;
+import com.liferay.xsl.content.web.upgrade.XSLContentWebUpgrade;
 
 import java.io.IOException;
 
@@ -38,7 +38,8 @@ import org.osgi.service.component.annotations.Reference;
  * @author Raymond Augé
  */
 @Component(
-	configurationPid = "com.liferay.xsl.content.web", immediate = true,
+	configurationPid = "com.liferay.xsl.content.web.configuration.XSLContentConfiguration",
+	immediate = true,
 	property = {
 		"com.liferay.portlet.css-class-wrapper=portlet-xsl-content",
 		"com.liferay.portlet.display-category=category.cms",
@@ -48,7 +49,6 @@ import org.osgi.service.component.annotations.Reference;
 		"com.liferay.portlet.private-request-attributes=false",
 		"com.liferay.portlet.private-session-attributes=false",
 		"com.liferay.portlet.render-weight=50",
-		"com.liferay.portlet.struts-path=xsl_content",
 		"javax.portlet.display-name=XSL Content",
 		"javax.portlet.expiration-cache=0",
 		"javax.portlet.init-param.config-template=/configuration.jsp",
@@ -57,6 +57,9 @@ import org.osgi.service.component.annotations.Reference;
 		"javax.portlet.resource-bundle=content.Language",
 		"javax.portlet.security-role-ref=administrator",
 		"javax.portlet.supported-public-render-parameter=tags",
+		"xml.doctype.declaration.allowed=false",
+		"xml.external.general.entities.allowed=false",
+		"xml.external.parameter.entities.allowed=false",
 		"xsl.secure.processing.enabled=true"
 	},
 	service = Portlet.class
@@ -87,7 +90,8 @@ public class XSLContentPortlet extends MVCPortlet {
 	}
 
 	@Reference(unbind = "-")
-	protected void setXSLContentUpgrade(XSLContentUpgrade xslContentUpgrade) {
+	protected void setXSLContentWebUpgrade(
+		XSLContentWebUpgrade xslContentWebUpgrade) {
 	}
 
 	private volatile XSLContentConfiguration _xslContentConfiguration;

@@ -157,7 +157,8 @@ public class JournalArticleAssetRendererFactory
 		PortletURL portletURL = liferayPortletResponse.createRenderURL(
 			PortletKeys.JOURNAL);
 
-		portletURL.setParameter("struts_action", "/journal/edit_article");
+		portletURL.setParameter(
+			"mvcPath", "/html/portlet/journal/edit_article.jsp");
 
 		return portletURL;
 	}
@@ -206,6 +207,19 @@ public class JournalArticleAssetRendererFactory
 
 		return JournalArticlePermission.contains(
 			permissionChecker, classPK, actionId);
+	}
+
+	@Override
+	public boolean isListable(long classPK) {
+		JournalArticle article =
+			JournalArticleLocalServiceUtil.fetchLatestArticle(
+				classPK, WorkflowConstants.STATUS_APPROVED, true);
+
+		if ((article != null) && article.isIndexable()) {
+			return true;
+		}
+
+		return false;
 	}
 
 	@Override

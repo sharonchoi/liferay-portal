@@ -106,7 +106,7 @@ public class LoginAction extends PortletAction {
 				if (cause instanceof PasswordExpiredException ||
 					cause instanceof UserLockoutException) {
 
-					SessionErrors.add(actionRequest, cause.getClass());
+					SessionErrors.add(actionRequest, cause.getClass(), cause);
 				}
 				else {
 					if (_log.isInfoEnabled()) {
@@ -126,7 +126,7 @@ public class LoginAction extends PortletAction {
 					 e instanceof UserPasswordException ||
 					 e instanceof UserScreenNameException) {
 
-				SessionErrors.add(actionRequest, e.getClass());
+				SessionErrors.add(actionRequest, e.getClass(), e);
 			}
 			else {
 				_log.error(e, e);
@@ -265,6 +265,12 @@ public class LoginAction extends PortletAction {
 			portletURL.setParameter("redirect", redirect);
 		}
 
+		String login = ParamUtil.getString(actionRequest, "login");
+
+		if (Validator.isNotNull(login)) {
+			portletURL.setParameter("login", login);
+		}
+
 		portletURL.setWindowState(WindowState.MAXIMIZED);
 
 		actionResponse.sendRedirect(portletURL.toString());
@@ -272,6 +278,6 @@ public class LoginAction extends PortletAction {
 
 	private static final boolean _CHECK_METHOD_ON_PROCESS_ACTION = false;
 
-	private static Log _log = LogFactoryUtil.getLog(LoginAction.class);
+	private static final Log _log = LogFactoryUtil.getLog(LoginAction.class);
 
 }

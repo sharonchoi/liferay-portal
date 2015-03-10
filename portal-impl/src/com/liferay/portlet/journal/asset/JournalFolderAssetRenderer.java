@@ -23,6 +23,7 @@ import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortletKeys;
+import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.asset.model.AssetRendererFactory;
 import com.liferay.portlet.asset.model.BaseAssetRenderer;
@@ -76,10 +77,11 @@ public class JournalFolderAssetRenderer
 
 	@Override
 	public String getIconCssClass() throws PortalException {
-		if (JournalFolderServiceUtil.getFoldersAndArticlesCount(
+		if (PropsValues.JOURNAL_FOLDER_ICON_CHECK_COUNT &&
+			JournalFolderServiceUtil.getFoldersAndArticlesCount(
 				_folder.getGroupId(), _folder.getFolderId()) > 0) {
 
-			return "icon-folder-close";
+			return "icon-folder-open";
 		}
 
 		return super.getIconCssClass();
@@ -88,7 +90,8 @@ public class JournalFolderAssetRenderer
 	@Override
 	public String getIconPath(ThemeDisplay themeDisplay) {
 		try {
-			if (JournalFolderServiceUtil.getFoldersAndArticlesCount(
+			if (PropsValues.JOURNAL_FOLDER_ICON_CHECK_COUNT &&
+				JournalFolderServiceUtil.getFoldersAndArticlesCount(
 					_folder.getGroupId(), _folder.getFolderId(),
 					WorkflowConstants.STATUS_APPROVED) > 0) {
 
@@ -122,6 +125,11 @@ public class JournalFolderAssetRenderer
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
+
+		if (!PropsValues.JOURNAL_FOLDER_ICON_CHECK_COUNT) {
+			return themeDisplay.getPathThemeImages() +
+				"/file_system/large/folder_empty_article.png";
+		}
 
 		int articlesCount = JournalArticleServiceUtil.getArticlesCount(
 			_folder.getGroupId(), _folder.getFolderId());
@@ -157,7 +165,8 @@ public class JournalFolderAssetRenderer
 			getControlPanelPlid(liferayPortletRequest), PortletKeys.JOURNAL,
 			PortletRequest.RENDER_PHASE);
 
-		portletURL.setParameter("struts_action", "/journal/edit_folder");
+		portletURL.setParameter(
+			"mvcPath", "/html/portlet/journal/edit_folder.jsp");
 		portletURL.setParameter(
 			"folderId", String.valueOf(_folder.getFolderId()));
 
@@ -175,7 +184,8 @@ public class JournalFolderAssetRenderer
 		PortletURL portletURL = assetRendererFactory.getURLView(
 			liferayPortletResponse, windowState);
 
-		portletURL.setParameter("struts_action", "/journal/view");
+		portletURL.setParameter(
+			"mvcPath", "/html/portlet/journal/asset/folder_full_content.jsp");
 		portletURL.setParameter(
 			"folderId", String.valueOf(_folder.getFolderId()));
 		portletURL.setWindowState(windowState);
@@ -189,9 +199,15 @@ public class JournalFolderAssetRenderer
 		LiferayPortletResponse liferayPortletResponse,
 		String noSuchEntryRedirect) {
 
-		return getURLViewInContext(
-			liferayPortletRequest, noSuchEntryRedirect, "/journal/find_folder",
-			"folderId", _folder.getFolderId());
+		try {
+			PortletURL viewInContextURL = getURLView(
+				liferayPortletResponse, WindowState.MAXIMIZED);
+
+			return viewInContextURL.toString();
+		}
+		catch (Exception e) {
+			return noSuchEntryRedirect;
+		}
 	}
 
 	@Override
@@ -232,8 +248,6 @@ public class JournalFolderAssetRenderer
 		throws Exception {
 
 		if (template.equals(TEMPLATE_FULL_CONTENT)) {
-			renderRequest.setAttribute(WebKeys.JOURNAL_FOLDER, _folder);
-
 			return "/html/portlet/journal/asset/folder_" + template + ".jsp";
 		}
 		else {
@@ -241,6 +255,6 @@ public class JournalFolderAssetRenderer
 		}
 	}
 
-	private JournalFolder _folder;
+	private final JournalFolder _folder;
 
 }

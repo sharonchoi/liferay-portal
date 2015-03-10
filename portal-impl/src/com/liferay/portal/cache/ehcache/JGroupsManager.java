@@ -14,7 +14,8 @@
 
 package com.liferay.portal.cache.ehcache;
 
-import com.liferay.portal.cluster.BaseReceiver;
+import com.liferay.portal.cluster.JGroupsReceiver;
+import com.liferay.portal.kernel.executor.PortalExecutorManagerUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 
@@ -24,6 +25,7 @@ import java.rmi.RemoteException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheException;
@@ -53,13 +55,15 @@ public class JGroupsManager implements CacheManagerPeerProvider, CachePeer {
 		String channelProperties) {
 
 		_cacheManager = cacheManager;
+		_executorService = PortalExecutorManagerUtil.getPortalExecutor(
+			JGroupsManager.class.getName());
 
 		JChannel jChannel = null;
 
 		try {
 			jChannel = new JChannel(channelProperties);
 
-			jChannel.setReceiver(new EhcacheJGroupsReceiver());
+			jChannel.setReceiver(new EhcacheJGroupsReceiver(_executorService));
 
 			jChannel.connect(clusterName);
 
@@ -76,13 +80,22 @@ public class JGroupsManager implements CacheManagerPeerProvider, CachePeer {
 		}
 
 		_jChannel = jChannel;
+
+		JGroupsReceiver jGroupsReceiver =
+			(JGroupsReceiver)_jChannel.getReceiver();
+
+		jGroupsReceiver.openLatch();
 	}
 
 	@Override
 	public void dispose() throws CacheException {
 		if (_jChannel != null) {
+			_jChannel.setReceiver(null);
+
 			_jChannel.close();
 		}
+
+		_executorService.shutdownNow();
 	}
 
 	public Address getBusLocalAddress() {
@@ -90,9 +103,10 @@ public class JGroupsManager implements CacheManagerPeerProvider, CachePeer {
 	}
 
 	public List<Address> getBusMembership() {
-		BaseReceiver baseReceiver = (BaseReceiver)_jChannel.getReceiver();
+		JGroupsReceiver jGroupsReceiver =
+			(JGroupsReceiver)_jChannel.getReceiver();
 
-		View view = baseReceiver.getView();
+		View view = jGroupsReceiver.getView();
 
 		return view.getMembers();
 	}
@@ -165,7 +179,7 @@ public class JGroupsManager implements CacheManagerPeerProvider, CachePeer {
 
 	@Override
 	public List<JGroupsManager> listRemoteCachePeers(Ehcache ehcache) {
-		List<JGroupsManager> cachePeers = new ArrayList<JGroupsManager>();
+		List<JGroupsManager> cachePeers = new ArrayList<>();
 
 		cachePeers.add(this);
 
@@ -193,8 +207,7 @@ public class JGroupsManager implements CacheManagerPeerProvider, CachePeer {
 	public void send(Address address, List eventMessages)
 		throws RemoteException {
 
-		ArrayList<JGroupEventMessage> jGroupEventMessages =
-			new ArrayList<JGroupEventMessage>();
+		ArrayList<JGroupEventMessage> jGroupEventMessages = new ArrayList<>();
 
 		for (Object eventMessage : eventMessages) {
 			if (eventMessage instanceof JGroupEventMessage) {
@@ -273,15 +286,16 @@ public class JGroupsManager implements CacheManagerPeerProvider, CachePeer {
 
 	private static final String _SCHEME = "JGroups";
 
-	private static Log _log = LogFactoryUtil.getLog(JGroupsManager.class);
+	private static final Log _log = LogFactoryUtil.getLog(JGroupsManager.class);
 
 	private final CacheManager _cacheManager;
+	private final ExecutorService _executorService;
 	private final JChannel _jChannel;
 
-	private class EhcacheJGroupsReceiver extends BaseReceiver {
+	private class EhcacheJGroupsReceiver extends JGroupsReceiver {
 
 		@Override
-		public void receive(Message message) {
+		protected void doReceive(Message message) {
 			Object object = message.getObject();
 
 			if (object == null) {
@@ -302,6 +316,10 @@ public class JGroupsManager implements CacheManagerPeerProvider, CachePeer {
 							object.getClass().getName());
 				}
 			}
+		}
+
+		private EhcacheJGroupsReceiver(ExecutorService executorService) {
+			super(executorService);
 		}
 
 	}

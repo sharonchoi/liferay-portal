@@ -11,7 +11,9 @@ import com.liferay.portal.kernel.dao.db.DBFactoryUtil;
 import com.liferay.portal.kernel.dao.jdbc.SqlUpdate;
 import com.liferay.portal.kernel.dao.jdbc.SqlUpdateFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
+import com.liferay.portal.kernel.dao.orm.Criterion;
 import com.liferay.portal.kernel.dao.orm.DefaultActionableDynamicQuery;
+import com.liferay.portal.kernel.dao.orm.Disjunction;
 import com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
@@ -19,6 +21,7 @@ import com.liferay.portal.kernel.dao.orm.Projection;
 import com.liferay.portal.kernel.dao.orm.ProjectionFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.Property;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -260,10 +263,10 @@ import ${packagePath}.service.${entity.name}${sessionTypeName}Service;
 		}
 
 		/**
-		 * Returns the number of rows that match the dynamic query.
+		 * Returns the number of rows matching the dynamic query.
 		 *
 		 * @param dynamicQuery the dynamic query
-		 * @return the number of rows that match the dynamic query
+		 * @return the number of rows matching the dynamic query
 		 */
 		@Override
 		public long dynamicQueryCount(DynamicQuery dynamicQuery) {
@@ -271,11 +274,11 @@ import ${packagePath}.service.${entity.name}${sessionTypeName}Service;
 		}
 
 		/**
-		 * Returns the number of rows that match the dynamic query.
+		 * Returns the number of rows matching the dynamic query.
 		 *
 		 * @param dynamicQuery the dynamic query
 		 * @param projection the projection to apply to the query
-		 * @return the number of rows that match the dynamic query
+		 * @return the number of rows matching the dynamic query
 		 */
 		@Override
 		public long dynamicQueryCount(DynamicQuery dynamicQuery, Projection projection) {
@@ -294,7 +297,7 @@ import ${packagePath}.service.${entity.name}${sessionTypeName}Service;
 			 * Returns the ${entity.humanName} with the matching UUID and company.
 			 *
 			 * @param uuid the ${entity.humanName}'s UUID
-			 * @param  companyId the primary key of the company
+			 * @param companyId the primary key of the company
 			 * @return the matching ${entity.humanName}, or <code>null</code> if a matching ${entity.humanName} could not be found
 			<#list serviceBaseExceptions as exception>
 			 * @throws ${exception}
@@ -448,7 +451,21 @@ import ${packagePath}.service.${entity.name}${sessionTypeName}Service;
 
 							@Override
 							public void addCriteria(DynamicQuery dynamicQuery) {
-								portletDataContext.addDateRangeCriteria(dynamicQuery, "modifiedDate");
+								<#if entity.isWorkflowEnabled()>
+									Criterion modifiedDateCriterion = portletDataContext.getDateRangeCriteria(dynamicQuery, "modifiedDate");
+									Criterion statusDateCriterion = portletDataContext.getDateRangeCriteria(dynamicQuery, "statusDate");
+
+									if ((modifiedDateCriterion != null) && (statusDateCriterion != null)) {
+										Disjunction disjunction = RestrictionsFactoryUtil.disjunction();
+
+										disjunction.add(modifiedDateCriterion);
+										disjunction.add(statusDateCriterion);
+
+										dynamicQuery.add(disjunction);
+									}
+								<#else>
+									portletDataContext.addDateRangeCriteria(dynamicQuery, "modifiedDate");
+								</#if>
 
 								<#if entity.isTypedModel()>
 									StagedModelType stagedModelType = exportActionableDynamicQuery.getStagedModelType();
@@ -510,11 +527,28 @@ import ${packagePath}.service.${entity.name}${sessionTypeName}Service;
 
 		<#if entity.hasUuid() && entity.hasColumn("companyId")>
 			<#if entity.hasColumn("groupId") && (entity.name != "Group")>
+				/**
+				 * Returns all the ${entity.humanNames} matching the UUID and company.
+				 *
+				 * @param uuid the UUID of the ${entity.humanNames}
+				 * @param companyId the primary key of the company
+				 * @return the matching ${entity.humanNames}, or an empty list if no matches were found
+				 */
 				@Override
 				public List<${entity.name}> get${entity.names}ByUuidAndCompanyId(String uuid, long companyId) {
 					return ${entity.varName}Persistence.findByUuid_C(uuid, companyId);
 				}
 
+				/**
+				 * Returns a range of ${entity.humanNames} matching the UUID and company.
+				 *
+				 * @param uuid the UUID of the ${entity.humanNames}
+				 * @param companyId the primary key of the company
+				 * @param start the lower bound of the range of ${entity.humanNames}
+				 * @param end the upper bound of the range of ${entity.humanNames} (not inclusive)
+				 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+				 * @return the range of matching ${entity.humanNames}, or an empty list if no matches were found
+				 */
 				@Override
 				public List<${entity.name}> get${entity.names}ByUuidAndCompanyId(String uuid, long companyId, int start, int end, OrderByComparator<${entity.name}> orderByComparator) {
 					return ${entity.varName}Persistence.findByUuid_C(uuid, companyId, start, end, orderByComparator);
@@ -524,7 +558,7 @@ import ${packagePath}.service.${entity.name}${sessionTypeName}Service;
 				 * Returns the ${entity.humanName} with the matching UUID and company.
 				 *
 				 * @param uuid the ${entity.humanName}'s UUID
-				 * @param  companyId the primary key of the company
+				 * @param companyId the primary key of the company
 				 * @return the matching ${entity.humanName}
 				<#list serviceBaseExceptions as exception>
 				<#if exception == "PortalException">

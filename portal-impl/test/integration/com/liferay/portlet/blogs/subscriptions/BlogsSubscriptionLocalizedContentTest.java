@@ -14,37 +14,53 @@
 
 package com.liferay.portlet.blogs.subscriptions;
 
-import com.liferay.portal.kernel.test.ExecutionTestListeners;
-import com.liferay.portal.test.Sync;
-import com.liferay.portal.test.SynchronousMailExecutionTestListener;
-import com.liferay.portal.test.listeners.MainServletExecutionTestListener;
-import com.liferay.portal.test.runners.LiferayIntegrationJUnitTestRunner;
+import com.liferay.portal.kernel.test.rule.AggregateTestRule;
+import com.liferay.portal.kernel.test.rule.Sync;
+import com.liferay.portal.kernel.test.rule.SynchronousMailTestRule;
+import com.liferay.portal.kernel.test.util.RandomTestUtil;
+import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
+import com.liferay.portal.kernel.util.Constants;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
+import com.liferay.portal.test.rule.MainServletTestRule;
 import com.liferay.portal.util.PortletKeys;
-import com.liferay.portal.util.subscriptions.BaseSubscriptionLocalizedContentTestCase;
-import com.liferay.portal.util.test.TestPropsValues;
 import com.liferay.portlet.blogs.model.BlogsEntry;
 import com.liferay.portlet.blogs.service.BlogsEntryLocalServiceUtil;
 import com.liferay.portlet.blogs.util.BlogsConstants;
 import com.liferay.portlet.blogs.util.test.BlogsTestUtil;
+import com.liferay.portlet.subscriptions.test.BaseSubscriptionLocalizedContentTestCase;
 
-import org.junit.runner.RunWith;
+import org.junit.ClassRule;
+import org.junit.Rule;
 
 /**
  * @author Roberto Díaz
  */
-@ExecutionTestListeners(
-	listeners = {
-		MainServletExecutionTestListener.class,
-		SynchronousMailExecutionTestListener.class
-	})
-@RunWith(LiferayIntegrationJUnitTestRunner.class)
 @Sync
 public class BlogsSubscriptionLocalizedContentTest
 	extends BaseSubscriptionLocalizedContentTestCase {
 
+	@ClassRule
+	@Rule
+	public static final AggregateTestRule aggregateTestRule =
+		new AggregateTestRule(
+			new LiferayIntegrationTestRule(), MainServletTestRule.INSTANCE,
+			SynchronousMailTestRule.INSTANCE);
+
 	@Override
-	protected long addBaseModel(long containerModelId) throws Exception {
-		BlogsEntry entry = BlogsTestUtil.addEntry(group, true);
+	protected long addBaseModel(long userId, long containerModelId)
+		throws Exception {
+
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				group.getGroupId(), userId);
+
+		BlogsTestUtil.populateNotificationsServiceContext(
+			serviceContext, Constants.ADD);
+
+		BlogsEntry entry = BlogsEntryLocalServiceUtil.addEntry(
+			userId, RandomTestUtil.randomString(),
+			RandomTestUtil.randomString(), serviceContext);
 
 		return entry.getEntryId();
 	}
@@ -54,7 +70,7 @@ public class BlogsSubscriptionLocalizedContentTest
 		throws Exception {
 
 		BlogsEntryLocalServiceUtil.subscribe(
-			TestPropsValues.getUserId(), group.getGroupId());
+			user.getUserId(), group.getGroupId());
 	}
 
 	@Override
@@ -68,8 +84,31 @@ public class BlogsSubscriptionLocalizedContentTest
 	}
 
 	@Override
-	protected String getSubscriptionBodyPreferenceName() throws Exception {
+	protected String getSubscriptionAddedBodyPreferenceName() {
 		return "emailEntryAddedBody";
+	}
+
+	@Override
+	protected String getSubscriptionUpdatedBodyPreferenceName() {
+		return "emailEntryUpdatedBody";
+	}
+
+	@Override
+	protected void updateBaseModel(long userId, long baseModelId)
+		throws Exception {
+
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				group.getGroupId(), userId);
+
+		BlogsTestUtil.populateNotificationsServiceContext(
+			serviceContext, Constants.UPDATE);
+
+		serviceContext.setAttribute("sendEmailEntryUpdated", true);
+
+		BlogsEntryLocalServiceUtil.updateEntry(
+			userId, baseModelId, RandomTestUtil.randomString(),
+			RandomTestUtil.randomString(), serviceContext);
 	}
 
 }

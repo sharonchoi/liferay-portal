@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.dynamicdatalists.util;
 
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.xml.Document;
@@ -23,10 +24,13 @@ import com.liferay.portlet.dynamicdatalists.model.DDLRecord;
 import com.liferay.portlet.dynamicdatalists.model.DDLRecordVersion;
 import com.liferay.portlet.dynamicdatalists.service.DDLRecordLocalServiceUtil;
 import com.liferay.portlet.dynamicdatamapping.model.DDMFormField;
+import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
 import com.liferay.portlet.dynamicdatamapping.model.LocalizedValue;
+import com.liferay.portlet.dynamicdatamapping.storage.DDMFormValues;
 import com.liferay.portlet.dynamicdatamapping.storage.Field;
 import com.liferay.portlet.dynamicdatamapping.storage.Fields;
 import com.liferay.portlet.dynamicdatamapping.storage.StorageEngineUtil;
+import com.liferay.portlet.dynamicdatamapping.util.DDMFormValuesToFieldsConverterUtil;
 
 import java.io.Serializable;
 
@@ -39,7 +43,7 @@ import java.util.List;
 public class DDLXMLExporter extends BaseDDLExporter {
 
 	protected void addFieldElement(
-		Element fieldsElement, String label, Serializable value, int status) {
+		Element fieldsElement, String label, Serializable value) {
 
 		Element fieldElement = fieldsElement.addElement("field");
 
@@ -50,10 +54,6 @@ public class DDLXMLExporter extends BaseDDLExporter {
 		Element valueElement = fieldElement.addElement("value");
 
 		valueElement.addText(String.valueOf(value));
-
-		Element statusElement = fieldElement.addElement("status");
-
-		statusElement.addText(getStatusMessage(status));
 	}
 
 	@Override
@@ -62,7 +62,9 @@ public class DDLXMLExporter extends BaseDDLExporter {
 			OrderByComparator<DDLRecord> orderByComparator)
 		throws Exception {
 
-		List<DDMFormField> ddmFormFields = getDDMFormFields(recordSetId);
+		DDMStructure ddmStructure = getDDMStructure(recordSetId);
+
+		List<DDMFormField> ddmFormFields = getDDMFormFields(ddmStructure);
 
 		Document document = SAXReaderUtil.createDocument();
 
@@ -76,8 +78,11 @@ public class DDLXMLExporter extends BaseDDLExporter {
 
 			DDLRecordVersion recordVersion = record.getRecordVersion();
 
-			Fields fields = StorageEngineUtil.getFields(
+			DDMFormValues ddmFormValues = StorageEngineUtil.getDDMFormValues(
 				recordVersion.getDDMStorageId());
+
+			Fields fields = DDMFormValuesToFieldsConverterUtil.convert(
+				ddmStructure, ddmFormValues);
 
 			for (DDMFormField ddmFormField : ddmFormFields) {
 				LocalizedValue label = ddmFormField.getLabel();
@@ -93,9 +98,12 @@ public class DDLXMLExporter extends BaseDDLExporter {
 				}
 
 				addFieldElement(
-					fieldsElement, label.getString(getLocale()), value,
-					recordVersion.getStatus());
+					fieldsElement, label.getString(getLocale()), value);
 			}
+
+			addFieldElement(
+				fieldsElement, LanguageUtil.get(getLocale(), "status"),
+				getStatusMessage(recordVersion.getStatus()));
 		}
 
 		String xml = document.asXML();

@@ -41,6 +41,8 @@ public class ModuleSessionFactory
 	public void setBundleContext(BundleContext bundleContext) {
 		_classLoader = new BundleResolverClassLoader(
 			bundleContext.getBundle(), null);
+
+		setSessionFactoryClassLoader(_classLoader);
 	}
 
 	@Override
@@ -48,7 +50,6 @@ public class ModuleSessionFactory
 		ModuleHibernateConfiguration moduleHibernateConfiguration =
 			new ModuleHibernateConfiguration(_classLoader);
 
-		moduleHibernateConfiguration.setBeanFactory(getBeanFactory());
 		moduleHibernateConfiguration.setDataSource(dataSource);
 
 		try {
