@@ -16,6 +16,7 @@ package com.liferay.portal.kernel.lar;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.portal.kernel.dao.orm.Criterion;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.util.DateRange;
@@ -118,7 +119,7 @@ public interface PortletDataContext extends Serializable {
 
 	/**
 	 * @deprecated As of 6.2.0, replaced by {@link #addClassedModel(Element,
-	 *             ClassedModel, Class)}
+	 *             String, ClassedModel, Class)}
 	 */
 	@Deprecated
 	public void addClassedModel(
@@ -154,7 +155,7 @@ public interface PortletDataContext extends Serializable {
 		String className, long classPK, List<MBMessage> messages);
 
 	public void addDateRangeCriteria(
-		DynamicQuery dynamicQuery, String modifiedDatePropertyName);
+		DynamicQuery dynamicQuery, String propertyName);
 
 	public void addDeletionSystemEventStagedModelTypes(
 		StagedModelType... stagedModelTypes);
@@ -313,6 +314,9 @@ public interface PortletDataContext extends Serializable {
 
 	public DateRange getDateRange();
 
+	public Criterion getDateRangeCriteria(
+		DynamicQuery dynamicQuery, String modifiedDatePropertyName);
+
 	public Set<StagedModelType> getDeletionSystemEventStagedModelTypes();
 
 	public Date getEndDate();
@@ -375,6 +379,8 @@ public interface PortletDataContext extends Serializable {
 
 	public Map<?, ?> getNewPrimaryKeysMap(String className);
 
+	public Map<String, Map<?, ?>> getNewPrimaryKeysMaps();
+
 	/**
 	 * @deprecated As of 7.0.0, with no direct replacement
 	 */
@@ -386,6 +392,8 @@ public interface PortletDataContext extends Serializable {
 	public Map<String, List<KeyValuePair>> getPermissions();
 
 	public long getPlid();
+
+	public String getPortletId();
 
 	/**
 	 * @deprecated As of 6.2.0, replaced by {@link
@@ -451,6 +459,8 @@ public interface PortletDataContext extends Serializable {
 	 */
 	@Deprecated
 	public String getRootPath();
+
+	public String getRootPortletId();
 
 	/**
 	 * @deprecated As of 7.0.0, with no direct replacement
@@ -662,8 +672,14 @@ public interface PortletDataContext extends Serializable {
 
 	public void setPlid(long plid);
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement
+	 */
+	@Deprecated
 	public void setPortetDataContextListener(
 		PortletDataContextListener portletDataContextListener);
+
+	public void setPortletId(String portletId);
 
 	public void setPrivateLayout(boolean privateLayout);
 

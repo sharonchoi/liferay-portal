@@ -19,12 +19,11 @@ import com.liferay.portal.fabric.netty.rpc.handlers.NettyRPCChannelHandler;
 import com.liferay.portal.kernel.concurrent.AsyncBroker;
 import com.liferay.portal.kernel.concurrent.DefaultNoticeableFuture;
 import com.liferay.portal.kernel.concurrent.NoticeableFuture;
-import com.liferay.portal.kernel.process.ProcessCallable;
 import com.liferay.portal.kernel.process.ProcessException;
 import com.liferay.portal.kernel.test.CaptureHandler;
-import com.liferay.portal.kernel.test.CodeCoverageAssertor;
 import com.liferay.portal.kernel.test.JDKLoggerTestUtil;
 import com.liferay.portal.kernel.test.ReflectionTestUtil;
+import com.liferay.portal.kernel.test.rule.CodeCoverageAssertor;
 import com.liferay.portal.kernel.util.StringPool;
 
 import io.netty.channel.ChannelHandlerContext;
@@ -46,10 +45,9 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
+import org.junit.Assert;
 import org.junit.ClassRule;
 import org.junit.Test;
-
-import org.testng.Assert;
 
 /**
  * @author Shuyang Zhou
@@ -57,7 +55,7 @@ import org.testng.Assert;
 public class RPCUtilTest {
 
 	@ClassRule
-	public static CodeCoverageAssertor codeCoverageAssertor =
+	public static final CodeCoverageAssertor codeCoverageAssertor =
 		new CodeCoverageAssertor() {
 
 			@Override
@@ -91,7 +89,7 @@ public class RPCUtilTest {
 			});
 
 		Future<String> future = RPCUtil.execute(
-			_embeddedChannel, new ResultProcessCallable("result"));
+			_embeddedChannel, new ResultRPCCallable("result"));
 
 		Assert.assertTrue(future.isCancelled());
 	}
@@ -104,7 +102,7 @@ public class RPCUtilTest {
 		ProcessException testException = new ProcessException("message");
 
 		Future<Serializable> future = RPCUtil.execute(
-			_embeddedChannel, new ExceptionProcessCallable(testException));
+			_embeddedChannel, new ExceptionRPCCallable(testException));
 
 		_embeddedChannel.writeInbound(_embeddedChannel.readOutbound());
 		_embeddedChannel.writeInbound(_embeddedChannel.readOutbound());
@@ -125,7 +123,7 @@ public class RPCUtilTest {
 		_embeddedChannel.close();
 
 		Future<String> channelFailureFuture = RPCUtil.execute(
-			_embeddedChannel, new ResultProcessCallable(StringPool.BLANK));
+			_embeddedChannel, new ResultRPCCallable(StringPool.BLANK));
 
 		try {
 			channelFailureFuture.get();
@@ -141,11 +139,10 @@ public class RPCUtilTest {
 
 		// Channel closed failure, no match key
 
-		Attribute<AsyncBroker<Long, String>> attribute =
-			_embeddedChannel.attr(
-				ReflectionTestUtil.
-					<AttributeKey<AsyncBroker<Long, String>>>getFieldValue(
-						NettyChannelAttributes.class, "_asyncBrokerKey"));
+		Attribute<AsyncBroker<Long, String>> attribute = _embeddedChannel.attr(
+			ReflectionTestUtil.
+				<AttributeKey<AsyncBroker<Long, String>>>getFieldValue(
+					NettyChannelAttributes.class, "_asyncBrokerKey"));
 
 		final AtomicLong keyRef = new AtomicLong();
 
@@ -156,17 +153,17 @@ public class RPCUtilTest {
 				public NoticeableFuture<String> post(Long key) {
 					keyRef.set(key);
 
-					return new DefaultNoticeableFuture<String>();
+					return new DefaultNoticeableFuture<>();
 				}
 
 			});
 
-		CaptureHandler captureHandler = JDKLoggerTestUtil.configureJDKLogger(
-			RPCUtil.class.getName(), Level.SEVERE);
+		try (CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+					RPCUtil.class.getName(), Level.SEVERE)) {
 
-		try {
 			RPCUtil.execute(
-				_embeddedChannel, new ResultProcessCallable(StringPool.BLANK));
+				_embeddedChannel, new ResultRPCCallable(StringPool.BLANK));
 
 			List<LogRecord> logRecords = captureHandler.getLogRecords();
 
@@ -184,9 +181,6 @@ public class RPCUtilTest {
 			Assert.assertSame(
 				ClosedChannelException.class, throwable.getClass());
 		}
-		finally {
-			captureHandler.close();
-		}
 	}
 
 	@Test
@@ -194,7 +188,7 @@ public class RPCUtilTest {
 		String result = "result";
 
 		Future<String> future = RPCUtil.execute(
-			_embeddedChannel, new ResultProcessCallable(result));
+			_embeddedChannel, new ResultRPCCallable(result));
 
 		_embeddedChannel.writeInbound(_embeddedChannel.readOutbound());
 		_embeddedChannel.writeInbound(_embeddedChannel.readOutbound());
@@ -205,34 +199,43 @@ public class RPCUtilTest {
 	private final EmbeddedChannel _embeddedChannel = new EmbeddedChannel(
 		NettyRPCChannelHandler.INSTANCE);
 
-	private static class ExceptionProcessCallable
-		implements ProcessCallable<Serializable> {
+	private static class ExceptionRPCCallable
+		implements RPCCallable<Serializable> {
 
-		public ExceptionProcessCallable(ProcessException processException) {
-			_processException = processException;
+		public ExceptionRPCCallable(Throwable throwable) {
+			_throwable = throwable;
 		}
 
 		@Override
-		public Serializable call() throws ProcessException {
-			throw _processException;
+		public NoticeableFuture<Serializable> call() {
+			DefaultNoticeableFuture<Serializable> defaultNoticeableFuture =
+				new DefaultNoticeableFuture<>();
+
+			defaultNoticeableFuture.setException(_throwable);
+
+			return defaultNoticeableFuture;
 		}
 
 		private static final long serialVersionUID = 1L;
 
-		private final ProcessException _processException;
+		private final Throwable _throwable;
 
 	}
 
-	private static class ResultProcessCallable
-		implements ProcessCallable<String> {
+	private static class ResultRPCCallable implements RPCCallable<String> {
 
-		public ResultProcessCallable(String result) {
+		public ResultRPCCallable(String result) {
 			_result = result;
 		}
 
 		@Override
-		public String call() {
-			return _result;
+		public NoticeableFuture<String> call() {
+			DefaultNoticeableFuture<String> defaultNoticeableFuture =
+				new DefaultNoticeableFuture<>();
+
+			defaultNoticeableFuture.set(_result);
+
+			return defaultNoticeableFuture;
 		}
 
 		private static final long serialVersionUID = 1L;

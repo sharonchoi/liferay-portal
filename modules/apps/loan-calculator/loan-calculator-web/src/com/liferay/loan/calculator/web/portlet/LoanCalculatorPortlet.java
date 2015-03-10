@@ -14,7 +14,7 @@
 
 package com.liferay.loan.calculator.web.portlet;
 
-import com.liferay.loan.calculator.web.upgrade.LoanCalculatorUpgrade;
+import com.liferay.loan.calculator.web.upgrade.LoanCalculatorWebUpgrade;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 
 import javax.portlet.Portlet;
@@ -35,7 +35,6 @@ import org.osgi.service.component.annotations.Reference;
 		"com.liferay.portlet.private-session-attributes=false",
 		"com.liferay.portlet.remoteable=true",
 		"com.liferay.portlet.render-weight=50",
-		"com.liferay.portlet.struts-path=loan_calculator",
 		"com.liferay.portlet.use-default-template=true",
 		"javax.portlet.display-name=Loan Calculator",
 		"javax.portlet.expiration-cache=0",
@@ -49,8 +48,8 @@ import org.osgi.service.component.annotations.Reference;
 public class LoanCalculatorPortlet extends MVCPortlet {
 
 	@Reference(unbind = "-")
-	protected void setLoanCalculatorUpgrade(
-		LoanCalculatorUpgrade loanCalculatorUpgrade) {
+	protected void setLoanCalculatorWebUpgrade(
+		LoanCalculatorWebUpgrade loanCalculatorWebUpgrade) {
 	}
 
 }

@@ -17,25 +17,25 @@ package com.liferay.portal.fabric.netty.rpc;
 import com.liferay.portal.fabric.netty.NettyTestUtil;
 import com.liferay.portal.fabric.netty.handlers.NettyChannelAttributes;
 import com.liferay.portal.kernel.concurrent.AsyncBroker;
+import com.liferay.portal.kernel.concurrent.DefaultNoticeableFuture;
 import com.liferay.portal.kernel.concurrent.NoticeableFuture;
-import com.liferay.portal.kernel.process.ProcessException;
 import com.liferay.portal.kernel.test.CaptureHandler;
-import com.liferay.portal.kernel.test.CodeCoverageAssertor;
 import com.liferay.portal.kernel.test.JDKLoggerTestUtil;
+import com.liferay.portal.kernel.test.ReflectionTestUtil;
+import com.liferay.portal.kernel.test.rule.CodeCoverageAssertor;
 
 import io.netty.channel.embedded.EmbeddedChannel;
 
 import java.io.Serializable;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ConcurrentMap;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
+import org.junit.Assert;
 import org.junit.ClassRule;
 import org.junit.Test;
-
-import org.testng.Assert;
 
 /**
  * @author Shuyang Zhou
@@ -43,41 +43,48 @@ import org.testng.Assert;
 public class RPCResponseTest {
 
 	@ClassRule
-	public static CodeCoverageAssertor codeCoverageAssertor =
-		new CodeCoverageAssertor();
+	public static final CodeCoverageAssertor codeCoverageAssertor =
+		CodeCoverageAssertor.INSTANCE;
+
+	@Test
+	public void testExecuteWithCancellation() throws Exception {
+		doTestExecute(true, _RESULT, null);
+	}
 
 	@Test
 	public void testExecuteWithException() throws Exception {
-		doTestExecute(null, _exception);
+		doTestExecute(false, null, _throwable);
 	}
 
 	@Test
 	public void testExecuteWithResult() throws Exception {
-		doTestExecute(_result, null);
+		doTestExecute(false, _RESULT, null);
 	}
 
 	@Test
 	public void testToString() {
-		RPCResponse<String> rpcResponse = new RPCResponse<String>(
-			_id, _result, _exception);
+		RPCResponse<String> rpcResponse = new RPCResponse<>(
+			_ID, true, _RESULT, _throwable);
 
 		Assert.assertEquals(
-			"{id=" + _id + ", result=" + _result + ", throwable=" + _exception +
-				"}",
+			"{cancelled=true, id=" + _ID + ", result=" + _RESULT +
+				", throwable=" + _throwable + "}",
 			rpcResponse.toString());
 	}
 
 	protected void doTestExecute(
-			String result, ProcessException processException)
+			boolean cancelled, String result, Throwable throwable)
 		throws Exception {
 
-		RPCResponse<String> rpcResponse = new RPCResponse<String>(
-			_id, result, processException);
+		// No future exist
 
-		CaptureHandler captureHandler = JDKLoggerTestUtil.configureJDKLogger(
-			RPCResponse.class.getName(), Level.SEVERE);
+		RPCResponse<String> rpcResponse = new RPCResponse<>(
+			_ID, cancelled, result, throwable);
 
-		try {
+		try (CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+					RPCResponse.class.getName(), Level.SEVERE)) {
+
 			rpcResponse.execute(_embeddedChannel);
 
 			List<LogRecord> logRecords = captureHandler.getLogRecords();
@@ -86,49 +93,118 @@ public class RPCResponseTest {
 
 			LogRecord logRecord = logRecords.get(0);
 
-			if (processException != null) {
+			if (cancelled) {
+				Assert.assertEquals(
+					"Unable to place cancellation because no future exists " +
+						"with ID " + _ID,
+					logRecord.getMessage());
+			}
+			else if (throwable != null) {
 				Assert.assertEquals(
 					"Unable to place exception because no future exists with " +
-						"ID " + _id,
+						"ID " + _ID,
 					logRecord.getMessage());
-				Assert.assertSame(processException, logRecord.getThrown());
+				Assert.assertSame(throwable, logRecord.getThrown());
 			}
 			else {
 				Assert.assertEquals(
 					"Unable to place result " + result +
-						" because no future exists with ID " + _id,
+						" because no future exists with ID " + _ID,
 					logRecord.getMessage());
 			}
 		}
-		finally {
-			captureHandler.close();
+
+		// Have futures, with log
+
+		try (CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+					RPCResponse.class.getName(), Level.FINEST)) {
+
+			AsyncBroker<Long, Serializable> asyncBroker =
+				NettyChannelAttributes.getAsyncBroker(_embeddedChannel);
+
+			NoticeableFuture<Serializable> noticeableFuture = asyncBroker.post(
+				_ID);
+
+			rpcResponse.execute(_embeddedChannel);
+
+			List<LogRecord> logRecords = captureHandler.getLogRecords();
+
+			if (!cancelled) {
+				Assert.assertTrue(logRecords.isEmpty());
+
+				return;
+			}
+
+			Assert.assertTrue(noticeableFuture.isCancelled());
+			Assert.assertEquals(1, logRecords.size());
+
+			LogRecord logRecord = logRecords.remove(0);
+
+			Assert.assertEquals(
+				"Cancelled future with ID " + _ID, logRecord.getMessage());
+
+			DefaultNoticeableFuture<Serializable> defaultNoticeableFuture =
+				new DefaultNoticeableFuture<>();
+
+			defaultNoticeableFuture.cancel(true);
+
+			ConcurrentMap<Long, DefaultNoticeableFuture<Serializable>>
+				defaultNoticeableFutures = ReflectionTestUtil.getFieldValue(
+					asyncBroker, "_defaultNoticeableFutures");
+
+			defaultNoticeableFutures.put(_ID, defaultNoticeableFuture);
+
+			rpcResponse.execute(_embeddedChannel);
+
+			Assert.assertEquals(1, logRecords.size());
+
+			logRecord = logRecords.remove(0);
+
+			Assert.assertEquals(
+				"Unable to cancel future with ID " + _ID +
+					" because it is already completed",
+				logRecord.getMessage());
 		}
 
-		AsyncBroker<Long, Serializable> asyncBroker =
-			NettyChannelAttributes.getAsyncBroker(_embeddedChannel);
+		// Have futures, without log
 
-		NoticeableFuture<Serializable> noticeableFuture = asyncBroker.post(_id);
+		try (CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+					RPCResponse.class.getName(), Level.OFF)) {
 
-		rpcResponse.execute(_embeddedChannel);
+			AsyncBroker<Long, Serializable> asyncBroker =
+				NettyChannelAttributes.getAsyncBroker(_embeddedChannel);
 
-		if (processException != null) {
-			try {
-				noticeableFuture.get();
-			}
-			catch (ExecutionException ee) {
-				Assert.assertSame(processException, ee.getCause());
-			}
-		}
-		else {
-			Assert.assertSame(result, noticeableFuture.get());
+			NoticeableFuture<Serializable> noticeableFuture = asyncBroker.post(
+				_ID);
+
+			rpcResponse.execute(_embeddedChannel);
+
+			Assert.assertTrue(noticeableFuture.isCancelled());
+
+			DefaultNoticeableFuture<Serializable> defaultNoticeableFuture =
+				new DefaultNoticeableFuture<>();
+
+			defaultNoticeableFuture.cancel(true);
+
+			ConcurrentMap<Long, DefaultNoticeableFuture<Serializable>>
+				defaultNoticeableFutures = ReflectionTestUtil.getFieldValue(
+					asyncBroker, "_defaultNoticeableFutures");
+
+			defaultNoticeableFutures.put(_ID, defaultNoticeableFuture);
+
+			rpcResponse.execute(_embeddedChannel);
 		}
 	}
 
+	private static final long _ID = System.currentTimeMillis();
+
+	private static final String _RESULT = "This is the result.";
+
 	private final EmbeddedChannel _embeddedChannel =
 		NettyTestUtil.createEmptyEmbeddedChannel();
-	private final ProcessException _exception = new ProcessException(
-		"This is the exception.");
-	private final long _id = System.currentTimeMillis();
-	private final String _result = "This is the result.";
+	private final Throwable _throwable = new Throwable(
+		"This is the throwable.");
 
 }

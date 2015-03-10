@@ -91,10 +91,10 @@ if (layout != null) {
 						handles: Liferay.Data.PORTLET_TOUCH_DRAG_HANDLE_SELECTOR || ['.portlet-title-text'],
 					</c:when>
 					<c:when test="<%= !themeDisplay.isFreeformLayout() %>">
-						handles: ['.portlet-title', '.portlet-title-default'],
+						handles: Liferay.Data.PORTLET_DRAG_HANDLE_SELECTOR || ['.portlet-title-default', '.portlet-topper'],
 					</c:when>
 					<c:otherwise>
-						handles: ['.portlet-header-bar', '.portlet-title-default', '.portlet-topper'],
+						handles: Liferay.Data.PORTLET_FREEFORM_DRAG_HANDLE_SELECTOR || ['.portlet-header-bar', '.portlet-title-default', '.portlet-topper'],
 					</c:otherwise>
 				</c:choose>
 
@@ -196,7 +196,7 @@ if (layout != null) {
 					List<Portlet> companyPortlets = PortletLocalServiceUtil.getPortlets(themeDisplay.getCompanyId());
 
 					for (Portlet portlet : companyPortlets) {
-						if (portlet.isAjaxable() || (portlet.isActive() && portlet.isReady() && !portlet.isUndeployedPortlet() && !portlet.isSinglePageApplication())) {
+						if (portlet.isActive() && portlet.isReady() && !portlet.isUndeployedPortlet() && !portlet.isSinglePageApplication()) {
 					%>
 
 							Liferay.Surface.blacklist.route['<%= portlet.getPortletId() %>'] = true;

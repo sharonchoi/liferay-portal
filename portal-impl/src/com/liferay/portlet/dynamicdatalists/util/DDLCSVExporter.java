@@ -24,11 +24,15 @@ import com.liferay.portlet.dynamicdatalists.model.DDLRecord;
 import com.liferay.portlet.dynamicdatalists.model.DDLRecordVersion;
 import com.liferay.portlet.dynamicdatalists.service.DDLRecordLocalServiceUtil;
 import com.liferay.portlet.dynamicdatamapping.model.DDMFormField;
+import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
 import com.liferay.portlet.dynamicdatamapping.model.LocalizedValue;
+import com.liferay.portlet.dynamicdatamapping.storage.DDMFormValues;
 import com.liferay.portlet.dynamicdatamapping.storage.Field;
 import com.liferay.portlet.dynamicdatamapping.storage.Fields;
 import com.liferay.portlet.dynamicdatamapping.storage.StorageEngineUtil;
+import com.liferay.portlet.dynamicdatamapping.util.DDMFormValuesToFieldsConverterUtil;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -45,7 +49,9 @@ public class DDLCSVExporter extends BaseDDLExporter {
 
 		StringBundler sb = new StringBundler();
 
-		List<DDMFormField> ddmFormFields = getDDMFormFields(recordSetId);
+		DDMStructure ddmStructure = getDDMStructure(recordSetId);
+
+		List<DDMFormField> ddmFormFields = getDDMFormFields(ddmStructure);
 
 		for (DDMFormField ddmFormField : ddmFormFields) {
 			LocalizedValue label = ddmFormField.getLabel();
@@ -60,11 +66,18 @@ public class DDLCSVExporter extends BaseDDLExporter {
 		List<DDLRecord> records = DDLRecordLocalServiceUtil.getRecords(
 			recordSetId, status, start, end, orderByComparator);
 
-		for (DDLRecord record : records) {
+		Iterator<DDLRecord> iterator = records.iterator();
+
+		while (iterator.hasNext()) {
+			DDLRecord record = iterator.next();
+
 			DDLRecordVersion recordVersion = record.getRecordVersion();
 
-			Fields fields = StorageEngineUtil.getFields(
+			DDMFormValues ddmFormValues = StorageEngineUtil.getDDMFormValues(
 				recordVersion.getDDMStorageId());
+
+			Fields fields = DDMFormValuesToFieldsConverterUtil.convert(
+				ddmStructure, ddmFormValues);
 
 			for (DDMFormField ddmFormField : ddmFormFields) {
 				String name = ddmFormField.getName();
@@ -81,7 +94,10 @@ public class DDLCSVExporter extends BaseDDLExporter {
 			}
 
 			sb.append(getStatusMessage(recordVersion.getStatus()));
-			sb.append(StringPool.NEW_LINE);
+
+			if (iterator.hasNext()) {
+				sb.append(StringPool.NEW_LINE);
+			}
 		}
 
 		String csv = sb.toString();

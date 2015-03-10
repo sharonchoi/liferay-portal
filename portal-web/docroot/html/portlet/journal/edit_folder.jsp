@@ -19,7 +19,7 @@
 <%
 String redirect = ParamUtil.getString(request, "redirect");
 
-JournalFolder folder = (JournalFolder)request.getAttribute(WebKeys.JOURNAL_FOLDER);
+JournalFolder folder = ActionUtil.getFolder(request);
 
 long folderId = BeanParamUtil.getLong(folder, request, "folderId");
 
@@ -38,9 +38,7 @@ if (workflowEnabled) {
 }
 %>
 
-<portlet:actionURL var="editFolderURL">
-	<portlet:param name="struts_action" value="/journal/edit_folder" />
-</portlet:actionURL>
+<portlet:actionURL name='<%= rootFolder ? "updateWorkflowDefinitions" : ((folder == null) ? "addFolder" : "updateFolder") %>' var="editFolderURL" />
 
 <liferay-util:buffer var="removeDDMStructureIcon">
 	<liferay-ui:icon
@@ -51,7 +49,6 @@ if (workflowEnabled) {
 </liferay-util:buffer>
 
 <aui:form action="<%= editFolderURL %>" method="post" name="fm">
-	<aui:input name="<%= Constants.CMD %>" type="hidden" value='<%= rootFolder ? "updateWorkflowDefinitions" : ((folder == null) ? Constants.ADD : Constants.UPDATE) %>' />
 	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 	<aui:input name="folderId" type="hidden" value="<%= folderId %>" />
 	<aui:input name="parentFolderId" type="hidden" value="<%= parentFolderId %>" />
@@ -59,7 +56,7 @@ if (workflowEnabled) {
 	<liferay-ui:header
 		backURL="<%= redirect %>"
 		localizeTitle="<%= (folder == null) %>"
-		title='<%= (folder == null) ? "new-folder" : folder.getName() %>'
+		title='<%= rootFolder ? "home" : ((folder == null) ? "new-folder" : folder.getName()) %>'
 	/>
 
 	<liferay-ui:error exception="<%= DuplicateFolderNameException.class %>" message="please-enter-a-unique-folder-name" />
@@ -87,8 +84,8 @@ if (workflowEnabled) {
 
 					<aui:button name="selecFolderButton" value="select" />
 
-					<aui:script use="aui-base">
-						A.one('#<portlet:namespace />selecFolderButton').on(
+					<aui:script>
+						AUI.$('#<portlet:namespace />selecFolderButton').on(
 							'click',
 							function(event) {
 								Liferay.Util.selectEntity(
@@ -102,7 +99,7 @@ if (workflowEnabled) {
 										title: '<liferay-ui:message arguments="folder" key="select-x" />',
 
 										<portlet:renderURL var="selectFolderURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
-											<portlet:param name="struts_action" value="/journal/select_folder" />
+											<portlet:param name="mvcPath" value="/html/portletjournal/select_folder.jsp" />
 											<portlet:param name="folderId" value="<%= String.valueOf(parentFolderId) %>" />
 										</portlet:renderURL>
 
@@ -124,7 +121,7 @@ if (workflowEnabled) {
 					</aui:script>
 
 					<%
-					String taglibRemoveFolder = "Liferay.Util.removeFolderSelection('parentFolderId', 'parentFolderName', '" + renderResponse.getNamespace() + "');";
+					String taglibRemoveFolder = "Liferay.Util.removeEntitySelection('parentFolderId', 'parentFolderName', this, '" + renderResponse.getNamespace() + "');";
 					%>
 
 					<aui:button disabled="<%= (parentFolderId <= 0) %>" name="removeFolderButton" onClick="<%= taglibRemoveFolder %>" value="remove" />
@@ -222,7 +219,7 @@ if (workflowEnabled) {
 												}
 											%>
 
-												<aui:option label='<%= workflowDefinition.getName() + " (" + LanguageUtil.format(locale, "version-x", workflowDefinition.getVersion(), false) + ")" %>' selected="<%= selected %>" value="<%= workflowDefinition.getName() + StringPool.AT + workflowDefinition.getVersion() %>" />
+												<aui:option label='<%= HtmlUtil.escape(workflowDefinition.getName()) + " (" + LanguageUtil.format(locale, "version-x", workflowDefinition.getVersion(), false) + ")" %>' selected="<%= selected %>" value="<%= HtmlUtil.escapeAttribute(workflowDefinition.getName()) + StringPool.AT + workflowDefinition.getVersion() %>" />
 
 											<%
 											}
@@ -282,7 +279,7 @@ if (workflowEnabled) {
 								}
 							%>
 
-								<aui:option label='<%= workflowDefinition.getName() + " (" + LanguageUtil.format(locale, "version-x", workflowDefinition.getVersion(), false) + ")" %>' selected="<%= selected %>" value="<%= workflowDefinition.getName() + StringPool.AT + workflowDefinition.getVersion() %>" />
+								<aui:option label='<%= HtmlUtil.escape(workflowDefinition.getName()) + " (" + LanguageUtil.format(locale, "version-x", workflowDefinition.getVersion(), false) + ")" %>' selected="<%= selected %>" value="<%= HtmlUtil.escapeAttribute(workflowDefinition.getName()) + StringPool.AT + workflowDefinition.getVersion() %>" />
 
 							<%
 							}
@@ -319,7 +316,7 @@ if (workflowEnabled) {
 			for (WorkflowDefinition workflowDefinition : workflowDefinitions) {
 			%>
 
-				<aui:option label='<%= workflowDefinition.getName() + " (" + LanguageUtil.format(locale, "version-x", workflowDefinition.getVersion(), false) + ")" %>' selected="<% selected %>" value="<%= workflowDefinition.getName() + StringPool.AT + workflowDefinition.getVersion() %>" />
+				<aui:option label='<%= HtmlUtil.escape(workflowDefinition.getName()) + " (" + LanguageUtil.format(locale, "version-x", workflowDefinition.getVersion(), false) + ")" %>' selected="<% selected %>" value="<%= HtmlUtil.escapeAttribute(workflowDefinition.getName()) + StringPool.AT + workflowDefinition.getVersion() %>" />
 
 			<%
 			}
@@ -339,7 +336,7 @@ if (workflowEnabled) {
 				},
 				eventName: '<portlet:namespace />selectStructure',
 				groupId: <%= scopeGroupId %>,
-				refererPortletName: '<%= PortletKeys.JOURNAL_CONTENT %>',
+				refererPortletName: '<%= PortletKeys.JOURNAL %>',
 				showAncestorScopes: true,
 				struts_action: '/dynamic_data_mapping/select_structure',
 				title: '<%= UnicodeLanguageUtil.get(request, "structures") %>'
@@ -354,8 +351,6 @@ if (workflowEnabled) {
 		window,
 		'<portlet:namespace />selectStructure',
 		function(ddmStructureId, ddmStructureName) {
-			var A = AUI();
-
 			var searchContainer = Liferay.SearchContainer.get('<portlet:namespace />ddmStructuresSearchContainer');
 
 			var ddmStructureLink = '<a class="modify-link" data-rowId="' + ddmStructureId + '" href="javascript:;"><%= UnicodeFormatter.toString(removeDDMStructureIcon) %></a>';
@@ -380,7 +375,10 @@ if (workflowEnabled) {
 
 	Liferay.Util.toggleRadio('<portlet:namespace />restrictionTypeInherit', '', ['<portlet:namespace />restrictionTypeDefinedDiv', '<portlet:namespace />restrictionTypeWorkflowDiv']);
 	Liferay.Util.toggleRadio('<portlet:namespace />restrictionTypeDefined', '<portlet:namespace />restrictionTypeDefinedDiv', '<portlet:namespace />restrictionTypeWorkflowDiv');
-	Liferay.Util.toggleRadio('<portlet:namespace />restrictionTypeWorkflow', '<portlet:namespace />restrictionTypeWorkflowDiv', '<portlet:namespace />restrictionTypeDefinedDiv');
+
+	<c:if test="<%= !rootFolder %>">
+		Liferay.Util.toggleRadio('<portlet:namespace />restrictionTypeWorkflow', '<portlet:namespace />restrictionTypeWorkflowDiv', '<portlet:namespace />restrictionTypeDefinedDiv');
+	</c:if>
 </aui:script>
 
 <aui:script use="liferay-search-container">
@@ -389,8 +387,6 @@ if (workflowEnabled) {
 	searchContainer.get('contentBox').delegate(
 		'click',
 		function(event) {
-			var A = AUI();
-
 			var link = event.currentTarget;
 
 			var tr = link.ancestor('tr');

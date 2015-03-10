@@ -14,38 +14,55 @@
 
 package com.liferay.portlet.messageboards.subscriptions;
 
-import com.liferay.portal.kernel.test.ExecutionTestListeners;
-import com.liferay.portal.test.Sync;
-import com.liferay.portal.test.SynchronousMailExecutionTestListener;
-import com.liferay.portal.test.listeners.MainServletExecutionTestListener;
-import com.liferay.portal.test.runners.LiferayIntegrationJUnitTestRunner;
+import com.liferay.portal.kernel.test.rule.AggregateTestRule;
+import com.liferay.portal.kernel.test.rule.Sync;
+import com.liferay.portal.kernel.test.rule.SynchronousMailTestRule;
+import com.liferay.portal.kernel.test.util.RandomTestUtil;
+import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
+import com.liferay.portal.kernel.util.Constants;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
+import com.liferay.portal.test.rule.MainServletTestRule;
 import com.liferay.portal.util.PortletKeys;
-import com.liferay.portal.util.subscriptions.BaseSubscriptionLocalizedContentTestCase;
-import com.liferay.portal.util.test.TestPropsValues;
 import com.liferay.portlet.messageboards.model.MBMessage;
 import com.liferay.portlet.messageboards.service.MBCategoryLocalServiceUtil;
+import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
 import com.liferay.portlet.messageboards.util.MBConstants;
 import com.liferay.portlet.messageboards.util.test.MBTestUtil;
+import com.liferay.portlet.subscriptions.test.BaseSubscriptionLocalizedContentTestCase;
 
-import org.junit.runner.RunWith;
+import org.junit.ClassRule;
+import org.junit.Rule;
 
 /**
  * @author Roberto Díaz
  */
-@ExecutionTestListeners(
-	listeners = {
-		MainServletExecutionTestListener.class,
-		SynchronousMailExecutionTestListener.class
-	})
-@RunWith(LiferayIntegrationJUnitTestRunner.class)
 @Sync
 public class MBSubscriptionLocalizedContentTest
 	extends BaseSubscriptionLocalizedContentTestCase {
 
+	@ClassRule
+	@Rule
+	public static final AggregateTestRule aggregateTestRule =
+		new AggregateTestRule(
+			new LiferayIntegrationTestRule(), MainServletTestRule.INSTANCE,
+			SynchronousMailTestRule.INSTANCE);
+
 	@Override
-	protected long addBaseModel(long containerModelId) throws Exception {
-		MBMessage message = MBTestUtil.addMessage(
-			group.getGroupId(), containerModelId, true);
+	protected long addBaseModel(long userId, long containerModelId)
+		throws Exception {
+
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				group.getGroupId(), userId);
+
+		MBTestUtil.populateNotificationsServiceContext(
+			serviceContext, Constants.ADD);
+
+		MBMessage message = MBMessageLocalServiceUtil.addMessage(
+			userId, RandomTestUtil.randomString(), group.getGroupId(),
+			containerModelId, RandomTestUtil.randomString(),
+			RandomTestUtil.randomString(), serviceContext);
 
 		return message.getMessageId();
 	}
@@ -55,7 +72,7 @@ public class MBSubscriptionLocalizedContentTest
 		throws Exception {
 
 		MBCategoryLocalServiceUtil.subscribeCategory(
-			TestPropsValues.getUserId(), group.getGroupId(), containerModelId);
+			user.getUserId(), group.getGroupId(), containerModelId);
 	}
 
 	@Override
@@ -69,8 +86,31 @@ public class MBSubscriptionLocalizedContentTest
 	}
 
 	@Override
-	protected String getSubscriptionBodyPreferenceName() throws Exception {
+	protected String getSubscriptionAddedBodyPreferenceName() {
 		return "emailMessageAddedBody";
+	}
+
+	@Override
+	protected String getSubscriptionUpdatedBodyPreferenceName() {
+		return "emailMessageUpdatedBody";
+	}
+
+	@Override
+	protected void updateBaseModel(long userId, long baseModelId)
+		throws Exception {
+
+		MBMessage message = MBMessageLocalServiceUtil.getMessage(baseModelId);
+
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				message.getGroupId(), userId);
+
+		MBTestUtil.populateNotificationsServiceContext(
+			serviceContext, Constants.UPDATE);
+
+		MBMessageLocalServiceUtil.updateMessage(
+			userId, message.getMessageId(), RandomTestUtil.randomString(),
+			serviceContext);
 	}
 
 }

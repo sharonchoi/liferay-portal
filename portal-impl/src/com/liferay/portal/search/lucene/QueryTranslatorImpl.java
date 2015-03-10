@@ -37,7 +37,7 @@ import org.apache.lucene.search.WildcardQuery;
  * @author Brian Wing Shun Chan
  */
 @DoPrivileged
-public class QueryTranslatorImpl implements QueryTranslator {
+public class QueryTranslatorImpl implements QueryTranslator<Object> {
 
 	@Override
 	public Object translate(Query query) throws ParseException {
@@ -134,7 +134,8 @@ public class QueryTranslatorImpl implements QueryTranslator {
 
 	private static final java.lang.reflect.Field _TEXT_FIELD;
 
-	private static Log _log = LogFactoryUtil.getLog(QueryTranslatorImpl.class);
+	private static final Log _log = LogFactoryUtil.getLog(
+		QueryTranslatorImpl.class);
 
 	static {
 		try {

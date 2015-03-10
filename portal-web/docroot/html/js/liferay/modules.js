@@ -44,6 +44,20 @@
 				base: PATH_JAVASCRIPT + '/liferay/',
 				combine: COMBINE,
 				modules: {
+					'liferay-alloy-editor': {
+						path: 'alloyeditor.js',
+						requires: [
+							'alloy-editor',
+							'liferay-portlet-base'
+						]
+					},
+					'liferay-alloy-editor-source': {
+						path: 'alloyeditor_source.js',
+						requires: [
+							'liferay-fullscreen-source-editor',
+							'liferay-source-editor'
+						]
+					},
 					'liferay-app-view-move': {
 						path: 'app_view_move.js',
 						plugins: {
@@ -63,8 +77,7 @@
 							'dd-drop',
 							'dd-proxy',
 							'liferay-history-manager',
-							'liferay-portlet-base',
-							'liferay-util-list-fields'
+							'liferay-portlet-base'
 						]
 					},
 					'liferay-app-view-move-touch': {
@@ -78,8 +91,7 @@
 						requires: [
 							'liferay-app-view-move',
 							'liferay-history-manager',
-							'liferay-portlet-base',
-							'liferay-util-list-fields'
+							'liferay-portlet-base'
 						]
 					},
 					'liferay-asset-categories-selector': {
@@ -188,6 +200,22 @@
 						path: 'browser_selectors.js',
 						requires: ['yui-base']
 					},
+					'liferay-cover-cropper': {
+						path: 'cover_cropper.js',
+						requires: [
+							'aui-base',
+							'dd-constrain',
+							'dd-drag',
+							'liferay-crop-region',
+							'plugin'
+						]
+					},
+					'liferay-crop-region': {
+						path: 'crop_region.js',
+						requires: [
+							'aui-base'
+						]
+					},
 					'liferay-ddm-form': {
 						path: 'ddm_form.js',
 						requires: [
@@ -195,6 +223,7 @@
 							'aui-datatype',
 							'aui-io-request',
 							'aui-parse-content',
+							'liferay-map-base',
 							'liferay-translation-manager'
 						]
 					},
@@ -336,6 +365,15 @@
 							'aui-base'
 						]
 					},
+					'liferay-editor-image-uploader': {
+						path: 'editor_image_uploader.js',
+						requires: [
+							'aui-alert',
+							'aui-base',
+							'aui-progressbar',
+							'uploader'
+						]
+					},
 					'liferay-form': {
 						path: 'form.js',
 						requires: [
@@ -355,6 +393,12 @@
 						requires: [
 							'liferay-form',
 							'plugin'
+						]
+					},
+					'liferay-fullscreen-source-editor': {
+						path: 'fullscreen_source_editor.js',
+						requires: [
+							'liferay-source-editor'
 						]
 					},
 					'liferay-history': {
@@ -521,6 +565,7 @@
 						requires: [
 							'aui-image-cropper',
 							'aui-io-request',
+							'liferay-crop-region',
 							'liferay-portlet-base',
 							'liferay-storage-formatter'
 						]
@@ -539,6 +584,26 @@
 							'aui-io-request',
 							'aui-modal',
 							'aui-tabview'
+						]
+					},
+					'liferay-map-base': {
+						path: 'map_base.js',
+						requires: [
+							'aui-base'
+						]
+					},
+					'liferay-map-google': {
+						path: 'map_google.js',
+						requires: [
+							'liferay-map-base'
+						]
+					},
+					'liferay-map-openstreet': {
+						path: 'map_openstreet.js',
+						requires: [
+							'jsonp',
+							'liferay-map-base',
+							'timers'
 						]
 					},
 					'liferay-menu': {
@@ -760,6 +825,12 @@
 							'aui-node'
 						]
 					},
+					'liferay-source-editor': {
+						path: 'source_editor.js',
+						requires: [
+							'aui-ace-editor'
+						]
+					},
 					'liferay-storage-formatter': {
 						path: 'storage_formatter.js',
 						requires: [
@@ -838,12 +909,6 @@
 							'liferay-portlet-base',
 							'liferay-storage-formatter',
 							'uploader'
-						]
-					},
-					'liferay-util-list-fields': {
-						path: 'util_list_fields.js',
-						requires: [
-							'aui-base'
 						]
 					},
 					'liferay-util-window': {

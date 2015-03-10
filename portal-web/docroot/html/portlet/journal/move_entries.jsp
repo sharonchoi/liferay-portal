@@ -21,7 +21,7 @@ String redirect = ParamUtil.getString(request, "redirect");
 
 long newFolderId = ParamUtil.getLong(request, "newFolderId");
 
-List<JournalFolder> folders = (List<JournalFolder>)request.getAttribute(WebKeys.JOURNAL_FOLDERS);
+List<JournalFolder> folders = ActionUtil.getFolders(request);
 
 List<JournalFolder> invalidMoveFolders = new ArrayList<JournalFolder>();
 List<JournalFolder> validMoveFolders = new ArrayList<JournalFolder>();
@@ -37,7 +37,7 @@ for (JournalFolder curFolder : folders) {
 	}
 }
 
-JournalArticle article = (JournalArticle)request.getAttribute(WebKeys.JOURNAL_ARTICLE);
+JournalArticle article = ActionUtil.getArticle(request);
 
 List<JournalArticle> articles = null;
 
@@ -47,7 +47,7 @@ if (article != null) {
 	articles.add(article);
 }
 else {
-	articles = (List<JournalArticle>)request.getAttribute(WebKeys.JOURNAL_ARTICLES);
+	articles = ActionUtil.getArticles(request);
 }
 
 List<JournalArticle> validMoveArticles = new ArrayList<JournalArticle>();
@@ -65,12 +65,9 @@ for (JournalArticle curArticle : articles) {
 }
 %>
 
-<portlet:actionURL var="moveArticleURL">
-	<portlet:param name="struts_action" value="/journal/move_entry" />
-</portlet:actionURL>
+<portlet:actionURL name="moveEntries" var="moveArticleURL" />
 
-<aui:form action="<%= moveArticleURL %>" enctype="multipart/form-data" method="post" name="fm" onSubmit='<%= "event.preventDefault(); " + renderResponse.getNamespace() + "saveArticle(false);" %>'>
-	<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= Constants.MOVE %>" />
+<aui:form action="<%= moveArticleURL %>" enctype="multipart/form-data" method="post" name="fm" onSubmit='<%= "event.preventDefault(); " + renderResponse.getNamespace() + "saveArticle();" %>'>
 	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 	<aui:input name="newFolderId" type="hidden" value="<%= newFolderId %>" />
 
@@ -248,8 +245,8 @@ for (JournalArticle curArticle : articles) {
 	</aui:fieldset>
 </aui:form>
 
-<aui:script use="aui-base">
-	A.one('#<portlet:namespace />selectFolderButton').on(
+<aui:script>
+	AUI.$('#<portlet:namespace />selectFolderButton').on(
 		'click',
 		function(event) {
 			Liferay.Util.selectEntity(
@@ -264,7 +261,7 @@ for (JournalArticle curArticle : articles) {
 					title: '<liferay-ui:message arguments="folder" key="select-x" />',
 
 					<portlet:renderURL var="selectFolderURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
-						<portlet:param name="struts_action" value="/journal/select_folder" />
+						<portlet:param name="mvcPath" value="/html/portlet/journal/select_folder.jsp" />
 						<portlet:param name="folderId" value="<%= String.valueOf(newFolderId) %>" />
 					</portlet:renderURL>
 
@@ -283,9 +280,7 @@ for (JournalArticle curArticle : articles) {
 			);
 		}
 	);
-</aui:script>
 
-<aui:script>
 	function <portlet:namespace />saveArticle() {
 		submitForm(document.<portlet:namespace />fm);
 	}
