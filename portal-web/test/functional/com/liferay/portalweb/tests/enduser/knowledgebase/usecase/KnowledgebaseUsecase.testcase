@@ -111,6 +111,7 @@
 		</execute>
 
 		<execute macro="KBArticle#importCP">
+			<var name="applyNumericalPrefix" value="true" />
 			<var name="kbZipFile" value="KBArticlesWithMetadata.zip" />
 		</execute>
 
@@ -884,6 +885,7 @@
 		</execute>
 
 		<execute macro="KBArticle#importCP">
+			<var name="applyNumericalPrefix" value="true" />
 			<var name="kbZipFile" value="KBArticlesWithMarkdown.zip" />
 		</execute>
 
@@ -892,16 +894,17 @@
 		</execute>
 
 		<execute macro="KBArticle#gotoKBArticleViaKBDisplayHierarchyNavigationPG">
-			<var name="kbArticleTitle" value="Knowledge Base Article1 Title" />
+			<var name="kbArticleTitle" value="Learning Paths" />
 		</execute>
 
 		<execute macro="KBArticle#viewHierarchyViaKBDisplayPG">
 			<var name="kbArticle2ChildArticleTitle1" value="Developing Applications with Liferay Developer Studio" />
-			<var name="kbArticle2ChildArticleTitle2" value="Developing Apps with Liferay IDE" />
-			<var name="kbArticle2ChildArticleTitle3" value="Writing Your First Liferay Application" />
+			<var name="kbArticle3ChildArticleTitle1" value="Configuring Your Permissions Scheme" />
+			<var name="kbArticle4ChildArticleTitle1" value="Modifying Your Service Layer" />
 			<var name="kbArticleTitle1" value="Learning Paths" />
 			<var name="kbArticleTitle2" value="Beginning Liferay Development" />
-			<var name="kbArticleTitle3" value="Writing a Data-Driven Application" />
+			<var name="kbArticleTitle3" value="Setting Permissions" />
+			<var name="kbArticleTitle4" value="Creating Entity Actions" />
 		</execute>
 
 		<execute macro="KBArticle#gotoKBChildArticleViaKBDisplayHierarchyNavigationPG">
@@ -933,6 +936,7 @@
 		</execute>
 
 		<execute macro="KBArticle#importCP">
+			<var name="applyNumericalPrefix" value="true" />
 			<var name="kbZipFile" value="KBArticlesWithMetadata.zip" />
 		</execute>
 
@@ -941,7 +945,7 @@
 		</execute>
 
 		<execute macro="KBArticle#gotoKBArticleViaKBDisplayHierarchyNavigationPG">
-			<var name="kbArticleTitle" value="Knowledge Base Article1 Title" />
+			<var name="kbArticleTitle" value="Application Display Templates" />
 		</execute>
 
 		<execute macro="KBArticle#viewHierarchyViaKBDisplayPG">
@@ -971,6 +975,7 @@
 		</execute>
 
 		<execute macro="KBArticle#importCP">
+			<var name="applyNumericalPrefix" value="true" />
 			<var name="kbZipFile" value="KBArticlesWithMetadata.zip" />
 		</execute>
 
@@ -1029,6 +1034,7 @@
 		</execute>
 
 		<execute macro="KBArticle#importCP">
+			<var name="applyNumericalPrefix" value="true" />
 			<var name="kbZipFile" value="KBArticlesWithMetadata.zip" />
 		</execute>
 
