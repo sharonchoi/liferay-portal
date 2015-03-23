@@ -570,6 +570,17 @@
 		<execute function="AssertClick" locator1="CPKnowledgebaseadmin#ADD_MENULIST_IMPORT" value1="Import" />
 
 		<execute function="UploadCommonFile" locator1="CPKnowledgebaseadminUploadZipFile#FILE_FIELD" value1="${kbZipFile}" />
+
+		<if>
+			<equals arg1="${applyNumericalPrefix}" arg2="true" />
+			<then>
+				<execute function="Check" locator1="CPKnowledgebaseadminUploadZipFile#PRIORITIZATION_STRATEGY_CHECKBOX" />
+			</then>
+			<else>
+				<execute function="Uncheck" locator1="CPKnowledgebaseadminUploadZipFile#PRIORITIZATION_STRATEGY_CHECKBOX" />
+			</else>
+		</if>
+
 		<execute function="AssertClick" locator1="CPKnowledgebaseadminUploadZipFile#SAVE_BUTTON" value1="Save" />
 
 		<execute function="AssertTextEquals#assertPartialText" locator1="CPKnowledgebaseadmin#SUCCESS_MESSAGE" value1="Your request completed successfully." />
@@ -1088,7 +1099,7 @@
 			<then>
 				<var name="key_kbArticleTitle" value="${kbArticleTitle3}" />
 
-				<execute function="Click" locator1="PGKnowledgebasedisplay#ARTICLE_NAVIGATION" value1="${kbArticleTitle2}" />
+				<execute function="Click" locator1="PGKnowledgebasedisplay#ARTICLE_NAVIGATION" value1="${kbArticleTitle3}" />
 				<execute function="AssertTextEquals" locator1="PGKnowledgebasedisplay#ARTICLE_NAVIGATION" value1="${kbArticleTitle3}" />
 
 				<if>
@@ -1118,6 +1129,46 @@
 						<var name="key_kbChildArticleTitle" value="${kbArticle3ChildArticleTitle3}" />
 
 						<execute function="AssertTextEquals" locator1="PGKnowledgebasedisplay#ARTICLE_NAVIGATION_CHILD" value1="${kbArticle3ChildArticleTitle3}" />
+					</then>
+				</if>
+			</then>
+		</if>
+
+		<if>
+			<isset var="kbArticleTitle4" />
+			<then>
+				<var name="key_kbArticleTitle" value="${kbArticleTitle4}" />
+
+				<execute function="Click" locator1="PGKnowledgebasedisplay#ARTICLE_NAVIGATION" value1="${kbArticleTitle4}" />
+				<execute function="AssertTextEquals" locator1="PGKnowledgebasedisplay#ARTICLE_NAVIGATION" value1="${kbArticleTitle4}" />
+
+				<if>
+					<isset var="kbArticle4ChildArticleTitle1" />
+					<then>
+						<var name="key_kbArticleTitle" value="${kbArticleTitle4}" />
+						<var name="key_kbChildArticleTitle" value="${kbArticle4ChildArticleTitle1}" />
+
+						<execute function="AssertTextEquals" locator1="PGKnowledgebasedisplay#ARTICLE_NAVIGATION_CHILD" value1="${kbArticle4ChildArticleTitle1}" />
+					</then>
+				</if>
+
+				<if>
+					<isset var="kbArticle4ChildArticleTitle2" />
+					<then>
+						<var name="key_kbArticleTitle" value="${kbArticleTitle4}" />
+						<var name="key_kbChildArticleTitle" value="${kbArticle4ChildArticleTitle2}" />
+
+						<execute function="AssertTextEquals" locator1="PGKnowledgebasedisplay#ARTICLE_NAVIGATION_CHILD" value1="${kbArticle4ChildArticleTitle2}" />
+					</then>
+				</if>
+
+				<if>
+					<isset var="kbArticle4ChildArticleTitle3" />
+					<then>
+						<var name="key_kbArticleTitle" value="${kbArticleTitle4}" />
+						<var name="key_kbChildArticleTitle" value="${kbArticle4ChildArticleTitle3}" />
+
+						<execute function="AssertTextEquals" locator1="PGKnowledgebasedisplay#ARTICLE_NAVIGATION_CHILD" value1="${kbArticle4ChildArticleTitle3}" />
 					</then>
 				</if>
 			</then>

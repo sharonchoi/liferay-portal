@@ -700,6 +700,120 @@
 		</execute>
 	</command>
 
+	<command name="ViewImportedKBArticlesPrioritization" priority="5">
+		<execute macro="Page#gotoContentCP">
+			<var name="portletName" value="Knowledge Base" />
+		</execute>
+
+		<execute macro="KBArticle#importCP">
+			<var name="applyNumericalPrefix" value="true" />
+			<var name="kbZipFile" value="KBArticlesWithMarkdown.zip" />
+		</execute>
+
+		<execute macro="KBArticle#viewKBArticlePriorityCP">
+			<var name="kbArticleTitle" value="Learning Paths" />
+			<var name="kbPriority" value="1.0" />
+		</execute>
+
+		<execute macro="KBArticle#viewKBArticlePriorityCP">
+			<var name="kbArticleTitle" value="Beginning Liferay Development" />
+			<var name="kbPriority" value="1.0" />
+		</execute>
+
+		<execute macro="KBArticle#viewKBArticlePriorityCP">
+			<var name="kbArticleTitle" value="Setting Permissions" />
+			<var name="kbPriority" value="2.0" />
+		</execute>
+
+		<execute macro="KBArticle#viewKBArticlePriorityCP">
+			<var name="kbArticleTitle" value="Creating Entity Actions" />
+			<var name="kbPriority" value="4.0" />
+		</execute>
+
+		<execute macro="KBArticle#importCP">
+			<var name="applyNumericalPrefix" value="true" />
+			<var name="kbZipFile" value="KBArticlesWithMarkdownChangedPriorities.zip" />
+		</execute>
+
+		<execute macro="KBArticle#viewKBArticlePriorityCP">
+			<var name="kbArticleTitle" value="Learning Paths" />
+			<var name="kbPriority" value="1.0" />
+		</execute>
+
+		<execute macro="KBArticle#viewKBArticlePriorityCP">
+			<var name="kbArticleTitle" value="Beginning Liferay Development" />
+			<var name="kbPriority" value="1.0" />
+		</execute>
+
+		<execute macro="KBArticle#viewKBArticlePriorityCP">
+			<var name="kbArticleTitle" value="Creating Entity Actions" />
+			<var name="kbPriority" value="2.0" />
+		</execute>
+
+		<execute macro="KBArticle#viewKBArticlePriorityCP">
+			<var name="kbArticleTitle" value="Setting Permissions" />
+			<var name="kbPriority" value="3.0" />
+		</execute>
+
+		<execute macro="KBArticle#selectAllCP" />
+
+		<execute macro="KBArticle#deleteCP" />
+
+		<execute macro="KBArticle#importCP">
+			<var name="applyNumericalPrefix" value="false" />
+			<var name="kbZipFile" value="KBArticlesWithMarkdown.zip" />
+		</execute>
+
+		<execute macro="KBArticle#viewKBArticlePriorityCP">
+			<var name="kbArticleTitle" value="Learning Paths" />
+			<var name="kbPriority" value="1.0" />
+		</execute>
+
+		<execute macro="KBArticle#viewKBArticlePriorityCP">
+			<var name="kbArticleTitle" value="Beginning Liferay Development" />
+			<var name="kbPriority" value="2.0" />
+		</execute>
+
+		<execute macro="KBArticle#viewKBArticlePriorityCP">
+			<var name="kbArticleTitle" value="Setting Permissions" />
+			<var name="kbPriority" value="3.0" />
+		</execute>
+
+		<execute macro="KBArticle#viewKBArticlePriorityCP">
+			<var name="kbArticleTitle" value="Creating Entity Actions" />
+			<var name="kbPriority" value="4.0" />
+		</execute>
+
+		<execute macro="KBArticle#selectAllCP" />
+
+		<execute macro="KBArticle#deleteCP" />
+
+		<execute macro="KBArticle#importCP">
+			<var name="applyNumericalPrefix" value="false" />
+			<var name="kbZipFile" value="KBArticlesWithNoPriorityPrefix.zip" />
+		</execute>
+
+		<execute macro="KBArticle#viewKBArticlePriorityCP">
+			<var name="kbArticleTitle" value="Learning Paths" />
+			<var name="kbPriority" value="1.0" />
+		</execute>
+
+		<execute macro="KBArticle#viewKBArticlePriorityCP">
+			<var name="kbArticleTitle" value="Beginning Liferay Development" />
+			<var name="kbPriority" value="2.0" />
+		</execute>
+
+		<execute macro="KBArticle#viewKBArticlePriorityCP">
+			<var name="kbArticleTitle" value="Creating Entity Actions" />
+			<var name="kbPriority" value="3.0" />
+		</execute>
+
+		<execute macro="KBArticle#viewKBArticlePriorityCP">
+			<var name="kbArticleTitle" value="Setting Permissions" />
+			<var name="kbPriority" value="4.0" />
+		</execute>
+	</command>
+
 	<command name="ViewKBArticlePriority" priority="5">
 		<var name="kbArticleCounterList" value="1,2" />
 
