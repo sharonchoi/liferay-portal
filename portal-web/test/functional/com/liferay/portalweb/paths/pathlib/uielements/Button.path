@@ -74,13 +74,18 @@
 	<td></td>
 </tr>
 <tr>
+	<td>OK</td>
+	<td>//button[.='OK']</td>
+	<td></td>
+</tr>
+<tr>
 	<td>PREVIEW</td>
 	<td>//button[contains(.,'Preview')]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>OK</td>
-	<td>//button[.='OK']</td>
+	<td>POST</td>
+	<td>//button[contains(.,'Post')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -96,11 +101,6 @@
 <tr>
 	<td>RESTORE</td>
 	<td>//button[contains(.,'Restore')]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>SUBMIT_FOR_PUBLICATION</td>
-	<td>//button[contains(.,'Submit for Publication')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -134,8 +134,23 @@
 	<td></td>
 </tr>
 <tr>
+	<td>SELECT_SCOPE</td>
+	<td>//div[contains (@class,'btn-group')]/a[@title='Default']</td>
+	<td></td>
+</tr>
+<tr>
 	<td>SEND</td>
 	<td>//button[contains(.,'Send')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>SOURCE</td>
+	<td>//a[@role='button' and (@title='Source')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>SUBMIT_FOR_PUBLICATION</td>
+	<td>//button[contains(.,'Submit for Publication')]</td>
 	<td></td>
 </tr>
 <tr>
