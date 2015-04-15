@@ -1,0 +1,95 @@
+<html>
+<head>
+<title>BlogsEditEntry</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">BlogsEditEntry</td></tr>
+</thead>
+<tbody>
+<tr>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>	
+<tr>
+	<td>CONTENT_TAB</td>
+	<td>//li[contains(@class,'tab')]/a[contains(.,'Content')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>SETTINGS_TAB</td>
+	<td>//li[contains(@class,'tab')]/a[contains(.,'Settings')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>HEADER_IMAGE</td>
+	<td>//div[contains(@class,'image-wrapper')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>CHANGE_PICTURE</td>
+	<td>//button[contains(.,'Change Picture')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>DELETE_PICTURE</td>
+	<td>//button/i[contains(@class,'icon-trash')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>HEADER_CAPTION</td>
+	<td>//div[contains(@id,'CaptionEditor')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>TITLE</td>
+	<td>//div[contains(@id,'titleEditor')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>SUBTITLE</td>
+	<td>//div[contains(@id,'subtitleEditor')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>CONTENT</td>
+	<td>//div[contains(@id,'contentEditor')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>CANCEL</td>
+	<td>//a[contains(@id,'cancelButton')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
+<!--SETTINGS_TAB-->
+<tr>
+	<td>SETTINGS_TAB_ABSTRACT_IMAGE</td>
+	<td>//img[contains(@class,'current-image')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>SETTINGS_TAB_USE_THE_FIRST_400_CHARACTERS_ABSTRACT</td>
+	<td>//label[contains(.,'Use the first 400 characters of the entry content.')]/input[contains(@id,'customAbstract')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>SETTINGS_TAB_CUSTOM_ABSTRACT</td>
+	<td>//label[contains(.,'Custom Abstract')]/input[contains(@id,'customAbstract')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>SETTINGS_TAB_ENABLE_PINGBACKS</td>
+	<td>//label[contains(.,'enabled')]/input[contains(@id,'allowPingbacks')]</td>
+	<td></td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>
