@@ -9,18 +9,13 @@
 </thead>
 <tbody>
 <tr>
-	<td></td>
-	<td></td>
-	<td></td>
-</tr>
-<tr>
 	<td>H1_HEADER</td>
 	<td>//h1[@class='header-title']/span</td>
 	<td></td>
 </tr>
 <tr>
 	<td>H2_HEADER</td>
-	<td>//h2[@class='header-title']/span</td>
+	<td>//h2</td>
 	<td></td>
 </tr>
 <tr>
