@@ -1,5 +1,5 @@
 CPPortalinstances#SUCCESS_MESSAGE|Message#SUCCESS
-CPPortalinstances#ADD_BUTTON|PortalInstances#ADD
+CPPortalinstances#ADD_BUTTON|Button#ADD
 CPPortalinstances#INSTANCE_TABLE_INSTANCE_ID|PortalInstances#INSTANCE_TABLE_INSTANCE_ID
 CPPortalinstances#INSTANCE_TABLE_WEB_ID|PortalInstances#INSTANCE_TABLE_WEB_ID
 CPPortalinstances#INSTANCE_TABLE_VIRTUAL_HOST|PortalInstances#INSTANCE_TABLE_VIRTUAL_HOST
