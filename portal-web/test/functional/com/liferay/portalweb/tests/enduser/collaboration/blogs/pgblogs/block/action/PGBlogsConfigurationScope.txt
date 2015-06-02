@@ -1,2 +1,0 @@
-PGBlogsConfigurationScope#SCOPE_MENULIST|xxxxxxxxxxxxx#xxxxxxxxxxxxx
-PGBlogsConfigurationScope#SCOPE_MENULIST_SELECTION|xxxxxxxxxxxxx#xxxxxxxxxxxxx
