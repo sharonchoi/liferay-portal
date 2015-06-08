@@ -815,9 +815,13 @@
 			<var name="entryTitle" value="${entryTitle}" />
 		</execute>
 
-		<execute macro="BlogsPortlet#viewScopePG">
-			<var name="scopeSelection" value="${scopeSelection}" />
+		<execute macro="BlogsNavigator#gotoConfigurationSetupPG">
+			<var name="portletName" value="Blogs" />
 		</execute>
+
+		<execute macro="BlogsNavigator#gotoConfigurationScopePG" />
+
+		<execute macro="BlogsPortlet#viewScopeSelection" />
 
 		<execute macro="Page#gotoPG">
 			<var name="pageName" value="${pageName}" />
