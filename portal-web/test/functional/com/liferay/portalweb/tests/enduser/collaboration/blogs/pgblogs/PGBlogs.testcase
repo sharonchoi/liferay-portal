@@ -308,7 +308,7 @@
 		</execute>
 
 		<execute macro="Portlet#viewPG">
-			<var name="portletName" value="Blogs" />
+			<var name="portletNameBorderless" value="Blogs" />
 		</execute>
 
 		<execute macro="Page#gotoPG">
@@ -330,7 +330,7 @@
 		</execute>
 
 		<execute macro="Portlet#viewPG">
-			<var name="portletName" value="${portletName2}" />
+			<var name="portletNameBorderless" value="${portletName2}" />
 		</execute>
 
 		<execute macro="BlogsPortlet#configureScopePG">
@@ -356,7 +356,7 @@
 		</execute>
 
 		<execute macro="Portlet#viewPG">
-			<var name="portletName" value="Blogs" />
+			<var name="portletNameBorderless" value="Blogs" />
 		</execute>
 	</command>
 
@@ -775,7 +775,7 @@
 		</execute>
 
 		<execute macro="Portlet#viewPG">
-			<var name="portletName" value="${portletName1}" />
+			<var name="portletNameBorderless" value="${portletName1}" />
 		</execute>
 
 		<execute macro="Page#gotoPG">
@@ -800,7 +800,7 @@
 		</execute>
 
 		<execute macro="Portlet#viewPG">
-			<var name="portletName" value="Blogs" />
+			<var name="portletNameBorderless" value="Blogs" />
 		</execute>
 
 		<execute macro="Blogs#addEntry">
@@ -1597,7 +1597,7 @@
 		</execute>
 
 		<execute macro="Portlet#viewPG">
-			<var name="portletName" value="${portletName2}" />
+			<var name="portletNameBorderless" value="Blogs" />
 		</execute>
 
 		<execute macro="Blogs#addEntry">
