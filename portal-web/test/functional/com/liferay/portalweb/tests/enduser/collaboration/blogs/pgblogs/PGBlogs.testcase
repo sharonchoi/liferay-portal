@@ -338,7 +338,7 @@
 		<execute macro="Portlet#viewPG">
 			<var name="portletNameBorderless" value="${portletName2}" />
 		</execute>
-		
+
 		<execute macro="BlogsNavigator#gotoConfigurationSetupPG">
 			<var name="portletNameBorderless" value="Blogs" />
 		</execute>
@@ -1661,7 +1661,7 @@
 			<var name="scopeDefault" value="Default" />
 			<var name="scopeSelection" value="${pageName2}" />
 		</execute>
-		
+
 		<execute macro="BlogsEntry#viewCP">
 			<var name="entryContent" value="Blogs Entry Content" />
 			<var name="entryTitle" value="Blogs Entry Title" />
