@@ -270,7 +270,13 @@
 			<var name="portletName" value="Blogs" />
 		</execute>
 
-		<execute macro="BlogsPortlet#configureScopePG">
+		<execute macro="BlogsNavigator#gotoConfigurationSetupPG">
+			<var name="portletNameBorderless" value="Blogs" />
+		</execute>
+
+		<execute macro="BlogsNavigator#gotoConfigurationScopePG" />
+
+		<execute macro="BlogsPortlet#selectScopePG">
 			<var name="scopeSelection" value="${pageName2}" />
 		</execute>
 
@@ -336,7 +342,13 @@
 			<var name="portletName" value="${portletName2}" />
 		</execute>
 
-		<execute macro="BlogsPortlet#configureScopePG">
+		<execute macro="BlogsNavigator#gotoConfigurationSetupPG">
+			<var name="portletNameBorderless" value="Blogs" />
+		</execute>
+
+		<execute macro="BlogsNavigator#gotoConfigurationScopePG" />
+
+		<execute macro="BlogsPortlet#selectScopePG">
 			<var name="scopeSelection" value="Liferay" />
 		</execute>
 
@@ -776,8 +788,14 @@
 			<var name="pageName" value="${pageName}" />
 		</execute>
 
-		<execute macro="BlogsPortlet#configureScopePG">
-			<var name="scopeSelection" value="${pageName}" />
+		<execute macro="BlogsNavigator#gotoConfigurationSetupPG">
+			<var name="portletName" value="Blogs" />
+		</execute>
+
+		<execute macro="BlogsNavigator#gotoConfigurationScopePG" />
+
+		<execute macro="BlogsPortlet#selectScopePG">
+			<var name="scopeSelection" value="Liferay" />
 		</execute>
 
 		<execute macro="Page#gotoPG">
@@ -1590,7 +1608,13 @@
 			<var name="pageName" value="${pageName}" />
 		</execute>
 
-		<execute macro="BlogsPortlet#configureScopePG">
+		<execute macro="BlogsNavigator#gotoConfigurationSetupPG">
+			<var name="portletNameBorderless" value="Blogs" />
+		</execute>
+
+		<execute macro="BlogsNavigator#gotoConfigurationScopePG" />
+
+		<execute macro="BlogsPortlet#selectScopePG">
 			<var name="scopeSelection" value="${pageName}" />
 		</execute>
 
@@ -1621,8 +1645,23 @@
 			<var name="contentScopeName" value="${contentScopeName}" />
 		</execute>
 
-		<execute macro="BlogsPortlet#configureScopeCP">
-			<var name="contentScopeName" value="${pageName}" />
+		<execute macro="BlogsNavigator#gotoConfigurationSetupPG">
+			<var name="portletNameBorderless" value="Blogs" />
+		</execute>
+
+		<execute macro="BlogsNavigator#gotoConfigurationScopePG" />
+
+		<execute macro="BlogsPortlet#selectScopePG">
+			<var name="scopeSelection" value="${pageName}" />
+		</execute>
+
+		<execute macro="Page#gotoContentCP">
+			<var name="portletName" value="Blogs" />
+		</execute>
+
+		<execute macro="BlogsPortlet#selectScopeCP">
+			<var name="scopeDefault" value="Default" />
+			<var name="scopeSelection" value="${pageName2}" />
 		</execute>
 
 		<execute macro="BlogsEntry#viewCP">
