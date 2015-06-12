@@ -160,6 +160,18 @@
 		<execute function="AssertTextEquals" locator1="PGBlogsConfigurationScope#SCOPE_MENULIST" value1="${scopeSelection}" />
 	</command>
 
+	<command name="disableSocialBookmarkSites">
+		<var name="key_socialBookmarkSite" value="${socialBookmarkSite}" />
+
+		<execute function="Uncheck" locator1="SocialBookmarks#SOCIAL_BOOKMARKS_CONFIGURATION_CHECKBOX" />
+	</command>
+
+	<command name="enableSocialBookmarkSites">
+		<var name="key_socialBookmarkSite" value="${socialBookmarkSite}" />
+
+		<execute function="Check" locator1="SocialBookmarks#SOCIAL_BOOKMARKS_CONFIGURATION_CHECKBOX" />
+	</command>
+
 	<command name="selectDisplayTemplate">
 		<execute function="Select" locator1="Configuration#SETUP_DISPLAY_SETTINGS_DISPLAY_TEMPLATE_SELECT" value1="${displayTemplate}" />
 	</command>
