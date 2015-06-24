@@ -122,7 +122,7 @@
 		<execute macro="Notifications#viewDefaultContent" />
 	</command>
 
-	<command name="ViewNoWebsiteNotificationForNewBlogsEntry" priority="5">
+	<command name="ViewNoWebsiteNotificationForNewBlogsEntry" priority="4">
 		<execute macro="Page#gotoPG">
 			<var name="pageName" value="Blogs Page" />
 		</execute>
@@ -299,7 +299,7 @@
 		</execute>
 	</command>
 
-	<command name="ViewWebsiteNotificationForNewCommentViaBlogs" priority="5">
+	<command name="ViewWebsiteNotificationForNewCommentViaBlogs" priority="4">
 		<execute macro="Page#gotoPG">
 			<var name="pageName" value="${pageName}" />
 		</execute>
