@@ -1,2 +1,2 @@
-PGActivities#ACTIVITY_TITLE|xxxxxxxxxxxxx#xxxxxxxxxxxxx
-PGActivities#ACTIVITY_TITLE_ASSET_NAME|xxxxxxxxxxxxx#xxxxxxxxxxxxx
+PGActivities#ACTIVITY_TITLE|Activities#ACTIVITY_TITLE
+PGActivities#ACTIVITY_TITLE_ASSET_NAME|Activities#ACTIVITY_TITLE_ASSET_NAME
