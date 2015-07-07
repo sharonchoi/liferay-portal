@@ -1,0 +1,7 @@
+Loancalculator#CALCULATE_BUTTON|Button#CALCULATE
+Loancalculator#LOAN_AMOUNT|TextInput#LOAN_AMOUNT
+Loancalculator#LOAN_INTEREST_RATE|TextInput#INTEREST_RATE
+Loancalculator#LOAN_YEARS|TextInput#YEARS
+Loancalculator#LOAN_MONTHLY_PAYMENT|TextInput#MONTHLY_PAYMENT
+Loancalculator#LOAN_INTEREST_PAID|TextInput#INTEREST_PAID
+Loancalculator#LOAN_TOTAL_PAID|TextInput#TOTAL_PAID

@@ -1,0 +1,6 @@
+PGUnitconverter#FROM_FIELD|UnitConverter#FROM_FIELD
+PGUnitconverter#TO_FIELD|UnitConverter#TO_FIELD
+PGUnitconverter#UNIT_FROM_SELECT|UnitConverter#UNIT_FROM_SELECT
+PGUnitconverter#UNIT_TO_SELECT|UnitConverter#UNIT_TO_SELECT
+PGUnitconverter#UNIT_TYPE_SELECT|UnitConverter#UNIT_TYPE_SELECT
+PGUnitconverter#CONVERT_BUTTON|Button#CONVERT

@@ -1,0 +1,7 @@
+CPKnowledgebaseadminAddfolder#INFO_MESSAGE|Message#INFO
+CPKnowledgebaseadminAddfolder#BACK_BUTTON|Button#BACK
+CPKnowledgebaseadminAddfolder#HEADER_TITLE|Portlet#H3_HEADER
+CPKnowledgebaseadminAddfolder#TITLE_FIELD|TextInput#TITLE
+CPKnowledgebaseadminAddfolder#DESCRIPTION_FIELD|TextArea#DESCRIPTION
+CPKnowledgebaseadminAddfolder#SAVE_BUTTON|Button#SAVE
+CPKnowledgebaseadminAddfolder#CANCEL_BUTTON|Button#CANCEL

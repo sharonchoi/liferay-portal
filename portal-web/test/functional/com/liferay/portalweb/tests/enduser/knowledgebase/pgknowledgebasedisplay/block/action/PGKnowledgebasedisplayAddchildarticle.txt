@@ -1,0 +1,3 @@
+PGKnowledgebasedisplayAddchildarticle#TITLE_FIELD|TextInput#TITLE
+PGKnowledgebasedisplayAddchildarticle#CONTENT_FIELD|CKEditor#IFRAME
+PGKnowledgebasedisplayAddchildarticle#PUBLISH_BUTTON|Button#PUBLISH

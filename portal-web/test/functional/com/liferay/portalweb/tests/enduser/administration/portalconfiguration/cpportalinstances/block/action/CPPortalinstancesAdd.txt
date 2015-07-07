@@ -1,0 +1,7 @@
+CPPortalinstancesAdd#HEADER_TITLE|PortalInstances#HEADER_TITLE
+CPPortalinstancesAdd#WEB_ID_FIELD|InputField#WEB_ID
+CPPortalinstancesAdd#VIRTUAL_HOST_FIELD|InputField#VIRTUAL_HOST
+CPPortalinstancesAdd#MAIL_DOMAIN_FIELD|InputField#MAIL_DOMAIN
+CPPortalinstancesAdd#MAX_USERS_FIELD|InputField#MAX_USERS
+CPPortalinstancesAdd#ACTIVE_CHECKBOX|Checkbox#ACTIVE
+CPPortalinstancesAdd#SAVE_BUTTON|Button#SAVE

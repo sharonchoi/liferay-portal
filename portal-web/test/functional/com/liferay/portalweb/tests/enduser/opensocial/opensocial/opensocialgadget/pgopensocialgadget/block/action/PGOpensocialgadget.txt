@@ -1,0 +1,2 @@
+PGOpensocialgadget#PORTLET_TITLE|Portlet#H1_HEADER
+PGOpensocialgadget#INFO_MESSAGE|Message#INFO
