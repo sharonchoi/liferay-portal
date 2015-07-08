@@ -1,5 +1,5 @@
-PGPagecomments#COMMENT_FIELD|xxxxxxxxxxxxx#xxxxxxxxxxxxx
-PGPagecomments#REPLY_BUTTON|xxxxxxxxxxxxx#xxxxxxxxxxxxx
-PGPagecomments#COMMENT_WORKFLOW_STATUS|xxxxxxxxxxxxx#xxxxxxxxxxxxx
-PGPagecomments#COMMENT_BODY|xxxxxxxxxxxxx#xxxxxxxxxxxxx
-PGPagecomments#COMMENT_DELETE|xxxxxxxxxxxxx#xxxxxxxxxxxxx
+PGPagecomments#COMMENT_FIELD|Comments#COMMENT_FIELD
+PGPagecomments#REPLY_BUTTON|Button#REPLY
+PGPagecomments#COMMENT_WORKFLOW_STATUS|Comments#WORKFLOW_STATUS
+PGPagecomments#COMMENT_BODY|Comments#COMMENT_BODY
+PGPagecomments#COMMENT_DELETE|Comments#DELETE_LINK
