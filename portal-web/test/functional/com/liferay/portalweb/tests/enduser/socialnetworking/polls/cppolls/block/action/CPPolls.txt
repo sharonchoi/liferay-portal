@@ -1,6 +1,6 @@
-CPPolls#ADD_POLL|xxxxxxxxxxxxx#xxxxxxxxxxxxx
-CPPolls#POLLS_TABLE_TITLE|xxxxxxxxxxxxx#xxxxxxxxxxxxx
-CPPolls#POLLS_TABLE_ACTION|xxxxxxxxxxxxx#xxxxxxxxxxxxx
-CPPolls#POLLS_TABLE_ACTIONS_GENERIC|xxxxxxxxxxxxx#xxxxxxxxxxxxx
-CPPolls#POLLS_MENULIST_PERMISSIONS|xxxxxxxxxxxxx#xxxxxxxxxxxxx
-CPPolls#POLLS_MENULIST_DELETE|xxxxxxxxxxxxx#xxxxxxxxxxxxx
+CPPolls#ADD_POLL|MenuItem#ADD_POLL
+CPPolls#POLLS_TABLE_TITLE|Polls#POLLS_TABLE_TITLE
+CPPolls#POLLS_TABLE_ACTION|Polls#POLLS_TABLE_ACTION
+CPPolls#POLLS_TABLE_ACTIONS_GENERIC|Polls#POLLS_TABLE_ACTION_GENERIC
+CPPolls#POLLS_MENULIST_PERMISSIONS|MenuItem#PERMISSIONS
+CPPolls#POLLS_MENULIST_DELETE|MenuItem#DELETE
