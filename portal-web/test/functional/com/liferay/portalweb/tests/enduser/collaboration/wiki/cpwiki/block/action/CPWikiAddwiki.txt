@@ -1,0 +1,3 @@
+CPWikiAddwiki#NAME_FIELD|TextInput#NAME
+CPWikiAddwiki#DESCRIPTION_FIELD|TextArea#DESCRIPTION
+CPWikiAddwiki#SAVE_BUTTON|Button#SAVE

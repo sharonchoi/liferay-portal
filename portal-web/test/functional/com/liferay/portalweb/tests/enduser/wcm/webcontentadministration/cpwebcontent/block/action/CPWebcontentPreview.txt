@@ -1,0 +1,2 @@
+CPWebcontentPreview#PREVIEW_IFRAME|WCPreview#PREVIEW_IFRAME
+CPWebcontentPreview#BODY_FIELD|WCPreview#BODY_FIELD

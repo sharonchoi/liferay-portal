@@ -1,0 +1,4 @@
+PGMessageboardsAddsubcategory#NAME_FIELD|TextInput#NAME
+PGMessageboardsAddsubcategory#DESCRIPTION_FIELD|TextArea#DESCRIPTION
+PGMessageboardsAddsubcategory#SAVE_BUTTON|Button#SAVE
+PGMessageboardsAddsubcategory#REQUIRED_ALERT|TextInput#REQUIRED_ALERT

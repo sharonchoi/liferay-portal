@@ -1,0 +1,4 @@
+Dictionary#FIND_BUTTON|Button#FIND
+Dictionary#DICTIONARY_WORD_FIELD|Dictionary#WORD_FIELD
+Dictionary#DICTIONARY_SELECT|Dictionary#TYPE_SELECT
+Dictionary#DICTIONARY_WORD|Dictionary#WORD

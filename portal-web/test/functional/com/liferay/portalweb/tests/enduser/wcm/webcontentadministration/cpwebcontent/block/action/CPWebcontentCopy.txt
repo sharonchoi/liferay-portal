@@ -1,0 +1,2 @@
+CPWebcontentCopy#COPY_BUTTON|Button#COPY
+CPWebcontentCopy#CANCEL_BUTTON|Button#CANCEL

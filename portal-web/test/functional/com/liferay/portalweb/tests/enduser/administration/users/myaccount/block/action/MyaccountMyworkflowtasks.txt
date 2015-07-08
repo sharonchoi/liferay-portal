@@ -1,0 +1,3 @@
+MyaccountMyworkflowtasks#VIEW_LINK|MyAccountMyWorkflowInstances#VIEW_LINK
+MyaccountMyworkflowtasks#EDIT_LINK|MyAccountMyWorkflowInstances#EDIT_LINK
+MyaccountMyworkflowtasks#VIEW_HISTORY_BUTTON|Button#VIEW_HISTORY

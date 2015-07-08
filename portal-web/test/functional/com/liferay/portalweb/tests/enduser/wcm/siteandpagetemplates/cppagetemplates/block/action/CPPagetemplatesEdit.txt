@@ -1,0 +1,5 @@
+CPPagetemplatesEdit#NAME_FIELD|TextInput#NAME
+CPPagetemplatesEdit#DESCRIPTION_FIELD|TextArea#DESCRIPTION
+CPPagetemplatesEdit#ACTIVE_CHECKBOX|Checkbox#ACTIVE
+CPPagetemplatesEdit#OPEN_PAGE_TEMPLATE|PageTemplates#OPEN_PAGE_TEMPLATE
+CPPagetemplatesEdit#SAVE_BUTTON|Button#SAVE

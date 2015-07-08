@@ -1,0 +1,3 @@
+CPKnowledgebaseadminUploadZipFile#FILE_FIELD|TextInput#UPLOAD_FILE
+CPKnowledgebaseadminUploadZipFile#SAVE_BUTTON|Button#SAVE
+CPKnowledgebaseadminUploadZipFile#CANCEL_BUTTON|Button#CANCEL

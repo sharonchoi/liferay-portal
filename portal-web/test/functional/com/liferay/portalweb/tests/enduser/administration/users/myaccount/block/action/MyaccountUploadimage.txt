@@ -1,0 +1,5 @@
+MyaccountUploadimage#UPLOAD_IMAGE_IFRAME|IFrame#UPLOAD_IMAGE
+MyaccountUploadimage#SUCCESS_MESSAGE|Message#SUCCESS
+MyaccountUploadimage#BROWSE_BUTTON|UploadImage#BROWSE_BUTTON
+MyaccountUploadimage#SAVE_BUTTON|Button#SAVE
+MyaccountUploadimage#IMAGE_CROPPER_RIGHT_HANDLE|UploadImage#IMAGE_CROPPER_RIGHT_HANDLE

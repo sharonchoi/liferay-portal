@@ -1,0 +1,10 @@
+CPBookmarksAddbookmark#OPTIONS_WRENCH_ICON|Icon#COG
+CPBookmarksAddbookmark#FOLDER_NAME|TextInput#FOLDER_NAME
+CPBookmarksAddbookmark#SELECT_BUTTON|Button#SELECT
+CPBookmarksAddbookmark#REMOVE_BUTTON|Button#REMOVE
+CPBookmarksAddbookmark#NAME_FIELD|TextInput#NAME
+CPBookmarksAddbookmark#URL_FIELD|TextInput#URL
+CPBookmarksAddbookmark#URL_FIELD_REQUIRED|TextInput#URL_FIELD_REQUIRED
+CPBookmarksAddbookmark#DESCRIPTION_FIELD|TextArea#DESCRIPTION
+CPBookmarksAddbookmark#SAVE_BUTTON|Button#SAVE
+CPBookmarksAddbookmark#CANCEL_BUTTON|Button#CANCEL

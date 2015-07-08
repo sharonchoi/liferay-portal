@@ -1,0 +1,2 @@
+CPPortalsettingsRecyclebin#RECYCLE_BIN_TITLE|PortalSettingsRecycleBin#RECYCLE_BIN_TITLE
+CPPortalsettingsRecyclebin#ENABLE_REYCLE_BIN_CHECKBOX|PortalSettingsRecycleBin#ENABLE_REYCLE_BIN_CHECKBOX

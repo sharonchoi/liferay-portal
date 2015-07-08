@@ -1,0 +1,4 @@
+NestedportletsConfiguration#SUCCESS_MESSAGE|Message#SUCCESS
+NestedportletsConfiguration#SAVE_BUTTON|Button#SAVE
+NestedportletsConfiguration#CONFIGURATION_IFRAME|IFrame#DIALOG
+NestedportletsConfiguration#LAYOUT_2_COLUMNS|Portlet#LAYOUT_2_COLUMNS

@@ -1,0 +1,3 @@
+CPMessageboardsAddcategory#NAME_FIELD|TextInput#NAME
+CPMessageboardsAddcategory#DESCRIPTION_FIELD|TextArea#DESCRIPTION
+CPMessageboardsAddcategory#SAVE_BUTTON|Button#SAVE

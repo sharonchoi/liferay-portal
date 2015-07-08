@@ -1,0 +1,3 @@
+PGKnowledgebasearticle#CONFIGURE_INFO_MESSAGE|Message#INFO
+PGKnowledgebasearticle#ERROR_MESSAGE|Message#ERROR
+PGKnowledgebasearticle#CONFIRMATION|Message#Confirmation

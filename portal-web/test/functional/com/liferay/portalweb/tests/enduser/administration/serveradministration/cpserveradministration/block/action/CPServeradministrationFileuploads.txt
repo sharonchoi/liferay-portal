@@ -1,0 +1,1 @@
+CPServeradministrationFileuploads#DOCUMENTS_AND_MEDIA_MAX_FILE_SIZE|ServerAdministrationFileUploads#DOCS_AND_MEDIA_MAX_FILE_SIZE_FIELD

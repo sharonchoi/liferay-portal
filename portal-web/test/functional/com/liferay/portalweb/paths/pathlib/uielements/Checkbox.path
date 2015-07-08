@@ -29,6 +29,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>BLOGS_ENTRY</td>
+	<td>//input[contains(@id,'BlogsEntry')]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>CHANGEABLE</td>
 	<td>//label[contains(.,'Changeable')]/input[@type='checkbox']</td>
 	<td></td>
@@ -86,6 +91,11 @@
 <tr>
 	<td>ENABLE_FLAGS</td>
 	<td>//label[contains(.,'Enable Flags')]/input[@type='checkbox']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>ENABLE_FULLSCREEN</td>
+	<td>//input[@id='_86_enableFullscreen']</td>
 	<td></td>
 </tr>
 <tr>

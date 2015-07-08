@@ -1,0 +1,6 @@
+Networkutilities#SEARCH_BUTTON|NetworkUtilities#SEARCH_BUTTON
+Networkutilities#DNS_LOOKUP_FIELD|NetworkUtilities#DNS_LOOKUP_FIELD
+Networkutilities#WHOIS_FIELD|NetworkUtilities#WHOIS_FIELD
+Networkutilities#NETWORK_DOMAIN|NetworkUtilities#NETWORK_DOMAIN
+Networkutilities#NAVIGATION_DNS_LOOKUP|NavTab#DNS_LOOKUP
+Networkutilities#NAVIGATION_WHOIS|NavTab#WHOIS

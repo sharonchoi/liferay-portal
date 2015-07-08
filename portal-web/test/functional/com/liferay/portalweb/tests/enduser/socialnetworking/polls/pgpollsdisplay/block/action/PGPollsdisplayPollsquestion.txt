@@ -1,0 +1,5 @@
+PGPollsdisplayPollsquestion#TITLE_FIELD|TextInput#TITLE
+PGPollsdisplayPollsquestion#POLLS_QUESTION_FIELD|TextArea#POLLS_QUESTION
+PGPollsdisplayPollsquestion#CHOICE_A_FIELD|TextInput#POLL_CHOICE_A
+PGPollsdisplayPollsquestion#CHOICE_B_FIELD|TextInput#POLL_CHOICE_B
+PGPollsdisplayPollsquestion#SAVE_BUTTON|Button#SAVE

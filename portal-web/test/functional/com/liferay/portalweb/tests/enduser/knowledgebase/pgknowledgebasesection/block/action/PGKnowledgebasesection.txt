@@ -1,0 +1,3 @@
+PGKnowledgebasesection#SECTIONS_TITLE|KnowledgeBaseSection#SECTIONS_TITLE
+PGKnowledgebasesection#PORTLET_BODY|KnowledgeBaseSection#PORTLET_BODY
+PGKnowledgebasesection#KB_ARTICLE_LINK|KnowledgeBaseSection#KB_ARTICLE_LINK

@@ -1,0 +1,2 @@
+PGLoginTermsofservice#I_AGREE_BUTTON|Button#I_AGREE
+PGLoginTermsofservice#I_DISAGREE_BUTTON|Button#I_DISAGREE

@@ -1,0 +1,5 @@
+PGDynamicdatalistsDisplayrecord#FIELD_1|DDLRecord#FIELD_1
+PGDynamicdatalistsDisplayrecord#FIELD_2|DDLRecord#FIELD_2
+PGDynamicdatalistsDisplayrecord#FIELD_3|DDLRecord#FIELD_3
+PGDynamicdatalistsDisplayrecord#EDIT_BUTTON|Button#EDIT
+PGDynamicdatalistsDisplayrecord#CANCEL_BUTTON|Button#CANCEL

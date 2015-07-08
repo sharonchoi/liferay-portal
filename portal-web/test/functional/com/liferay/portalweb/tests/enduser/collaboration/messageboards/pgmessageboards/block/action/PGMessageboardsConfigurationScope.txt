@@ -1,0 +1,2 @@
+PGMessageboardsConfigurationScope#SCOPE_DROPDOWN|MessageBoardsConfiguration#SCOPE_DROPDOWN
+PGMessageboardsConfigurationScope#SCOPE_MENULIST|MessageBoardsConfiguration#SCOPE_MENULIST

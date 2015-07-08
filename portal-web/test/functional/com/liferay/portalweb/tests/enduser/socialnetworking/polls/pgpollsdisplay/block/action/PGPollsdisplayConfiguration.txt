@@ -1,0 +1,3 @@
+PGPollsdisplayConfiguration#SUCCESS_MESSAGE|Message#SUCCESS
+PGPollsdisplayConfiguration#TITLE_DROPDOWN_SELECT|Polls#TITLE_DROPDOWN_SELECT
+PGPollsdisplayConfiguration#SAVE_BUTTON|Button#SAVE
