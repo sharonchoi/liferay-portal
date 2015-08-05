@@ -64,6 +64,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>PREVIEW_FIELD</td>
+	<td>//div[contains(@class,'preview')]/div[contains(.,'${key_wikiPageContent}')]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>VIEW_BODY_FIELD</td>
 	<td>//html/body[contains(@class,'portlet-wiki') and contains(.,'${key_wikiPageContent}')]</td>
 	<td></td>
