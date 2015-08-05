@@ -78,6 +78,28 @@
 		</execute>
 	</command>
 
+	<command name="PreviewPageContentHeader" priority="4">
+		<execute macro="WikiNavigator#gotoAllPages" />
+
+		<execute function="AssertClick" locator1="Button#ADD_PAGE" value1="Add Page" />
+
+		<execute macro="WikiEntry#addPageTitle">
+			<var name="wikiPageTitle" value="Wiki Page Title" />
+		</execute>
+
+		<execute macro="WikiEntry#addPageContent">
+			<var name="wikiPageContent" value="Wiki Page Content 1" />
+			<var name="wikiPageContent2" value="Wiki Page Content 2" />
+		</execute>
+
+		<execute function="AssertClick" locator1="Button#PREVIEW" value1="Preview" />
+
+		<execute macro="WikiEntry#previewPageTitle">
+			<var name="wikiPageContent" value="Wiki Page Content 1" />
+			<var name="wikiPageContent2" value="Wiki Page Content 2" />
+		</execute>
+	</command>
+
 	<command name="SearchWikiCommentsAndAttachments" priority="4">
 		<execute macro="WikiPage#addFrontPagePG">
 			<var name="wikiNodeName" value="Main" />
