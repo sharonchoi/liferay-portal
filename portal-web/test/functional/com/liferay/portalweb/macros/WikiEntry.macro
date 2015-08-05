@@ -1,0 +1,35 @@
+<definition>
+	<command name="addPageContent">
+		<execute function="SelectFrame" locator1="CKEditor#BODY_FIELD_IFRAME" />
+
+		<execute function="Type" locator1="CKEditor#BODY" value1="${wikiPageContent}" />
+
+		<if>
+			<isset var="wikiPageContent2" />
+			<then>
+				<execute function="KeyPress" locator1="CKEditor#BODY" value1="\RETURN" />
+
+				<execute function="Type#sendKeys" locator1="CKEditor#BODY" value1="${wikiPageContent2}" />
+			</then>
+		</if>
+
+		<execute function="SelectFrame" value1="relative=top" />
+	</command>
+
+	<command name="addPageTitle">
+		<execute function="Type" locator1="TextInput#TITLE" value1="${wikiPageTitle}" />
+	</command>
+
+	<command name="previewPageTitle">
+		<if>
+			<isset var="wikiPageContent2" />
+			<then>
+				<var name="wikiPageContent" value="${wikiPageContent} ${wikiPageContent2}" />
+			</then>
+		</if>
+
+		<var name="key_wikiPageContent" value="${wikiPageContent}" />
+
+		<execute function="AssertTextEquals" locator1="Wiki#PREVIEW_FIELD" value1="${wikiPageContent}" />
+	</command>
+</definition>
