@@ -5198,6 +5198,37 @@ module.framework.properties.osgi.console=11312</echo>
 			</then>
 		</if>
 
+		<get-testcase-property property.name="repository.type" />
+
+		<if>
+			<equals arg1="${repository.type}" arg2="true" />
+			<then>
+				<if>
+					<os family="unix" />
+					<then>
+						<exec executable="/bin/bash" os="${os.unix}" outputproperty="dm.vm.host.name">
+							<arg value="-c" />
+							<arg value="curl &quot;http://it.liferay.com/osb-ici-controller-web/vm/allocation/borrow?leaseTime=30000&amp;resourceType=qa%2E${repository.type}&quot;" />
+						</exec>
+					</then>
+					<else>
+						<exec executable="cmd" outputproperty="dm.vm.host.name">
+							<arg value="/c" />
+							<arg value="curl &quot;http://it.liferay.com/osb-ici-controller-web/vm/allocation/borrow?leaseTime=30000&amp;resourceType=qa%2E${repository.type}&quot;" />
+						</exec>
+					</else>
+				</if>
+
+				<propertyregex
+					input="${dm.vm.host.name}"
+					override="true"
+					property="dm.vm.host.name"
+					regexp="&quot;(cloud.*?)&quot;"
+					select="\1"
+				/>
+			</then>
+		</if>
+
 		<get-testcase-property property.name="sharepoint.enabled" />
 
 		<if>
