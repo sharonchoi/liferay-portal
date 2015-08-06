@@ -5229,6 +5229,17 @@ module.framework.properties.osgi.console=11312</echo>
 			</then>
 		</if>
 
+		<if>
+			<equals arg1="${repository.type}" arg2="documentum6" />
+			<then>
+				<replace
+					file="${lp.plugins.dir}/hooks/documentum-hook/docroot/WEB-INF/src/dfc.properties"
+					token="dfc.docbroker.host[0]=localhost"
+					value="dfc.docbroker.host[0]=${dm.vm.host.name}"
+				/>
+			</then>
+		</if>
+
 		<get-testcase-property property.name="sharepoint.enabled" />
 
 		<if>
