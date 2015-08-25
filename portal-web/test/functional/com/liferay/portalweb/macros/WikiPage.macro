@@ -773,6 +773,10 @@
 		<execute function="AssertClick" locator1="CPWikiAllpages#WIKI_PAGE_TABLE_PAGE" value1="${wikiPageTitle}" />
 	</command>
 
+	<command name="gotoDetails">
+		<execute function="AssertClick" locator1="Link#DETAILS" value1="Details" />
+	</command>
+
 	<command name="gotoDraftPagesPG">
 		<execute function="AssertClick" locator1="PGWiki#NAVIGATION_DRAFT_PAGES" value1="Draft Pages" />
 	</command>
