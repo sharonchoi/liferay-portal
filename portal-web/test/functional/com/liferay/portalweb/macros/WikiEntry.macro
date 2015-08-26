@@ -18,6 +18,6 @@
 	</command>
 
 	<command name="selectPageFormat">
-		<execute function="Select" locator1="Wiki#ADD_PAGE_FORMAT_DROPDOWN" value1="${pageFormat}" />
+		<execute function="SelectNoError#pauseSelect" locator1="Wiki#ADD_PAGE_FORMAT_DROPDOWN" value1="${pageFormat}" />
 	</command>
 </definition>
