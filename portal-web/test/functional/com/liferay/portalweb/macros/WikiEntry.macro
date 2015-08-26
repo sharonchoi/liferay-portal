@@ -1,4 +1,8 @@
 <definition>
+	<command name="addMediaWikiDescription">
+		<execute function="Type" locator1="TextArea#WEB_EDITOR" value1="${wikiPageContent}" />
+	</command>
+
 	<command name="addPageContent">
 		<execute function="SelectFrame" locator1="CKEditor#BODY_FIELD_IFRAME" />
 
@@ -9,6 +13,10 @@
 
 	<command name="addPageTitle">
 		<execute function="Type" locator1="TextInput#TITLE" value1="${wikiPageTitle}" />
+	</command>
+
+	<command name="confirmMediaWiki">
+		<execute function="Confirm" value1="You may lose some formatting when switching from Creole to MediaWiki. Do you want to continue?" />
 	</command>
 
 	<command name="publish">
