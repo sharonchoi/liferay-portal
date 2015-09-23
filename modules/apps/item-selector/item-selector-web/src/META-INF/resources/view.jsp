@@ -81,8 +81,15 @@ List<String> titles = localizedItemSelectorRendering.getTitles();
 			%>
 
 			<c:if test="<%= itemSelectorView.isShowSearch() %>">
+
+				<%
+				PortletURL searchURL = PortletURLUtil.clone(currentURLObj, liferayPortletResponse);
+
+				searchURL.setParameter("resetCur", Boolean.TRUE.toString());
+				%>
+
 				<aui:nav-bar-search>
-					<aui:form action="<%= currentURL %>" name="searchFm">
+					<aui:form action="<%= searchURL %>" name="searchFm">
 						<liferay-ui:input-search markupView="lexicon" />
 					</aui:form>
 				</aui:nav-bar-search>
