@@ -1122,6 +1122,7 @@
 		<var name="key_lastPostUserName" value="userfn userln" />
 
 		<execute function="AssertTextEquals#assertPartialText" locator1="MessageBoards#THREAD_TABLE_LAST_POST" value1="userfn userln" />
+
 		<execute function="Click" locator1="MessageBoards#THREAD_TABLE_THREAD" value1="MB Thread Message Subject" />
 
 		<execute function="AssertTextEquals" locator1="MessageBoardsThread#THREAD_TABLE_SUBJECT_1" value1="MB Thread Message Subject" />

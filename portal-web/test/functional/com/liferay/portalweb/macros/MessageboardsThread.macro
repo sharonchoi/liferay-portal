@@ -411,6 +411,7 @@
 				<var name="key_lastPostUserName" value="${lastPostUserName}" />
 
 				<execute function="AssertTextEquals#assertPartialText" locator1="MessageBoards#THREAD_TABLE_LAST_POST" value1="${lastPostUserName}" />
+
 				<execute function="Click" locator1="MessageBoards#THREAD_TABLE_THREAD" value1="${threadSubject}" />
 			</else>
 		</if>
