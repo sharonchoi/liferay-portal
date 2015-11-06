@@ -312,9 +312,9 @@
 	</command>
 
 	<command name="addScheduledPG">
-		<execute function="AssertClick" locator1="PGBlogs#ADD_ENTRY_BUTTON" value1="Add Blog Entry" />
+		<execute function="AssertClick" locator1="Blogs#ADD_BLOGS_ENTRY" value1="Add Blog Entry" />
 
-		<execute function="Type" locator1="PGBlogsAdd#TITLE_FIELD" value1="${entryTitle}" />
+		<execute function="Type" locator1="AlloyEditor#TITLE_FIELD" value1="${entryTitle}" />
 
 		<execute function="Click" locator1="Button#COG" />
 
@@ -346,10 +346,11 @@
 		<var name="displayDate" value="${displayDateHour}:${displayDateMinuteFuture} ${displayDateMeridian}" />
 
 		<execute function="Type#clickAtSendKeys" locator1="PGBlogsAdd#DISPLAY_DATE_TIME_INPUT" value1="${displayDate}" />
-		<execute function="Type" locator1="PGBlogsAdd#CONTENT_FIELD" value1="${entryContent}" />
-		<execute function="AssertClick" locator1="PGBlogsAdd#PUBLISH_BUTTON" value1="Publish" />
+		<execute function="Type" locator1="AlloyEditor#CONTENT_FIELD" value1="${entryContent}" />
 
-		<execute function="AssertTextEquals" locator1="PGBlogs#SUCCESS_MESSAGE" value1="Your request completed successfully." />
+		<execute function="AssertClick" locator1="Button#PUBLISH" value1="Publish" />
+
+		<execute function="AssertTextEquals" locator1="Message#SUCCESS" value1="Your request completed successfully." />
 	</command>
 
 	<command name="addSubtitle">
