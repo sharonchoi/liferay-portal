@@ -111,7 +111,7 @@
 		<var name="key_entryTitle" value="${entryTitle}" />
 
 		<execute function="Click" locator1="Blogs#ENTRY_TABLE_ACTIONS" />
-		
+
 		<execute function="AssertClick" locator1="CPBlogs#ENTRY_MENULIST_PERMISSIONS" value1="Permissions" />
 
 		<execute function="SelectFrame" locator1="Permissions#PERMISSIONS_IFRAME" />
