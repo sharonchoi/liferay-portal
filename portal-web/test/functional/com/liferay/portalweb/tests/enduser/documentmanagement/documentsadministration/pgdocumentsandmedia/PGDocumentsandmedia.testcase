@@ -773,6 +773,14 @@
 			<var name="dmDocumentTitle" value="DM Document Title" />
 		</execute>
 
+		<execute macro="Page#gotoPG">
+			<var name="pageName" value="${pageName}" />
+		</execute>
+
+		<execute macro="DMFolder#gotoPG">
+			<var name="dmFolderName" value="DM Folder Name" />
+		</execute>
+		
 		<execute macro="DMFolder#addSubfolderPG">
 			<var name="dmSubFolder" value="Duplicate" />
 			<var name="dmSubFolderDescription" value="DM Document Description" />
@@ -796,6 +804,14 @@
 
 		<execute macro="DMFolder#viewPG">
 			<var name="dmFolderDescription" value="DM Folder Description" />
+			<var name="dmFolderName" value="Folder Name" />
+		</execute>
+
+		<execute macro="Page#gotoPG">
+			<var name="pageName" value="${pageName}" />
+		</execute>
+
+		<execute macro="DMFolder#gotoPG">
 			<var name="dmFolderName" value="Folder Name" />
 		</execute>
 
