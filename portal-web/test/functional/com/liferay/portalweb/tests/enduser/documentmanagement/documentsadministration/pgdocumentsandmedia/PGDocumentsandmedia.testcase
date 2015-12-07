@@ -780,7 +780,7 @@
 		<execute macro="DMFolder#gotoPG">
 			<var name="dmFolderName" value="DM Folder Name" />
 		</execute>
-		
+
 		<execute macro="DMFolder#addSubfolderPG">
 			<var name="dmSubFolder" value="Duplicate" />
 			<var name="dmSubFolderDescription" value="DM Document Description" />
