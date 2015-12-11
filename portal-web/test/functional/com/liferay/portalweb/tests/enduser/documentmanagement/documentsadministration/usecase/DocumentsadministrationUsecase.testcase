@@ -230,6 +230,10 @@
 			<var name="portletName" value="Documents and Media" />
 		</execute>
 
+		<execute macro="Page#gotoPG">
+			<var name="pageName" value="${pageName}" />
+		</execute>
+
 		<execute function="Click" locator1="Icon#DISPLAY_STYLE_DESCRIPTIVE" />
 
 		<execute macro="Page#gotoPG">
@@ -446,6 +450,10 @@
 			<var name="columnNumberFrom" value="1" />
 			<var name="columnNumberTo" value="2" />
 			<var name="portletName" value="Documents and Media" />
+		</execute>
+
+		<execute macro="Page#gotoPG">
+			<var name="pageName" value="${pageName}" />
 		</execute>
 
 		<execute function="Click" locator1="Icon#DISPLAY_STYLE_DESCRIPTIVE" />
@@ -1195,6 +1203,10 @@
 
 		<execute macro="DMDocument#enableActionsMenuOnPortlet" />
 
+		<execute macro="Page#gotoPG">
+			<var name="pageName" value="${pageName}" />
+		</execute>
+
 		<execute function="Click" locator1="Icon#DISPLAY_STYLE_DESCRIPTIVE" />
 
 		<execute macro="Page#gotoPG">
@@ -1256,6 +1268,10 @@
 			<var name="portletName" value="Documents and Media" />
 		</execute>
 
+		<execute macro="Page#gotoPG">
+			<var name="pageName" value="Documents and Media Page" />
+		</execute>
+
 		<execute function="Click" locator1="Icon#DISPLAY_STYLE_DESCRIPTIVE" />
 
 		<execute macro="Page#gotoPG">
@@ -1276,10 +1292,13 @@
 		</execute>
 
 		<execute function="Type" locator1="DocumentsAndMediaEditDocument#TITLE_FIELD" value1="DM Document 2 Title" />
+
 		<execute function="AssertClick" locator1="Button#PUBLISH" value1="Publish" />
+
 		<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS" value1="Your request completed successfully." />
 
 		<execute function="Pause" locator1="1000" />
+
 		<execute function="AssertTextNotPresent" value1="Documents and Media is temporarily unavailable." />
 
 		<execute macro="Page#gotoPG">
@@ -1287,6 +1306,7 @@
 		</execute>
 
 		<execute function="Pause" locator1="1000" />
+
 		<execute function="AssertTextNotPresent" value1="Documents and Media is temporarily unavailable." />
 
 		<execute macro="DMDocument#viewPG">
