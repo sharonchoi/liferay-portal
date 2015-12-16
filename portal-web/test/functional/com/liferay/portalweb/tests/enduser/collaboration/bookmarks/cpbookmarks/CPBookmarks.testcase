@@ -31,7 +31,9 @@
 	</tear-down>
 
 	<command name="AddBookmark" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<var name="bookmarkDescription" value="This is a test bookmark!" />
 		<var name="bookmarkName" value="Test Bookmark" />
@@ -62,7 +64,9 @@
 	</command>
 
 	<command name="AddBookmarks" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<var name="bookmark1Description" value="This is a test bookmark!" />
 		<var name="bookmark1Name" value="Test Bookmark" />
@@ -119,7 +123,9 @@
 	</command>
 
 	<command name="AddFolder" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<var name="folderDescription" value="This is a test bookmarks folder!" />
 		<var name="folderName" value="Test Bookmarks Folder" />
@@ -165,7 +171,9 @@
 	</command>
 
 	<command name="AddNullFolder" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Navigator#openURL" />
 
@@ -265,7 +273,9 @@
 	</command>
 
 	<command name="DeleteBookmark" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<var name="bookmarkDescription" value="This is a test bookmark!" />
 		<var name="bookmarkName" value="Test Bookmark" />
@@ -346,7 +356,9 @@
 	</command>
 
 	<command name="EditBookmark" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<var name="bookmarkDescription" value="This is a test bookmark!" />
 		<var name="bookmarkName" value="Test Bookmark" />
@@ -395,7 +407,9 @@
 	</command>
 
 	<command name="EditFolder" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<var name="editFolderDescription" value="This is a test bookmarks folder edit!" />
 		<var name="editFolderName" value="Test Bookmarks Folder Edit" />
@@ -588,7 +602,9 @@
 	</command>
 
 	<command name="MoveToRecycleBinFolder" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<var name="folderDescription" value="This is a test bookmarks folder!" />
 		<var name="folderName" value="Test Bookmarks Folder" />

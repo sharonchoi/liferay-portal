@@ -41,7 +41,9 @@
 	</tear-down>
 
 	<command description="Ensure that the super admin can add pages, add portlets, navigate to the product menu, use the WYSIWYG editor, and view alert messages." name="Smoke" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Smoke#viewWelcomePage" />
 

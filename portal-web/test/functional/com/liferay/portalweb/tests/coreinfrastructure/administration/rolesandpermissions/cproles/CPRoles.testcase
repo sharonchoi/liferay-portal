@@ -31,7 +31,9 @@
 	</tear-down>
 
 	<command name="AddOrganizationRole" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Page#gotoCP">
 			<var name="portletName" value="Roles" />
@@ -53,7 +55,9 @@
 	</command>
 
 	<command name="AddRegularRole" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Page#gotoCP">
 			<var name="portletName" value="Roles" />
@@ -74,7 +78,9 @@
 	</command>
 
 	<command name="AddSiteRole" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Page#gotoCP">
 			<var name="portletName" value="Roles" />
@@ -96,7 +102,9 @@
 	</command>
 
 	<command name="DeleteRegularRole" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Page#gotoCP">
 			<var name="portletName" value="Roles" />

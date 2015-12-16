@@ -98,7 +98,9 @@
 	</command>
 
 	<command name="AddBlogsEntry" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Page#gotoPG">
 			<var name="pageName" value="${pageName}" />
@@ -121,7 +123,9 @@
 	</command>
 
 	<command name="AddBlogsEntryComment" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Page#gotoPG">
 			<var name="pageName" value="${pageName}" />
@@ -659,7 +663,9 @@
 	</command>
 
 	<command name="EditBlogsEntry" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Page#gotoPG">
 			<var name="pageName" value="${pageName}" />
@@ -697,7 +703,9 @@
 	</command>
 
 	<command name="EditBlogsEntryComment" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<var name="entryComment" value="Blogs Entry Comment" />
 		<var name="entryCommentEdit" value="Blogs Entry Comment Edit" />

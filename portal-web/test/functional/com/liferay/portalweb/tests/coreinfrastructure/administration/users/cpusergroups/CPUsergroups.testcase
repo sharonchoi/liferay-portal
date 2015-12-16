@@ -31,7 +31,9 @@
 	</tear-down>
 
 	<command name="AddMember" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="ProductMenu#gotoControlPanelUsers">
 			<var name="portlet" value="Users and Organizations" />
@@ -72,7 +74,9 @@
 	</command>
 
 	<command name="AddUserGroup" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Page#gotoCP">
 			<var name="portletName" value="User Groups" />
@@ -225,7 +229,9 @@
 	</command>
 
 	<command name="DeleteUserGroup" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="ProductMenu#gotoControlPanelUsers">
 			<var name="portlet" value="User Groups" />
@@ -293,7 +299,9 @@
 	</command>
 
 	<command name="EditUserGroup" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Page#gotoCP">
 			<var name="portletName" value="User Groups" />

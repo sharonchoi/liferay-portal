@@ -107,7 +107,9 @@
 	</command>
 
 	<command description="Ensure that a user can add a category." name="AddCategory" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Navigator#openURL" />
 
@@ -398,7 +400,9 @@
 	</command>
 
 	<command name="AddSubcategory" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Navigator#openURL" />
 
@@ -479,7 +483,9 @@
 	</command>
 
 	<command name="AddVocabulary" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Navigator#openURL" />
 
@@ -1012,7 +1018,9 @@
 	</command>
 
 	<command name="DeleteSubcategoryViaMenu" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Navigator#openURL" />
 
@@ -1055,7 +1063,9 @@
 	</command>
 
 	<command name="DeleteVocabulary" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Navigator#openURL" />
 
@@ -1089,7 +1099,9 @@
 	</command>
 
 	<command name="EditCategory" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Navigator#openURL" />
 
@@ -1182,7 +1194,9 @@
 	</command>
 
 	<command name="EditSubcategory" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Navigator#openURL" />
 
@@ -1226,7 +1240,9 @@
 	</command>
 
 	<command name="EditVocabulary" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Navigator#openURL" />
 
