@@ -84,7 +84,8 @@
 		</if>
 	</tear-down>
 
-	<command name="ViewNoWebsiteNotificationForNewThreadInCategory" priority="4">
+	<command name="ViewNoWebsiteNotificationForNewThreadInCategory" priority="4
+		<property name="portal.acceptance" value="true" />">
 		<execute macro="Page#gotoPG">
 			<var name="pageName" value="${pageName}" />
 		</execute>
@@ -153,6 +154,7 @@
 	</command>
 
 	<command name="ViewNoWebsiteNotificationForUpdatedThreadInCategory" priority="4">
+		<property name="portal.acceptance" value="true" />
 		<execute macro="Page#gotoPG">
 			<var name="pageName" value="${pageName}" />
 		</execute>
@@ -238,6 +240,7 @@
 	</command>
 
 	<command name="ViewWebsiteNotificationForNewThreadInCategory" priority="4">
+		<property name="portal.acceptance" value="true" />
 		<execute macro="Page#gotoPG">
 			<var name="pageName" value="${pageName}" />
 		</execute>
@@ -313,6 +316,7 @@
 	</command>
 
 	<command name="ViewWebsiteNotificationForUpdatedThreadInCategory" priority="4">
+		<property name="portal.acceptance" value="true" />
 		<execute macro="Page#gotoPG">
 			<var name="pageName" value="${pageName}" />
 		</execute>
