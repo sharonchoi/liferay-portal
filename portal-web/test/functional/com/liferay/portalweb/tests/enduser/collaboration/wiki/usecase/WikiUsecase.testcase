@@ -48,6 +48,7 @@
 	</tear-down>
 
 	<command name="AddPageWithCustomContentHeading" priority="4">
+		<property name="portal.acceptance" value="true" />
 		<execute macro="WikiNavigator#gotoAllPages" />
 
 		<execute function="AssertClick" locator1="Wiki#ADD_PAGE" value1="Add Page" />
@@ -105,6 +106,7 @@
 	</command>
 
 	<command name="ConfigurePortletDisplaySettings" priority="4">
+		<property name="portal.acceptance" value="true" />
 		<execute macro="Page#gotoPG">
 			<var name="pageName" value="Wiki Test Page" />
 		</execute>
@@ -157,6 +159,7 @@
 	</command>
 
 	<command name="DeleteDeleteWikiFrontpage" priority="5">
+		<property name="portal.acceptance" value="true" />
 		<execute macro="Navigator#openURL" />
 
 		<execute macro="ProductMenu#gotoSitesContent">
@@ -230,6 +233,7 @@
 	</command>
 
 	<command name="RateAndEditPageComment" priority="5">
+		<property name="portal.acceptance" value="true" />
 		<execute macro="Navigator#openURL" />
 
 		<execute macro="ProductMenu#gotoSitesContent">
@@ -301,6 +305,7 @@
 	</command>
 
 	<command name="RatePage" priority="5">
+		<property name="portal.acceptance" value="true" />
 		<execute macro="Navigator#openURL" />
 
 		<execute macro="ProductMenu#gotoSitesContent">
@@ -366,6 +371,7 @@
 	</command>
 
 	<command name="RestoreDeleteWikiFrontpage" priority="5">
+		<property name="portal.acceptance" value="true" />
 		<execute macro="Navigator#openURL" />
 
 		<execute macro="ProductMenu#gotoSitesContent">
@@ -430,6 +436,7 @@
 	</command>
 
 	<command name="SearchWikiCommentsAndAttachments" priority="4">
+		<property name="portal.acceptance" value="true" />
 		<execute macro="WikiPage#addFrontPagePG">
 			<var name="wikiNodeName" value="Main" />
 			<var name="wikiPageContent" value="Wiki FrontPage Content" />
@@ -488,6 +495,7 @@
 	</command>
 
 	<command name="ViewNoWikiXSSviaAddPage" priority="3">
+		<property name="portal.acceptance" value="true" />
 		<execute macro="Page#gotoPG">
 			<var name="pageName" value="Wiki Test Page" />
 		</execute>
@@ -501,6 +509,7 @@
 	</command>
 
 	<command name="ViewWikiDraftPagesViaBreadcrumb" priority="4">
+		<property name="portal.acceptance" value="true" />
 		<execute macro="Page#gotoPG">
 			<var name="pageName" value="${pageName}" />
 		</execute>

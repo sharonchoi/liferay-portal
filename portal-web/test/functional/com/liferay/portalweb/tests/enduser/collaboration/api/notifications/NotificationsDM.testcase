@@ -81,6 +81,7 @@
 	</tear-down>
 
 	<command name="ViewNoWebsiteNotificationForNewDocumentInFolder" priority="4">
+		<property name="portal.acceptance" value="true" />
 		<execute macro="Page#gotoPG">
 			<var name="pageName" value="${pageName}" />
 		</execute>
@@ -155,6 +156,7 @@
 	</command>
 
 	<command name="ViewNoWebsiteNotificationForUpdatedDocumentInFolder" priority="4">
+		<property name="portal.acceptance" value="true" />
 		<execute macro="Page#gotoPG">
 			<var name="pageName" value="${pageName}" />
 		</execute>
@@ -234,6 +236,7 @@
 	</command>
 
 	<command name="ViewWebsiteNotificationForNewDocumentInFolder" priority="4">
+		<property name="portal.acceptance" value="true" />
 		<execute macro="Page#gotoPG">
 			<var name="pageName" value="${pageName}" />
 		</execute>
@@ -311,6 +314,7 @@
 	</command>
 
 	<command name="ViewWebsiteNotificationForUpdatedDocumentInFolder" priority="4">
+		<property name="portal.acceptance" value="true" />
 		<execute macro="Page#gotoPG">
 			<var name="pageName" value="${pageName}" />
 		</execute>
