@@ -457,7 +457,6 @@
 
 	<command name="ConfigureAPPortletSelectedWebContent" priority="5">
 
-
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="AssetPublisherPortlet#configureSelectedPG">

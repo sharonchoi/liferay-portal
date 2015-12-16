@@ -84,8 +84,8 @@
 		</if>
 	</tear-down>
 
-	<command name="ViewNoWebsiteNotificationForNewThreadInCategory" priority="4
-		<property name="portal.acceptance" value="true" />">
+	<command name="ViewNoWebsiteNotificationForNewThreadInCategory" priority="4">
+		<property name="portal.acceptance" value="true" />
 		<execute macro="Page#gotoPG">
 			<var name="pageName" value="${pageName}" />
 		</execute>

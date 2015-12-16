@@ -55,7 +55,6 @@
 
 	<command name="AddRSSADTViaPortletConfiguration" priority="5">
 
-
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Page#gotoPG">
@@ -274,7 +273,6 @@
 
 	<command name="ADTBreadcrumb" priority="5">
 
-
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Page#gotoPG">
@@ -312,7 +310,6 @@
 	</command>
 
 	<command name="ADTCategoriesNavigation" priority="5">
-
 
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
@@ -655,7 +652,6 @@
 	</command>
 
 	<command name="ADTTagsNavigationPortlet" priority="5">
-
 
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 

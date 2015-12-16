@@ -327,7 +327,6 @@
 
 	<command name="AddCalendarEventRegular" priority="5">
 
-
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<var name="eventTitle" value="Calendar Event Regular Title" />
@@ -1240,7 +1239,6 @@
 
 	<command name="AddCalendarResource" priority="5">
 
-
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<var name="calendarResourceName" value="Calendar Resource Name" />
@@ -1869,7 +1867,6 @@
 
 	<command name="DeleteCalendarEventRegular"  priority="5">
 
-
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<var name="eventTitle" value="Calendar Event Regular Title" />
@@ -1940,7 +1937,6 @@
 	</command>
 
 	<command name="DeleteCalendarEventRepeatingAllFollowing" priority="5">
-
 
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
@@ -3417,7 +3413,6 @@
 
 	<command name="SearchForOtherCalendars" priority="5">
 
-
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<var name="eventType" value="Regular" />
@@ -3916,7 +3911,6 @@
 	</command>
 
 	<command name="ViewCalendarTimeZoneDefaults" priority="5">
-
 
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
@@ -4707,7 +4701,6 @@
 	</command>
 
 	<command name="ViewWeekStartMonday" priority="5">
-
 
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 

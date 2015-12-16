@@ -83,7 +83,6 @@
 
 	<command name="AddDisplayTemplateVelocity" priority="5">
 
-
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<var name="ddlDataDefinitionName" value="Data Definition" />
@@ -128,7 +127,6 @@
 	</command>
 
 	<command name="AddFormTemplate" priority="5">
-
 
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
@@ -1276,7 +1274,6 @@
 	</command>
 
 	<command name="AddListRecordWithHTMLField" priority="5">
-
 
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
@@ -2714,7 +2711,6 @@
 
 	<command name="DeleteListRecord" priority="5">
 
-
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<var name="ddlDataDefinitionName" value="Data Definition" />
@@ -2789,7 +2785,6 @@
 	</command>
 
 	<command name="EditBooleanFieldFieldLabel" priority="5">
-
 
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
@@ -3185,7 +3180,6 @@
 
 	<command name="EditDataDefinition" priority="5">
 
-
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<var name="ddlDataDefinitionDescription" value="Data Definition Description" />
@@ -3570,7 +3564,6 @@
 
 	<command name="EditListRecord" priority="5">
 
-
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<var name="ddlDataDefinitionName" value="Data Definition" />
@@ -3870,7 +3863,6 @@
 	</command>
 
 	<command name="EditSelectFieldOptions" priority="5">
-
 
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 

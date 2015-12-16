@@ -61,7 +61,6 @@
 
 	<command name="AddBlogsEntryOrgRole" priority="5">
 
-
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Permissions#setUpOrgRoleLoginUserPG">
@@ -229,7 +228,6 @@
 
 	<command name="AddBlogsEntryRegRole" priority="5">
 
-
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Permissions#setUpRegRoleLoginUserPG">
@@ -366,7 +364,6 @@
 	</command>
 
 	<command name="AddBlogsEntrySiteRole" priority="5">
-
 
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 

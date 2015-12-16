@@ -212,7 +212,6 @@
 
 	<command name="AddSitePublicChildPage" priority="5">
 
-
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Page#gotoCP">
@@ -256,7 +255,6 @@
 	</command>
 
 	<command name="AddSitePublicPage" priority="5">
-
 
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
@@ -388,7 +386,6 @@
 
 	<command name="DeleteSitePages" priority="5">
 
-
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Page#gotoCP">
@@ -423,7 +420,6 @@
 	</command>
 
 	<command name="EditSitePage" priority="5">
-
 
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 

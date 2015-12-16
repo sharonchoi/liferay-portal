@@ -1412,7 +1412,6 @@
 
 	<command name="SubmitFormWithTextField" priority="5">
 
-
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Navigator#openURL" />
@@ -1500,7 +1499,6 @@
 	</command>
 
 	<command name="SubmitFormWithThreePages" priority="5">
-
 
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 

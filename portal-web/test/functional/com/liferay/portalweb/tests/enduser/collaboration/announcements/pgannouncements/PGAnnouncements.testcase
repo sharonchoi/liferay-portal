@@ -45,7 +45,6 @@
 
 	<command name="AddAnnouncementsEntry" priority="5">
 
-
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<var name="announcementType" value="General" />
@@ -249,7 +248,6 @@
 
 	<command name="DeleteAnnouncementsEntry" priority="5">
 
-
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<var name="distributionScope" value="General" />
@@ -285,7 +283,6 @@
 	</command>
 
 	<command name="EditAnnouncementsEntry" priority="5">
-
 
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
@@ -333,7 +330,6 @@
 	</command>
 
 	<command name="HideAnnouncementsEntry" priority="5">
-
 
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 

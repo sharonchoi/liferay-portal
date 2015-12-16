@@ -16,7 +16,6 @@
 
 	<command description="This is a test case for LPS-56769." name="Smoke" priority="5">
 
-
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Navigator#gotoPage">

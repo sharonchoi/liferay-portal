@@ -32,7 +32,6 @@
 
 	<command name="AddBookmark" priority="5">
 
-
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<var name="bookmarkDescription" value="This is a test bookmark!" />
@@ -64,7 +63,6 @@
 	</command>
 
 	<command name="AddBookmarks" priority="5">
-
 
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
@@ -124,7 +122,6 @@
 
 	<command name="AddFolder" priority="5">
 
-
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<var name="folderDescription" value="This is a test bookmarks folder!" />
@@ -171,7 +168,6 @@
 	</command>
 
 	<command name="AddNullFolder" priority="5">
-
 
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
@@ -274,7 +270,6 @@
 
 	<command name="DeleteBookmark" priority="5">
 
-
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<var name="bookmarkDescription" value="This is a test bookmark!" />
@@ -357,7 +352,6 @@
 
 	<command name="EditBookmark" priority="5">
 
-
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<var name="bookmarkDescription" value="This is a test bookmark!" />
@@ -407,7 +401,6 @@
 	</command>
 
 	<command name="EditFolder" priority="5">
-
 
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
@@ -602,7 +595,6 @@
 	</command>
 
 	<command name="MoveToRecycleBinFolder" priority="5">
-
 
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 

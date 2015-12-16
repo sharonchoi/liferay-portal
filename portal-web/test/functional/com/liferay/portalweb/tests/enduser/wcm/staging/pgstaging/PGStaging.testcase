@@ -192,7 +192,6 @@
 	<command name="ActivateRemoteStaging" priority="5">
 		<property name="custom.properties" value="tunneling.servlet.shared.secret=1234567890123456${line.separator}auth.verifier.TunnelingServletAuthVerifier.hosts.allowed=" />
 
-
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<var name="siteID" value="${siteID}" />
@@ -227,7 +226,6 @@
 	</command>
 
 	<command name="ActivateStaging" priority="5">
-
 
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
@@ -320,7 +318,6 @@
 
 	<command name="AddPageVariation" priority="5">
 
-
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Page#gotoPublishingTools">
@@ -382,7 +379,6 @@
 	</command>
 
 	<command name="AddSitePagesVariation" priority="5">
-
 
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
@@ -1372,7 +1368,6 @@
 	</command>
 
 	<command name="StagingPublishPortlet" priority="5">
-
 
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
