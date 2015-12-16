@@ -82,7 +82,8 @@
 	</command>
 
 	<command name="AddDisplayTemplateVelocity" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<var name="ddlDataDefinitionName" value="Data Definition" />
 		<var name="ddlDisplayTemplateLanguage" value="Velocity (.vm)" />
@@ -126,7 +127,8 @@
 	</command>
 
 	<command name="AddFormTemplate" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<var name="ddlDataDefinitionName" value="Data Definition" />
 		<var name="ddlFormTemplateName" value="Data Definition Form Template Name" />
@@ -1272,7 +1274,8 @@
 	</command>
 
 	<command name="AddListRecordWithHTMLField" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<var name="ddlDataDefinitionName" value="Data Definition" />
 		<var name="ddlListName" value="List Name" />
@@ -2707,7 +2710,8 @@
 	</command>
 
 	<command name="DeleteListRecord" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<var name="ddlDataDefinitionName" value="Data Definition" />
 		<var name="ddlListName" value="List Name" />
@@ -2781,7 +2785,8 @@
 	</command>
 
 	<command name="EditBooleanFieldFieldLabel" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<var name="ddlDataDefinitionName" value="Data Definition" />
 		<var name="ddlListName" value="List Name" />
@@ -3174,7 +3179,8 @@
 	</command>
 
 	<command name="EditDataDefinition" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<var name="ddlDataDefinitionDescription" value="Data Definition Description" />
 		<var name="ddlDataDefinitionDescriptionEdit" value="Data Definition Description Edit" />
@@ -3557,7 +3563,8 @@
 	</command>
 
 	<command name="EditListRecord" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<var name="ddlDataDefinitionName" value="Data Definition" />
 		<var name="ddlListName" value="List Name" />
@@ -3856,7 +3863,8 @@
 	</command>
 
 	<command name="EditSelectFieldOptions" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<var name="ddlDataDefinitionName" value="Data Definition" />
 		<var name="field" value="Select" />

@@ -71,7 +71,8 @@
 	</command>
 
 	<command name="AddChildSite" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Page#gotoCP">
 			<var name="portletName" value="Sites" />
@@ -142,7 +143,8 @@
 	</command>
 
 	<command description="Ensure that the super admin can add a Blank Site" name="AddSite" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Page#gotoCP">
 			<var name="portletName" value="Sites" />
@@ -273,7 +275,8 @@
 	</command>
 
 	<command name="DeleteSite" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Page#gotoCP">
 			<var name="portletName" value="Sites" />
@@ -293,7 +296,8 @@
 	</command>
 
 	<command name="EditSite" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Page#gotoCP">
 			<var name="portletName" value="Sites" />
@@ -422,7 +426,8 @@
 	</command>
 
 	<command name="SearchSite" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Page#gotoCP">
 			<var name="portletName" value="Sites" />

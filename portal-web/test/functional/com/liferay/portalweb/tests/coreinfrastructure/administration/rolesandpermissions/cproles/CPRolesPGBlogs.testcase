@@ -60,7 +60,8 @@
 	</command>
 
 	<command name="AddBlogsEntryOrgRole" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Permissions#setUpOrgRoleLoginUserPG">
 			<var name="orgName" value="Organization Name" />
@@ -226,7 +227,8 @@
 	</command>
 
 	<command name="AddBlogsEntryRegRole" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Permissions#setUpRegRoleLoginUserPG">
 			<var name="pageName" value="Blogs Page" />
@@ -362,7 +364,8 @@
 	</command>
 
 	<command name="AddBlogsEntrySiteRole" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Permissions#setUpSiteRoleLoginUserPG">
 			<var name="page" value="Public Pages" />

@@ -456,7 +456,8 @@
 	</command>
 
 	<command name="ConfigureAPPortletSelectedWebContent" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="AssetPublisherPortlet#configureSelectedPG">
 			<var name="selectedAsset" value="Web Content Article" />

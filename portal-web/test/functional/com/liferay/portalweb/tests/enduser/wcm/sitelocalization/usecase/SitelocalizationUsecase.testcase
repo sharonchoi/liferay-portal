@@ -31,7 +31,8 @@
 	</tear-down>
 
 	<command name="AvailableSiteLocalesSubsetOfAvailablePortalLocales" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Page#addPG">
 			<var name="pageName" value="Language Test Page" />
@@ -526,7 +527,8 @@
 	</command>
 
 	<command name="SiteTemplateLocalization" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Page#gotoCP">
 			<var name="portletName" value="Site Templates" />
@@ -682,7 +684,8 @@
 	</command>
 
 	<command name="ViewSiteLocalizationAfterDeletingOriginalLocale" priority="5">
-		<property name="portal.acceptance" value="true" />
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Page#gotoCP">
 			<var name="portletName" value="Portal Settings" />
