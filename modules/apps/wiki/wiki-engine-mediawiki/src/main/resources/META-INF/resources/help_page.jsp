@@ -76,3 +76,9 @@ Code block:
 Inline code:
 	&lt;code&gt;Test.java&lt;/code&gt;
 </pre>
+
+<%
+BaseInputEditorWikiEngine baseInputEditorWikiEngine = BaseInputEditorWikiEngine.getBaseInputEditorWikiEngine(request);
+%>
+
+<aui:a href="<%= baseInputEditorWikiEngine.getSyntaxHelpPageLinkURL() %>" target="_blank"><liferay-ui:message key="learn-more" /> &raquo;</aui:a>
