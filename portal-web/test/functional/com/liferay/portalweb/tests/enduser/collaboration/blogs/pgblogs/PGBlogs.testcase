@@ -99,7 +99,6 @@
 
 	<command name="AddBlogsEntry" priority="5">
 
-
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Page#gotoPG">
@@ -123,7 +122,6 @@
 	</command>
 
 	<command name="AddBlogsEntryComment" priority="5">
-
 
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
@@ -664,7 +662,6 @@
 
 	<command name="EditBlogsEntry" priority="5">
 
-
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Page#gotoPG">
@@ -703,7 +700,6 @@
 	</command>
 
 	<command name="EditBlogsEntryComment" priority="5">
-
 
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 

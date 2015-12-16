@@ -188,7 +188,6 @@
 
 	<command name="AddSelectTagViaBlogs" priority="5">
 
-
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Page#gotoCP">
@@ -271,7 +270,6 @@
 	</command>
 
 	<command name="AddTagViaBlogs" priority="5">
-
 
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
@@ -365,7 +363,6 @@
 	</command>
 
 	<command name="DisplayTagCloud" priority="5">
-
 
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
@@ -685,7 +682,6 @@
 
 	<command name="RemoveTagViaBlogs" priority="5">
 
-
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Page#gotoCP">
@@ -877,7 +873,6 @@
 
 	<command name="ViewTagCloudDisplayConfiguration" priority="5">
 
-
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Page#addPG">
@@ -902,7 +897,6 @@
 	</command>
 
 	<command name="ViewTagCloudIncrease" priority="5">
-
 
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 

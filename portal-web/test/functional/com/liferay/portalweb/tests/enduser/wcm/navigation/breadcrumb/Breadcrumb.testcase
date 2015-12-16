@@ -263,7 +263,6 @@
 
 	<command name="DisableShowCurrentSite" priority="5">
 
-
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Page#gotoCP">
@@ -369,7 +368,6 @@
 	</command>
 
 	<command name="DisableShowPage" priority="5">
-
 
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 

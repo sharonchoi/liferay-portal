@@ -80,8 +80,8 @@
 		</if>
 	</tear-down>
 
-	<command name="ViewNoWebsiteNotificationForNewDocumentInFolder" priority="4
-		<property name="portal.acceptance" value="true" />">
+	<command name="ViewNoWebsiteNotificationForNewDocumentInFolder" priority="4">
+		<property name="portal.acceptance" value="true" />
 		<execute macro="Page#gotoPG">
 			<var name="pageName" value="${pageName}" />
 		</execute>

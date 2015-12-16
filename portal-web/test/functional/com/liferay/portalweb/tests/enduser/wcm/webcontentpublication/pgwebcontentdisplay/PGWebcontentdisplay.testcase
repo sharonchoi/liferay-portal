@@ -124,7 +124,6 @@
 
 	<command name="AddWebContent" priority="5">
 
-
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Page#gotoPG">
@@ -498,7 +497,6 @@
 
 	<command name="RemoveWCDPortletSite" priority="5">
 
-
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Portlet#deletePG">
@@ -562,7 +560,6 @@
 	</command>
 
 	<command name="SelectWebContent" priority="5">
-
 
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 

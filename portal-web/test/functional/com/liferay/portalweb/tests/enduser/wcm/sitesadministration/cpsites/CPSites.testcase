@@ -72,7 +72,6 @@
 
 	<command name="AddChildSite" priority="5">
 
-
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Page#gotoCP">
@@ -144,7 +143,6 @@
 	</command>
 
 	<command description="Ensure that the super admin can add a Blank Site" name="AddSite" priority="5">
-
 
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
@@ -278,7 +276,6 @@
 
 	<command name="DeleteSite" priority="5">
 
-
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Page#gotoCP">
@@ -299,7 +296,6 @@
 	</command>
 
 	<command name="EditSite" priority="5">
-
 
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
@@ -430,7 +426,6 @@
 	</command>
 
 	<command name="SearchSite" priority="5">
-
 
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 

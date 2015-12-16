@@ -42,7 +42,6 @@
 
 	<command name="AddWebContentCP" priority="5">
 
-
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<var name="webContentContent" value="WC WebContent Content" />

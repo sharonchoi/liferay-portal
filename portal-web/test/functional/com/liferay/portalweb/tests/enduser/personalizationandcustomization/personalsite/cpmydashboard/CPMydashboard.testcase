@@ -32,7 +32,6 @@
 
 	<command name="JoinSiteOpen" priority="5">
 
-
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
 		<execute macro="Page#gotoCP">
@@ -87,7 +86,6 @@
 	</command>
 
 	<command name="JoinSitePrivateNo" priority="5">
-
 
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
@@ -234,7 +232,6 @@
 	</command>
 
 	<command name="LeaveSite" priority="5">
-
 
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER_TOOLBAR_TITLE" value1="${wikiNodeName}" />
 
