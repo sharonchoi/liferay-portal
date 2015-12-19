@@ -35,32 +35,61 @@ WikiPage templatePage = null;
 if ((templateNodeId > 0) && Validator.isNotNull(templateTitle)) {
 	try {
 		templatePage = WikiPageServiceUtil.getPage(templateNodeId, templateTitle);
+
+		attachmentsFileEntries = templatePage.getAttachmentsFileEntries();
 	}
 	catch (Exception e) {
 	}
 }
 %>
 
-<c:if test="<%= (templatePage != null) && (templatePage.getAttachmentsFileEntriesCount() > 0) %>">
+<c:if test="<%= (attachmentsFileEntries != null) %>">
+	<c:if test="<%= (templatePage != null) && !attachmentsFileEntries.isEmpty() %>">
+		<aui:input name="copyPageAttachments" type="checkbox" value="<%= copyPageAttachments %>" />
+	</c:if>
 
-	<%
-	attachmentsFileEntries = templatePage.getAttachmentsFileEntries();
-	%>
+	<liferay-ui:search-container
+		id="pageAttachments"
+		iteratorURL="<%= currentURLObj %>"
+		total="<%= attachmentsFileEntries.size() %>"
+	>
 
-	<aui:input name="copyPageAttachments" type="checkbox" value="<%= copyPageAttachments %>" />
-</c:if>
+		<liferay-ui:search-container-results
+			results="<%= attachmentsFileEntries %>"
+		/>
 
-<c:if test="<%= attachmentsFileEntries != null %>">
+		<liferay-ui:search-container-row
+			className="com.liferay.portal.kernel.repository.model.FileEntry"
+			escapedModel="<%= true %>"
+			keyProperty="fileEntryId"
+			modelVar="fileEntry"
+			rowVar="row"
+		>
 
-	<%
-	for (int i = 0; i < attachmentsFileEntries.size(); i++) {
-		FileEntry attachmentsFileEntry = attachmentsFileEntries.get(i);
-	%>
+			<%
+			int status = WorkflowConstants.STATUS_APPROVED;
 
-		<aui:a href="<%= (templatePage != null) && (templatePage.getAttachmentsFileEntriesCount() > 0) ? PortletFileRepositoryUtil.getDownloadPortletFileEntryURL(themeDisplay, attachmentsFileEntry, StringPool.BLANK) : null %>"><%= attachmentsFileEntry.getTitle() %></aui:a> (<%= TextFormatter.formatStorageSize(attachmentsFileEntry.getSize(), locale) %>)<%= (i < (attachmentsFileEntries.size() - 1)) ? ", " : "" %>
+			String rowURL = PortletFileRepositoryUtil.getDownloadPortletFileEntryURL(themeDisplay, fileEntry, "status=" + status);
+			%>
 
-	<%
-	}
-	%>
+			<liferay-ui:search-container-column-text
+				href="<%= rowURL %>"
+				name="file-name"
+				value="<%= fileEntry.getTitle()%>"
+			/>
 
+			<liferay-ui:search-container-column-text
+				href="<%= rowURL %>"
+				name="size"
+				value="<%= TextFormatter.formatStorageSize(fileEntry.getSize(), locale) %>"
+			/>
+
+			<liferay-ui:search-container-column-jsp
+				cssClass="entry-action"
+				path="/wiki/page_attachment_action.jsp"
+			/>
+		</liferay-ui:search-container-row>
+
+		<liferay-ui:search-iterator markupView="lexicon" paginate="<%= false %>" />
+	</liferay-ui:search-container>
 </c:if>

@@ -188,6 +188,11 @@ AUI.add(
 						value: true
 					},
 
+                    removeOnComplete: {
+                        validator: Lang.isBoolean,
+                        value: false
+					},
+
 					strings: {
 						value: {
 							allFilesSelectedText: Liferay.Language.get('all-files-selected'),
@@ -211,7 +216,6 @@ AUI.add(
 							unexpectedErrorOnUploadText: Liferay.Language.get('an-unexpected-error-occurred-while-uploading-your-file'),
 							uploadingFileXofXText: Liferay.Language.get('uploading-file-x-of-x'),
 							uploadingText: Liferay.Language.get('uploading'),
-							uploadsCompleteText: Liferay.Language.get('all-files-ready-to-be-saved'),
 							warningFailureText: Liferay.Language.get('consider-that-the-following-data-would-not-have-been-imported-either'),
 							warningText: Liferay.Language.get('the-following-data-will-not-be-imported'),
 							xFilesReadyText: Liferay.Language.get('x-files-ready-to-be-uploaded'),
@@ -228,6 +232,11 @@ AUI.add(
 						validator: Lang.isString,
 						value: null
 					},
+
+                    uploadsCompleteText: {
+                        validator: Lang.isString,
+                        value: Liferay.Language.get('all-files-ready-to-be-saved')
+                    },
 
 					uploadFile: {
 						value: ''
@@ -627,10 +636,18 @@ AUI.add(
 						var uploadsCompleteText;
 
 						if (instance._fileListContent.one('.upload-file.upload-complete') && instance.get('multipleFiles')) {
-							uploadsCompleteText = strings.uploadsCompleteText;
+							uploadsCompleteText = instance.get('uploadsCompleteText');
 						}
 
 						instance._updateList(0, uploadsCompleteText);
+
+                        var removeOnComplete = instance.get('removeOnComplete');
+
+                        if (removeOnComplete) {
+                            instance._listInfo.one('h4').hide();
+
+                            instance._allRowIdsCheckbox.hide();
+                        }
 
 						Liferay.fire('allUploadsComplete');
 					},
@@ -818,7 +835,7 @@ AUI.add(
 							if (li) {
 								if (data.warningMessages) {
 									file.selected = true;
-									file.temp = true;
+									file.temp = true; //?
 									file.warningMessages = data.warningMessages;
 
 									newLiNode = instance._fileListTPL.parse([file]);
@@ -829,7 +846,7 @@ AUI.add(
 								}
 								else if (data.name) {
 									file.selected = true;
-									file.temp = true;
+									file.temp = true; //?
 									file.name = data.name;
 									file.title = data.title;
 
@@ -864,7 +881,15 @@ AUI.add(
 
 							instance._updateMetadataContainer();
 						}
-					},
+
+                        var removeOnComplete = instance.get('removeOnComplete');
+
+                        if (removeOnComplete) {
+                            li.remove(true);
+                        }
+
+                        instance.fire('uploadComplete', file);
+                    },
 
 					_onUploadProgress: function(event) {
 						var instance = this;
