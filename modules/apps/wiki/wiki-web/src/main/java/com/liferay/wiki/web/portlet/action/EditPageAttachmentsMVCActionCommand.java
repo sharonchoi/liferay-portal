@@ -33,6 +33,7 @@ import com.liferay.portal.kernel.upload.UploadPortletRequest;
 import com.liferay.portal.kernel.upload.UploadRequestSizeException;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ContentTypes;
+import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.KeyValuePair;
 import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -45,10 +46,14 @@ import com.liferay.portal.kernel.util.TempFileEntryUtil;
 import com.liferay.portal.kernel.util.TextFormatter;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.TrashedModel;
+import com.liferay.portal.portletfilerepository.PortletFileRepositoryUtil;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portlet.ActionResponseImpl;
+import com.liferay.portlet.PortletURLFactoryUtil;
 import com.liferay.portlet.asset.AssetCategoryException;
 import com.liferay.portlet.asset.AssetTagException;
 import com.liferay.portlet.asset.model.AssetVocabulary;
@@ -85,6 +90,7 @@ import javax.portlet.PortletConfig;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 
+import javax.portlet.PortletURL;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.FileUploadBase;
@@ -163,145 +169,6 @@ public class EditPageAttachmentsMVCActionCommand extends BaseMVCActionCommand {
 		}
 	}
 
-	/**
-	 * TODO: Remove. This should extend from EditFileEntryAction once it is
-	 * modularized.
-	 */
-	protected void addMultipleFileEntries(
-			PortletConfig portletConfig, ActionRequest actionRequest,
-			ActionResponse actionResponse)
-		throws Exception {
-
-		List<KeyValuePair> validFileNameKVPs = new ArrayList<>();
-		List<KeyValuePair> invalidFileNameKVPs = new ArrayList<>();
-
-		String[] selectedFileNames = ParamUtil.getParameterValues(
-			actionRequest, "selectedFileName", new String[0], false);
-
-		for (String selectedFileName : selectedFileNames) {
-			addMultipleFileEntries(
-				portletConfig, actionRequest, actionResponse, selectedFileName,
-				validFileNameKVPs, invalidFileNameKVPs);
-		}
-
-		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
-
-		for (KeyValuePair validFileNameKVP : validFileNameKVPs) {
-			String fileName = validFileNameKVP.getKey();
-			String originalFileName = validFileNameKVP.getValue();
-
-			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
-
-			jsonObject.put("added", Boolean.TRUE);
-			jsonObject.put("fileName", fileName);
-			jsonObject.put("originalFileName", originalFileName);
-
-			jsonArray.put(jsonObject);
-		}
-
-		for (KeyValuePair invalidFileNameKVP : invalidFileNameKVPs) {
-			String fileName = invalidFileNameKVP.getKey();
-			String errorMessage = invalidFileNameKVP.getValue();
-
-			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
-
-			jsonObject.put("added", Boolean.FALSE);
-			jsonObject.put("errorMessage", errorMessage);
-			jsonObject.put("fileName", fileName);
-			jsonObject.put("originalFileName", fileName);
-
-			jsonArray.put(jsonObject);
-		}
-
-		JSONPortletResponseUtil.writeJSON(
-			actionRequest, actionResponse, jsonArray);
-	}
-
-	protected void addMultipleFileEntries(
-			PortletConfig portletConfig, ActionRequest actionRequest,
-			ActionResponse actionResponse, String selectedFileName,
-			List<KeyValuePair> validFileNameKVPs,
-			List<KeyValuePair> invalidFileNameKVPs)
-		throws Exception {
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		long nodeId = ParamUtil.getLong(actionRequest, "nodeId");
-		String title = ParamUtil.getString(actionRequest, "title");
-
-		FileEntry tempFileEntry = null;
-
-		try {
-			tempFileEntry = TempFileEntryUtil.getTempFileEntry(
-				themeDisplay.getScopeGroupId(), themeDisplay.getUserId(),
-				_TEMP_FOLDER_NAME, selectedFileName);
-
-			String originalSelectedFileName =
-				TempFileEntryUtil.getOriginalTempFileName(
-					tempFileEntry.getFileName());
-			InputStream inputStream = tempFileEntry.getContentStream();
-			String mimeType = tempFileEntry.getMimeType();
-
-			FileEntry fileEntry = _wikiPageService.addPageAttachment(
-				nodeId, title, originalSelectedFileName, inputStream, mimeType);
-
-			validFileNameKVPs.add(
-				new KeyValuePair(fileEntry.getTitle(), selectedFileName));
-		}
-		catch (Exception e) {
-			String errorMessage = getAddMultipleFileEntriesErrorMessage(
-				portletConfig, actionRequest, actionResponse, e);
-
-			invalidFileNameKVPs.add(
-				new KeyValuePair(selectedFileName, errorMessage));
-		}
-		finally {
-			if (tempFileEntry != null) {
-				TempFileEntryUtil.deleteTempFileEntry(
-					tempFileEntry.getFileEntryId());
-			}
-		}
-	}
-
-	protected void addTempAttachment(
-			ActionRequest actionRequest, ActionResponse actionResponse)
-		throws Exception {
-
-		UploadPortletRequest uploadPortletRequest =
-			PortalUtil.getUploadPortletRequest(actionRequest);
-
-		long nodeId = ParamUtil.getLong(actionRequest, "nodeId");
-		String sourceFileName = uploadPortletRequest.getFileName("file");
-
-		InputStream inputStream = null;
-
-		try {
-			inputStream = uploadPortletRequest.getFileAsStream("file");
-
-			String mimeType = uploadPortletRequest.getContentType("file");
-
-			String tempFileName = TempFileEntryUtil.getTempFileName(
-				sourceFileName);
-
-			FileEntry fileEntry = _wikiPageService.addTempFileEntry(
-				nodeId, _TEMP_FOLDER_NAME, tempFileName, inputStream, mimeType);
-
-			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
-
-			jsonObject.put("groupId", fileEntry.getGroupId());
-			jsonObject.put("name", fileEntry.getTitle());
-			jsonObject.put("title", sourceFileName);
-			jsonObject.put("uuid", fileEntry.getUuid());
-
-			JSONPortletResponseUtil.writeJSON(
-				actionRequest, actionResponse, jsonObject);
-		}
-		finally {
-			StreamUtil.cleanUp(inputStream);
-		}
-	}
-
 	protected void deleteAttachment(
 			ActionRequest actionRequest, boolean moveToTrash)
 		throws Exception {
@@ -332,36 +199,6 @@ public class EditPageAttachmentsMVCActionCommand extends BaseMVCActionCommand {
 		}
 	}
 
-	protected void deleteTempAttachment(
-			ActionRequest actionRequest, ActionResponse actionResponse)
-		throws Exception {
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		long nodeId = ParamUtil.getLong(actionRequest, "nodeId");
-		String fileName = ParamUtil.getString(actionRequest, "fileName");
-
-		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
-
-		try {
-			_wikiPageService.deleteTempFileEntry(
-				nodeId, fileName, _TEMP_FOLDER_NAME);
-
-			jsonObject.put("deleted", Boolean.TRUE);
-		}
-		catch (Exception e) {
-			String errorMessage = themeDisplay.translate(
-				"an-unexpected-error-occurred-while-deleting-the-file");
-
-			jsonObject.put("deleted", Boolean.FALSE);
-			jsonObject.put("errorMessage", errorMessage);
-		}
-
-		JSONPortletResponseUtil.writeJSON(
-			actionRequest, actionResponse, jsonObject);
-	}
-
 	@Override
 	protected void doProcessAction(
 			ActionRequest actionRequest, ActionResponse actionResponse)
@@ -379,38 +216,22 @@ public class EditPageAttachmentsMVCActionCommand extends BaseMVCActionCommand {
 			if (uploadException != null) {
 				Throwable cause = uploadException.getCause();
 
-				if (cmd.equals(Constants.ADD_TEMP)) {
-					if (cause instanceof FileUploadBase.IOFileUploadException) {
-						if (_log.isInfoEnabled()) {
-							_log.info("Temporary upload was cancelled");
-						}
-					}
-				}
-				else {
-					if (uploadException.isExceededFileSizeLimit()) {
+				if (uploadException.isExceededFileSizeLimit()) {
 						throw new FileSizeException(cause);
 					}
 
-					if (uploadException.isExceededLiferayFileItemSizeLimit()) {
-						throw new LiferayFileItemException(cause);
-					}
-
-					if (uploadException.isExceededUploadRequestSizeLimit()) {
-						throw new UploadRequestSizeException(cause);
-					}
-
-					throw new PortalException(cause);
+				if (uploadException.isExceededLiferayFileItemSizeLimit()) {
+					throw new LiferayFileItemException(cause);
 				}
+
+				if (uploadException.isExceededUploadRequestSizeLimit()) {
+					throw new UploadRequestSizeException(cause);
+				}
+
+				throw new PortalException(cause);
 			}
 			else if (cmd.equals(Constants.ADD)) {
 				addAttachment(actionRequest);
-			}
-			else if (cmd.equals(Constants.ADD_MULTIPLE)) {
-				addMultipleFileEntries(
-					portletConfig, actionRequest, actionResponse);
-			}
-			else if (cmd.equals(Constants.ADD_TEMP)) {
-				addTempAttachment(actionRequest, actionResponse);
 			}
 			else if (cmd.equals(Constants.CHECK)) {
 				JSONObject jsonObject = RestoreEntryUtil.checkEntry(
@@ -423,9 +244,6 @@ public class EditPageAttachmentsMVCActionCommand extends BaseMVCActionCommand {
 			}
 			else if (cmd.equals(Constants.DELETE)) {
 				deleteAttachment(actionRequest, false);
-			}
-			else if (cmd.equals(Constants.DELETE_TEMP)) {
-				deleteTempAttachment(actionRequest, actionResponse);
 			}
 			else if (cmd.equals(Constants.EMPTY_TRASH)) {
 				emptyTrash(actionRequest);
@@ -441,12 +259,6 @@ public class EditPageAttachmentsMVCActionCommand extends BaseMVCActionCommand {
 			}
 			else if (cmd.equals(Constants.OVERRIDE)) {
 				restoreOverride(actionRequest);
-			}
-
-			if (cmd.equals(Constants.ADD_TEMP) ||
-				cmd.equals(Constants.DELETE_TEMP)) {
-
-				actionResponse.setRenderParameter("mvcPath", "/null.jsp");
 			}
 		}
 		catch (NoSuchNodeException | NoSuchPageException |

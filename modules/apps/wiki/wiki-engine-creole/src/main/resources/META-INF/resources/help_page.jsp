@@ -72,3 +72,9 @@
 &lt;&lt;TableOfContents&gt;&gt;
 {{{ Preformatted }}}
 </pre>
+
+<%
+BaseInputEditorWikiEngine baseInputEditorWikiEngine = BaseInputEditorWikiEngine.getBaseInputEditorWikiEngine(request);
+%>
+
+<aui:a href="<%= baseInputEditorWikiEngine.getSyntaxHelpPageLinkURL() %>" target="_blank"><liferay-ui:message key="learn-more" /> &raquo;</aui:a>

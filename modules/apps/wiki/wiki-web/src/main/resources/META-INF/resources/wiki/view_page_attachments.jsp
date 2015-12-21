@@ -62,66 +62,6 @@ PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(request, "attachm
 		title="removed-attachments"
 	/>
 </c:if>
-
-<c:if test="<%= WikiNodePermissionChecker.contains(permissionChecker, node.getNodeId(), ActionKeys.ADD_ATTACHMENT) %>">
-	<c:choose>
-		<c:when test="<%= viewTrashAttachments %>">
-			<portlet:actionURL name="/wiki/edit_page_attachment" var="emptyTrashURL">
-				<portlet:param name="nodeId" value="<%= String.valueOf(node.getPrimaryKey()) %>" />
-				<portlet:param name="title" value="<%= wikiPage.getTitle() %>" />
-			</portlet:actionURL>
-
-			<liferay-ui:trash-empty
-				confirmMessage="are-you-sure-you-want-to-remove-the-attachments-for-this-page"
-				emptyMessage="remove-the-attachments-for-this-page"
-				infoMessage="attachments-that-have-been-removed-for-more-than-x-will-be-automatically-deleted"
-				portletURL="<%= emptyTrashURL.toString() %>"
-				totalEntries="<%= wikiPage.getDeletedAttachmentsFileEntriesCount() %>"
-			/>
-		</c:when>
-		<c:otherwise>
-
-			<%
-			int deletedAttachmentsCount = wikiPage.getDeletedAttachmentsFileEntriesCount();
-			%>
-
-			<c:if test="<%= TrashUtil.isTrashEnabled(scopeGroupId) && (deletedAttachmentsCount > 0) %>">
-				<portlet:renderURL var="viewTrashAttachmentsURL">
-					<portlet:param name="mvcRenderCommandName" value="/wiki/view_page_attachments" />
-					<portlet:param name="redirect" value="<%= currentURL %>" />
-					<portlet:param name="nodeId" value="<%= String.valueOf(node.getNodeId()) %>" />
-					<portlet:param name="title" value="<%= wikiPage.getTitle() %>" />
-					<portlet:param name="viewTrashAttachments" value="<%= Boolean.TRUE.toString() %>" />
-				</portlet:renderURL>
-
-				<liferay-ui:icon
-					cssClass="trash-attachments"
-					iconCssClass="icon-trash"
-					label="<%= true %>"
-					message='<%= LanguageUtil.format(request, (deletedAttachmentsCount == 1) ? "x-recently-removed-attachment" : "x-recently-removed-attachments", deletedAttachmentsCount, false) %>'
-					url="<%= viewTrashAttachmentsURL %>"
-				/>
-			</c:if>
-
-			<portlet:renderURL var="addAttachmentsURL">
-				<portlet:param name="mvcRenderCommandName" value="/wiki/edit_page_attachment" />
-				<portlet:param name="nodeId" value="<%= String.valueOf(node.getNodeId()) %>" />
-				<portlet:param name="title" value="<%= wikiPage.getTitle() %>" />
-				<portlet:param name="redirect" value="<%= currentURL %>" />
-			</portlet:renderURL>
-
-			<div class="btn-toolbar">
-
-				<%
-				String taglibAddAttachments = "location.href = '" + addAttachmentsURL + "';";
-				%>
-
-				<aui:button onClick="<%= taglibAddAttachments %>" value="add-attachments" />
-			</div>
-		</c:otherwise>
-	</c:choose>
-</c:if>
-
 <%
 String emptyResultsMessage = null;
 
