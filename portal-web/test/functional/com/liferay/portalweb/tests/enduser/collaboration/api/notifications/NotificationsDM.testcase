@@ -373,6 +373,8 @@
 			<var name="dmFolderName" value="DM Folder Name" />
 		</execute>
 
+		<execute function="Pause" locator1="3000" />
+
 		<execute macro="DMDocument#editPG">
 			<var name="dmDocumentTitle" value="DM Document Title" />
 			<var name="dmDocumentTitleEdit" value="DM Document Title Edit" />
