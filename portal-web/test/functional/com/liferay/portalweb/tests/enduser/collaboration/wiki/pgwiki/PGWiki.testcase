@@ -495,6 +495,8 @@
 	</command>
 
 	<command name="AddWikiPage" priority="5">
+		<property name="portal.acceptance" value="true" />
+
 		<var name="wikiPageContent" value="Wiki Page Content" />
 		<var name="wikiPageTitle" value="Wiki Page Title" />
 
@@ -527,6 +529,8 @@
 	</command>
 
 	<command name="AddWikiPageChildPage" priority="5">
+		<property name="portal.acceptance" value="true" />
+
 		<var name="wikiChildPageContent" value="Wiki Child Page Content" />
 		<var name="wikiChildPageTitle" value="Wiki Child Page Title" />
 		<var name="wikiPageContent" value="Wiki Page Content" />
@@ -632,6 +636,8 @@
 	</command>
 
 	<command name="AddWikiPageFormatMediaWiki" priority="5">
+		<property name="portal.acceptance" value="true" />
+
 		<execute macro="Page#gotoPG">
 			<var name="pageName" value="Wiki Test Page" />
 		</execute>
@@ -712,6 +718,8 @@
 	</command>
 
 	<command name="CancelAddPage" priority="5">
+		<property name="portal.acceptance" value="true" />
+
 		<execute macro="Page#gotoPG">
 			<var name="pageName" value="Wiki Test Page" />
 		</execute>
@@ -916,6 +924,8 @@
 	</command>
 
 	<command name="DeleteWikiPage" priority="5">
+		<property name="portal.acceptance" value="true" />
+
 		<var name="wikiPageContent" value="Wiki Page Content" />
 		<var name="wikiPageTitle" value="Wiki Page Title" />
 
@@ -952,6 +962,8 @@
 	</command>
 
 	<command name="EditDraftPage" priority="5">
+		<property name="portal.acceptance" value="true" />
+
 		<execute macro="Page#gotoPG">
 			<var name="pageName" value="Wiki Test Page" />
 		</execute>

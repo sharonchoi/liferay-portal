@@ -54,6 +54,8 @@
 	</tear-down>
 
 	<command name="AddMBCategories" priority="5">
+		<property name="portal.acceptance" value="true" />
+
 		<var name="categoryNameList" value="MB Category1 Name,MB Category2 Name,MB Category3 Name" />
 
 		<for list="${categoryNameList}" param="categoryName" >
@@ -72,6 +74,8 @@
 	</command>
 
 	<command name="AddMBCategory" priority="5">
+		<property name="portal.acceptance" value="true" />
+
 		<var name="categoryName" value="MB Category Name" />
 
 		<execute macro="Page#gotoPG">
@@ -354,6 +358,8 @@
 	</command>
 
 	<command name="AddMBThread" priority="5">
+		<property name="portal.acceptance" value="true" />
+
 		<var name="threadBody" value="MB Thread Message Body" />
 		<var name="threadSubject" value="MB Thread Message Subject" />
 
@@ -491,6 +497,8 @@
 	</command>
 
 	<command name="AddMBThreadReply" priority="5">
+		<property name="portal.acceptance" value="true" />
+
 		<var name="threadBody" value="MB Thread Message Body" />
 		<var name="threadReplyBody" value="MB Thread Reply Body" />
 		<var name="threadSubject" value="MB Thread Message Subject" />
@@ -577,6 +585,8 @@
 	</command>
 
 	<command name="DeleteMBCategory" priority="5">
+		<property name="portal.acceptance" value="true" />
+
 		<var name="categoryName" value="MB Category Name" />
 
 		<execute macro="Page#gotoPG">
@@ -599,6 +609,8 @@
 	</command>
 
 	<command name="DeleteMBThread" priority="5">
+		<property name="portal.acceptance" value="true" />
+
 		<var name="threadBody" value="MB Thread Message Body" />
 		<var name="threadSubject" value="MB Thread Message Subject" />
 
@@ -621,6 +633,8 @@
 	</command>
 
 	<command name="EditMBCategory" priority="5">
+		<property name="portal.acceptance" value="true" />
+
 		<execute macro="Page#gotoPG">
 			<var name="pageName" value="${pageName}" />
 		</execute>
@@ -640,6 +654,8 @@
 	</command>
 
 	<command name="EditMBThreadBody" priority="5">
+		<property name="portal.acceptance" value="true" />
+
 		<execute macro="Page#gotoPG">
 			<var name="pageName" value="${pageName}" />
 		</execute>
@@ -672,6 +688,8 @@
 	</command>
 
 	<command name="EditMBThreadSubject" priority="5">
+		<property name="portal.acceptance" value="true" />
+
 		<execute macro="Page#gotoPG">
 			<var name="pageName" value="${pageName}" />
 		</execute>
@@ -704,6 +722,8 @@
 	</command>
 
 	<command name="EditMBThreadSubjectAndBody" priority="5">
+		<property name="portal.acceptance" value="true" />
+
 		<execute macro="Page#gotoPG">
 			<var name="pageName" value="${pageName}" />
 		</execute>
