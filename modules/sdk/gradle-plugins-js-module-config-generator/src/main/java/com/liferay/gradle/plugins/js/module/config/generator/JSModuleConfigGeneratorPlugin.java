@@ -112,8 +112,7 @@ public class JSModuleConfigGeneratorPlugin implements Plugin<Project> {
 	}
 
 	protected DownloadNodeModuleTask addTaskDownloadLfrModuleConfigGenerator(
-		Project project,
-		final JSModuleConfigGeneratorExtension
+		Project project, final JSModuleConfigGeneratorExtension
 			jsModuleConfigGeneratorExtension) {
 
 		DownloadNodeModuleTask downloadLfrModuleConfigGeneratorTask =
