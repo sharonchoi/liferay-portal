@@ -46,8 +46,7 @@ public class RTLServletTracker {
 				")(rtl.required=true))");
 
 		_serviceTracker = new ServiceTracker<>(
-			bundleContext, filter,
-			new ServiceTrackerCustomizer
+			bundleContext, filter, new ServiceTrackerCustomizer
 				<ServletContextHelper, ServiceRegistration<Servlet>>() {
 
 				@Override

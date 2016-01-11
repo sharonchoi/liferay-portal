@@ -129,8 +129,7 @@ public class BlogsEntryAttachmentFileEntryHelper {
 	}
 
 	public String updateContent(
-		String content,
-		List<BlogsEntryAttachmentFileEntryReference>
+		String content, List<BlogsEntryAttachmentFileEntryReference>
 			blogsEntryAttachmentFileEntryReferences) {
 
 		for (BlogsEntryAttachmentFileEntryReference

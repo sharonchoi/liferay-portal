@@ -124,8 +124,7 @@ public class ItemSelectorRepositoryEntryBrowserUtil {
 					locale, "x-ago-by-x",
 					new Object[] {
 						LanguageUtil.getTimeDescription(
-							locale,
-							System.currentTimeMillis() -
+							locale, System.currentTimeMillis() -
 								fileEntry.getModifiedDate().getTime(),
 							true),
 						HtmlUtil.escape(fileEntry.getUserName())
