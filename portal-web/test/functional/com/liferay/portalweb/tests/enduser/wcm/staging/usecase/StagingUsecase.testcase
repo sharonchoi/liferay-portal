@@ -972,7 +972,7 @@
 		</execute>
 
 		<execute macro="BlogsConfiguration#configureScopePG">
-			<var name="scopeSelection" value="Blogs Page 2" />
+			<var name="scopeSelection" value="Blogs Page 2 (Create New)" />
 		</execute>
 
 		<execute macro="Page#gotoPG">
