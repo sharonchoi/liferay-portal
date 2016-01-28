@@ -167,7 +167,7 @@ embeddedPlayerURL.setWindowState(LiferayWindowState.POP_UP);
 	var maxHeight = (viewportRegion.height / 2);
 	var maxWidth = (viewportRegion.width / 2);
 
-	new A.ImageViewer(
+	var imageViewer = new A.ImageViewer(
 		{
 			after: {
 				<c:if test="<%= dlPortletInstanceSettingsHelper.isShowActions() %>">
@@ -223,4 +223,14 @@ embeddedPlayerURL.setWindowState(LiferayWindowState.POP_UP);
 			zIndex: ++Liferay.zIndex.WINDOW
 		}
 	).render();
+
+	var onClickLinksDefaultFn = imageViewer._onClickLinks;
+
+	imageViewer._onClickLinks = function(event) {
+		if (!event.target.ancestor('.dropdown')) {
+			onClickLinksDefaultFn.call(this, event);
+		}
+	};
+
+	imageViewer.set('links', '#<portlet:namespace />imageGalleryAssetInfo .image-link.preview');
 </aui:script>
