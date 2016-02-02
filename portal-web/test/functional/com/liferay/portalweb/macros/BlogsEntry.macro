@@ -1415,7 +1415,6 @@
 	</command>
 
 	<command name="viewEntryViaBlogsAggregatorPG">
-		<execute function="AssertTextEquals" locator1="PGBlogsAggregator#ENTRY_ABSTRACT_DESCRIPTION" value1="${entryAbstractDescription}" />
 		<execute function="AssertClick#assertPartialTextClickAt" locator1="PGBlogsAggregator#ENTRY_READ_MORE" value1="Read More" />
 
 		<execute function="AssertTextEquals" locator1="PGBlogs#PORTLET_TITLE" value1="Blogs" />
