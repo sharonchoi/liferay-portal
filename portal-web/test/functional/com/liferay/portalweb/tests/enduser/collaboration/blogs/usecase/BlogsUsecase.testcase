@@ -354,10 +354,8 @@
 	<command name="DemoTrackbackURL" priority="4">
 		<property name="custom.properties" value="blogs.trackback.enabled=true" />
 
-		<var name="ipAddress" value="${getIPAddress()}" />
-
 		<execute macro="Page#gotoPG">
-			<var name="pageName" value="${pageName}" />
+			<var name="pageName" value="Blogs Page" />
 		</execute>
 
 		<execute macro="Blogs#addEntry">
@@ -370,7 +368,7 @@
 			<var name="entryContent2" value="Blogs Entry2 Content" />
 			<var name="entryTitle" value="Blogs Entry1 Title" />
 			<var name="entryTitle2" value="Blogs Entry2 Title" />
-			<var name="pageName" value="${pageName}" />
+			<var name="pageName" value="Blogs Page" />
 		</execute>
 
 		<execute macro="Page#gotoPG">
@@ -449,7 +447,7 @@
 			<var name="entryContent2" value="Blogs Entry4 Content" />
 			<var name="entryTitle" value="Blogs Entry3 Title" />
 			<var name="entryTitle2" value="Blogs Entry4 Title" />
-			<var name="pageName" value="${pageName}" />
+			<var name="pageName" value="Blogs Page" />
 			<var name="virtualHosts" value="true" />
 			<var name="virtualHostsURL" value="www.able.com:8080" />
 		</execute>
@@ -483,7 +481,7 @@
 		<execute macro="User#firstLoginPG">
 			<var name="password" value="test" />
 			<var name="userEmailAddress" value="test@liferay.com" />
-			<var name="virtualHostsURL" value="http://${ipAddress}:8080" />
+			<var name="virtualHostsURL" value="http://127.0.0.1:8080" />
 		</execute>
 
 		<execute macro="Page#gotoPG">
@@ -503,7 +501,7 @@
 			<var name="entryTitle" value="Blogs Entry5 Title" />
 		</execute>
 
-		<execute function="AssertTextEquals#assertValue" locator1="BlogsEntry#COMMENTS_TRACKBACK_URL" value1="http://${ipAddress}:8080/web/guest/blogs-page/-/blogs/trackback/blogs-entry5-title" />
+		<execute function="AssertTextEquals#assertValue" locator1="BlogsEntry#COMMENTS_TRACKBACK_URL" value1="http://127.0.0.1:8080/web/guest/blogs-page/-/blogs/trackback/blogs-entry5-title" />
 
 		<execute macro="Page#gotoPG">
 			<var name="pageName" value="${pageName}" />
@@ -515,9 +513,9 @@
 			<var name="entryContent2" value="Blogs Entry6 Content" />
 			<var name="entryTitle" value="Blogs Entry5 Title" />
 			<var name="entryTitle2" value="Blogs Entry6 Title" />
-			<var name="pageName" value="${pageName}" />
+			<var name="pageName" value="Blogs Page" />
 			<var name="virtualHosts" value="true" />
-			<var name="virtualHostsURL" value="http://${ipAddress}:8080" />
+			<var name="virtualHostsURL" value="http://127.0.0.1:8080" />
 		</execute>
 
 		<execute macro="BlogsEntry#viewPG">
@@ -535,7 +533,7 @@
 			<var name="userFullName" value="Test Test" />
 		</execute>
 
-		<execute function="AssertTextEquals#assertValue" locator1="BlogsEntry#COMMENTS_TRACKBACK_URL" value1="http://${ipAddress}:8080/web/guest/blogs-page/-/blogs/trackback/blogs-entry5-title" />
+		<execute function="AssertTextEquals#assertValue" locator1="BlogsEntry#COMMENTS_TRACKBACK_URL" value1="http://127.0.0.1:8080/web/guest/blogs-page/-/blogs/trackback/blogs-entry5-title" />
 
 		<execute function="AssertClick" locator1="Link#READ_MORE" value1="Read More" />
 
