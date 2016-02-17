@@ -43,6 +43,67 @@
 	<td></td>
 	<td></td>
 </tr>
+<!--FOLDER_MENU_ITEM-->
+<tr>
+	<td>FOLDER_MENU_VERTICAL_ELLIPSIS</td>
+	<td>//div[contains(@class,'column-actions')]//*[name()='svg'][contains(@class,'icon-ellipsis')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>FOLDER_MENU_ITEM_DOWNLOAD</td>
+	<td>//div[contains(@class,'asset-column-actions')]//span[contains(.,'Download')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>FOLDER_MENU_ITEM_EDIT</td>
+	<td>//div[contains(@class,'asset-column-actions')]//span[contains(.,'Edit')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>FOLDER_MENU_ITEM_MOVE</td>
+	<td>//div[contains(@class,'asset-column-actions')]//span[contains(.,'Move')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>FOLDER_MENU_ITEM_ADD_SUBFOLDER</td>
+	<td>//div[contains(@class,'asset-column-actions')]//span[contains(.,'Add Subfolder')]</td>
+	<td></td>s
+</tr>
+<tr>
+	<td>FOLDER_MENU_ITEM_ADD_FILE_ENTRY</td>
+	<td>//div[contains(@class,'asset-column-actions')]//span[contains(.,'Add File Entry')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>FOLDER_MENU_ITEM_MULTIPLE_MEDIA</td>
+	<td>//div[contains(@class,'asset-column-actions')]//span[contains(.,'Multiple Media')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>FOLDER_MENU_ITEM_ADD_SHORTCUT</td>
+	<td>//div[contains(@class,'asset-column-actions')]//span[contains(.,'Add Shortcut')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>FOLDER_MENU_ITEM_ACCESS_FROM_DESKTOP</td>
+	<td>//div[contains(@class,'asset-column-actions')]//span[contains(.,'Access From Desktop')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>FOLDER_MENU_ITEM_PERMISSIONS</td>
+	<td>//div[contains(@class,'asset-column-actions')]//span[contains(.,'Permissions')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>FOLDER_MENU_ITEM_MOVE_TO_THE_RECYCLE_BIN</td>
+	<td>//div[contains(@class,'asset-column-actions')]//span[contains(.,'Move to the Recycle Bin')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
 <!--ENTRY-->
 <tr>
 	<td>ENTRY_THUMBNAIL</td>
