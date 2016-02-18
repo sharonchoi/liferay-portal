@@ -846,11 +846,11 @@
 		</execute>
 
 		<execute macro="Navigator#gotoSitePage">
-			<var name="pageName" value="Staging Test Page" />
+			<var name="pageName" value="Site Page Name" />
 			<var name="siteName" value="Site Name" />
 		</execute>
 
-		<execute macro="Navigator#gotoStagedView" />
+		<execute macro="ProductMenu#gotoStagingSite" />
 
 		<execute macro="Staging#gotoPublishToLive" />
 
@@ -862,6 +862,7 @@
 
 		<execute macro="Page#gotoPG">
 			<var name="pageName" value="Blogs Page 1" />
+			<var name="pageStaging" value="true" />
 			<var name="siteName" value="Site Name" />
 			<var name="siteURL" value="true" />
 		</execute>
@@ -893,7 +894,7 @@
 		</execute>
 
 		<execute macro="BlogsConfiguration#configureScopePG">
-			<var name="scopeSelection" value="Blogs Page 2" />
+			<var name="scopeSelection" value="Blogs Page 2 (Create New)" />
 		</execute>
 
 		<execute macro="Page#gotoPG">
