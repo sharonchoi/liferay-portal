@@ -96,9 +96,7 @@
 			</then>
 		</if>
 
-		<execute function="AssertClick" locator1="Button#PUBLISH" value1="Publish" />
-
-		<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS" value1="Your request completed successfully." />
+		<execute macro="DMDocument#publish" />
 	</command>
 
 	<command name="addDMMarketingBannerCP">
@@ -117,9 +115,7 @@
 		<execute function="Type" locator1="DocumentsAndMediaEditMarketingBanner#BANNER_NAME_FIELD" value1="${bannerName}" />
 		<execute function="Type" locator1="DocumentsAndMediaEditMarketingBanner#BANNER_DESCRIPTION_FIELD" value1="${bannerDescription}" />
 
-		<execute function="AssertClick" locator1="Button#PUBLISH" value1="Publish" />
-
-		<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS" value1="Your request completed successfully." />
+		<execute macro="DMDocument#publish" />
 	</command>
 
 	<command name="addDocumentTypeCmdCP">
@@ -178,8 +174,7 @@
 			<var name="textField" value="${textField}" />
 		</execute>
 
-		<execute function="AssertClick" locator1="Button#PUBLISH" value1="Publish" />
-		<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS" value1="Your request completed successfully." />
+		<execute macro="DMDocument#publish" />
 	</command>
 
 	<command name="addDocumentTypePG">
@@ -229,8 +224,7 @@
 			</then>
 		</if>
 
-		<execute function="AssertClick" locator1="Button#PUBLISH" value1="Publish" />
-		<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS" value1="Your request completed successfully." />
+		<execute macro="DMDocument#publish" />
 	</command>
 
 	<command name="addDocumentTypeWithWorkflowCP">
@@ -479,9 +473,7 @@
 
 		<execute function="Type" locator1="TextArea#DESCRIPTION" value1="${mgDocumentDescription}" />
 
-		<execute function="AssertClick" locator1="Button#PUBLISH" value1="Publish" />
-
-		<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS" value1="Your request completed successfully." />
+		<execute macro="DMDocument#publish" />
 	</command>
 
 	<command name="addRelatedAssetPG">
@@ -944,8 +936,7 @@
 		<execute function="MakeVisible" locator1="Comments#EDIT_LINK" value1="Edit" />
 		<execute function="AssertClick" locator1="Comments#EDIT_LINK" value1="Edit" />
 		<execute function="Type" locator1="AlloyEditor#CONTENT_FIELD" value1="${commentBodyEdit}" />
-		<execute function="AssertClick" locator1="Button#PUBLISH" value1="Publish" />
-		<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS" value1="Your request completed successfully." />
+		<execute macro="DMDocument#publish" />
 	</command>
 
 	<command name="editCP">
@@ -959,9 +950,7 @@
 			<var name="dmDocumentTitleEdit" value="${dmDocumentTitleEdit}" />
 		</execute>
 
-		<execute function="Click" locator1="Button#PUBLISH" />
-
-		<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS" value1="Your request completed successfully." />
+		<execute macro="DMDocument#publish" />
 	</command>
 
 	<command name="editDocument">
@@ -989,9 +978,7 @@
 			<var name="dmDocumentTitleEdit" value="${dmDocumentTitleEdit}" />
 		</execute>
 
-		<execute function="AssertClick" locator1="Button#PUBLISH" value1="Publish" />
-
-		<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS" value1="Your request completed successfully." />
+		<execute macro="DMDocument#publish" />
 	</command>
 
 	<command name="editPGViaAP">
@@ -1026,9 +1013,7 @@
 
 		<execute function="Type" locator1="TextArea#DESCRIPTION" value1="${mgDocumentDescriptionEdit}" />
 
-		<execute function="AssertClick" locator1="Button#PUBLISH" value1="Publish" />
-
-		<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS" value1="Your request completed successfully." />
+		<execute macro="DMDocument#publish" />
 
 		<var name="key_mgDocumentTitle" value="${mgDocumentTitleEdit}" />
 
@@ -1048,8 +1033,7 @@
 			<var name="userName" value="${userName}" />
 		</execute>
 
-		<execute function="AssertClick" locator1="Button#PUBLISH" value1="Publish" />
-		<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS" value1="Your request completed successfully." />
+		<execute macro="DMDocument#publish" />
 	</command>
 
 	<command name="editSaveAndCheckinPG">
@@ -1430,9 +1414,7 @@
 
 		<execute function="AssertClick#assertTextClick" locator1="Button#EDIT" value1="Edit" />
 
-		<execute function="AssertClick" locator1="Button#PUBLISH" value1="Publish" />
-
-		<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS" value1="Your request completed successfully." />
+		<execute macro="DMDocument#publish" />
 	</command>
 
 	<command name="ratePG">
