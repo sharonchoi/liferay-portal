@@ -654,25 +654,15 @@
 
 		<execute function="AssertTextEquals" locator1="Comments#COMMENT_BODY_SPECIFIC" value1="${entryComment}" />
 
-		<execute function="AssertClick" locator1="Comments#EDIT_LINK" value1="Edit" />
+		<execute function="Click" locator1="Comments#COMMENT_ACTIONS" />
+
+		<execute function="AssertClick" locator1="MenuItem#EDIT" value1="Edit" />
 
 		<execute function="Type#typeAlloyEditor" locator1="Comments#EDIT_COMMENT_FIELD" value1="${entryCommentEdit}" />
 
 		<execute function="AssertClick" locator1="Button#PUBLISH" value1="Publish" />
-	</command>
 
-	<command name="editCommentPG">
-		<execute function="AssertTextEquals" locator1="Portlet#H3_HEADER_2" value1="${wikiPageTitle}" />
-
-		<var name="key_commentBody" value="${commentBody}" />
-
-		<execute function="AssertClick" locator1="Wiki#COMMENT_EDIT_LINK" value1="Edit" />
-
-		<execute function="Type" locator1="Wiki#COMMENT_EDIT_BODY_FIELD" value1="${commentBodyEdit}" />
-
-		<execute function="AssertClick" locator1="Button#PUBLISH" value1="Publish" />
-
-		<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS" value1="Your request completed successfully." />
+		<execute macro="Alert#viewRequestCompletedSuccessMessage" />
 	</command>
 
 	<command name="editFrontPagePG">
