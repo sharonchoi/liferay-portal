@@ -91,7 +91,7 @@
 					<var name="calendarName" value="${calendarName}" />
 				</execute>
 
-				<execute macro="Calendar#save" />
+				<execute macro="PortletEntry#save" />
 			</then>
 			<elseif>
 				<equals arg1="${calendarType}" arg2="Current Site Calendars" />
@@ -102,7 +102,7 @@
 						<var name="calendarName" value="${calendarName}" />
 					</execute>
 
-					<execute macro="Calendar#save" />
+					<execute macro="PortletEntry#save" />
 				</then>
 			</elseif>
 			<elseif>
