@@ -23,6 +23,10 @@ import javax.portlet.PortletURL;
  */
 public interface DLViewDisplayContext extends DLDisplayContext {
 
+	public String getDisplayStyle();
+
+	public PortletURL getDisplayStyleURL();
+
 	public Map<String, String> getOrderColumns();
 
 	public PortletURL getSortURL();

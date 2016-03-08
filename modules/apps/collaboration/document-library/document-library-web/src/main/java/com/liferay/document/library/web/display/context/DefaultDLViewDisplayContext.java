@@ -16,11 +16,17 @@ package com.liferay.document.library.web.display.context;
 
 import com.liferay.document.library.display.context.DLViewDisplayContext;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
+import com.liferay.document.library.web.constants.DLPortletKeys;
 import com.liferay.document.library.web.display.context.util.DLRequestHelper;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
+import com.liferay.portal.kernel.portlet.PortalPreferences;
+import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.repository.model.Folder;
+import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.util.PropsValues;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -47,6 +53,80 @@ public class DefaultDLViewDisplayContext implements DLViewDisplayContext {
 	}
 
 	@Override
+	public String getDisplayStyle() {
+		String displayStyle = ParamUtil.getString(
+			_dlRequestHelper.getRequest(), "displayStyle");
+
+		PortalPreferences portalPreferences =
+			PortletPreferencesFactoryUtil.getPortalPreferences(
+				_dlRequestHelper.getLiferayPortletRequest());
+
+		if (Validator.isNull(displayStyle)) {
+			displayStyle = portalPreferences.getValue(
+				DLPortletKeys.DOCUMENT_LIBRARY, "display-style",
+				PropsValues.DL_DEFAULT_DISPLAY_VIEW);
+		}
+
+		return displayStyle;
+	}
+
+	@Override
+	public PortletURL getDisplayStyleURL() {
+		LiferayPortletResponse liferayPortletResponse =
+			_dlRequestHelper.getLiferayPortletResponse();
+
+		PortletURL displayStyleURL = liferayPortletResponse.createRenderURL();
+
+		long folderId = getFolderId();
+
+		String keywords = ParamUtil.getString(
+			_dlRequestHelper.getRequest(), "keywords");
+
+		String mvcRenderCommandName = "/document_library/search";
+
+		if (Validator.isNull(keywords)) {
+			if (folderId == DLFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
+				mvcRenderCommandName = "/document_library/view";
+			}
+			else {
+				mvcRenderCommandName = "/document_library/view_folder";
+			}
+		}
+
+		displayStyleURL.setParameter(
+			"mvcRenderCommandName", mvcRenderCommandName);
+
+		displayStyleURL.setParameter(
+			"navigation", HtmlUtil.escapeJS(getNavigation()));
+
+		int curEntry = ParamUtil.getInteger(
+			_dlRequestHelper.getRequest(), "curEntry");
+
+		if (curEntry > 0) {
+			displayStyleURL.setParameter("curEntry", String.valueOf(curEntry));
+		}
+
+		int deltaEntry = ParamUtil.getInteger(
+			_dlRequestHelper.getRequest(), "deltaEntry");
+
+		if (deltaEntry > 0) {
+			displayStyleURL.setParameter(
+				"deltaEntry", String.valueOf(deltaEntry));
+		}
+
+		displayStyleURL.setParameter("folderId", String.valueOf(folderId));
+
+		long fileEntryTypeId = getFileEntryTypeId();
+
+		if (fileEntryTypeId != -1) {
+			displayStyleURL.setParameter(
+				"fileEntryTypeId", String.valueOf(fileEntryTypeId));
+		}
+
+		return displayStyleURL;
+	}
+
+	@Override
 	public Map<String, String> getOrderColumns() {
 		Map<String, String> orderColumns = new HashMap();
 
@@ -66,11 +146,7 @@ public class DefaultDLViewDisplayContext implements DLViewDisplayContext {
 
 		PortletURL sortURL = liferayPortletResponse.createRenderURL();
 
-		long folderId = DLFolderConstants.DEFAULT_PARENT_FOLDER_ID;
-
-		if (_folder != null) {
-			folderId = _folder.getFolderId();
-		}
+		long folderId = getFolderId();
 
 		String mvcRenderCommandName = "/document_library/view";
 
@@ -78,16 +154,11 @@ public class DefaultDLViewDisplayContext implements DLViewDisplayContext {
 			mvcRenderCommandName = "/document_library/view_folder";
 		}
 
-		String navigation = ParamUtil.getString(
-			_dlRequestHelper.getRequest(), "navigation", "home");
-		long fileEntryTypeId = ParamUtil.getLong(
-			_dlRequestHelper.getRequest(), "fileEntryTypeId", -1);
-
 		sortURL.setParameter("mvcRenderCommandName", mvcRenderCommandName);
-		sortURL.setParameter("navigation", navigation);
+		sortURL.setParameter("navigation", getNavigation());
 		sortURL.setParameter("folderId", String.valueOf(folderId));
 		sortURL.setParameter(
-			"fileEntryTypeId", String.valueOf(fileEntryTypeId));
+			"fileEntryTypeId", String.valueOf(getFileEntryTypeId()));
 
 		return sortURL;
 	}
@@ -95,6 +166,26 @@ public class DefaultDLViewDisplayContext implements DLViewDisplayContext {
 	@Override
 	public UUID getUuid() {
 		return _UUID;
+	}
+
+	protected long getFileEntryTypeId() {
+		return ParamUtil.getLong(
+			_dlRequestHelper.getRequest(), "fileEntryTypeId", -1);
+	}
+
+	protected long getFolderId() {
+		long folderId = DLFolderConstants.DEFAULT_PARENT_FOLDER_ID;
+
+		if (_folder != null) {
+			folderId = _folder.getFolderId();
+		}
+
+		return folderId;
+	}
+
+	protected String getNavigation() {
+		return ParamUtil.getString(
+			_dlRequestHelper.getRequest(), "navigation", "home");
 	}
 
 	private static final UUID _UUID = UUID.fromString(

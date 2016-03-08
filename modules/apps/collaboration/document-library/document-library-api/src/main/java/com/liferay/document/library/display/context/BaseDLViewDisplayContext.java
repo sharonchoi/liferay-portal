@@ -42,6 +42,16 @@ public class BaseDLViewDisplayContext
 	}
 
 	@Override
+	public String getDisplayStyle() {
+		return parentDisplayContext.getDisplayStyle();
+	}
+
+	@Override
+	public PortletURL getDisplayStyleURL() {
+		return parentDisplayContext.getDisplayStyleURL();
+	}
+
+	@Override
 	public Map<String, String> getOrderColumns() {
 		return parentDisplayContext.getOrderColumns();
 	}

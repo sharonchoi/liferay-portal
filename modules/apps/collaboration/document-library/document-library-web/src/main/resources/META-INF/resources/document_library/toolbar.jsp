@@ -53,7 +53,11 @@ DLViewDisplayContext dlViewDisplayContext = dlDisplayContextProvider.getDLViewDi
 		/>
 
 		<c:if test="<%= !search %>">
-			<liferay-util:include page="/document_library/display_style_buttons.jsp" servletContext="<%= application %>" />
+			<liferay-frontend:management-bar-display-buttons
+				displayViews="<%= dlPortletInstanceSettings.getDisplayViews() %>"
+				portletURL="<%= dlViewDisplayContext.getDisplayStyleURL() %>"
+				selectedDisplayStyle="<%= dlViewDisplayContext.getDisplayStyle() %>"
+			/>
 		</c:if>
 	</liferay-frontend:management-bar-buttons>
 
