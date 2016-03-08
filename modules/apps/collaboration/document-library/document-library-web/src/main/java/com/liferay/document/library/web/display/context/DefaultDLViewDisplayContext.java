@@ -43,9 +43,8 @@ import javax.servlet.http.HttpServletResponse;
 public class DefaultDLViewDisplayContext implements DLViewDisplayContext {
 
 	public DefaultDLViewDisplayContext(
-			HttpServletRequest request, HttpServletResponse response,
-			Folder folder)
-		throws PortalException {
+		HttpServletRequest request, HttpServletResponse response,
+		Folder folder) {
 
 		_folder = folder;
 

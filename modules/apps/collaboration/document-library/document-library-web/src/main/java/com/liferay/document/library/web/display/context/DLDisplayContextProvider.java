@@ -95,23 +95,18 @@ public class DLDisplayContextProvider {
 		HttpServletRequest request, HttpServletResponse response,
 		Folder folder) {
 
-		try {
-			DLViewDisplayContext dlViewDisplayContext =
-				new DefaultDLViewDisplayContext(request, response, folder);
+		DLViewDisplayContext dlViewDisplayContext =
+			new DefaultDLViewDisplayContext(request, response, folder);
 
-			for (DLDisplayContextFactory dlDisplayContextFactory :
-					_dlDisplayContextFactories) {
+		for (DLDisplayContextFactory dlDisplayContextFactory :
+				_dlDisplayContextFactories) {
 
-				dlViewDisplayContext =
-					dlDisplayContextFactory.getDLViewDisplayContext(
-						dlViewDisplayContext, request, response, folder);
-			}
-
-			return dlViewDisplayContext;
+			dlViewDisplayContext =
+				dlDisplayContextFactory.getDLViewDisplayContext(
+					dlViewDisplayContext, request, response, folder);
 		}
-		catch (PortalException pe) {
-			throw new SystemException(pe);
-		}
+
+		return dlViewDisplayContext;
 	}
 
 	public DLViewFileVersionDisplayContext
