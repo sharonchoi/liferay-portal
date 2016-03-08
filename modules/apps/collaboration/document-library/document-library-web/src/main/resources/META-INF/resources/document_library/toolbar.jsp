@@ -23,6 +23,8 @@ String navigation = ParamUtil.getString(request, "navigation", "home");
 
 long repositoryId = GetterUtil.getLong((String)request.getAttribute("view.jsp-repositoryId"));
 
+Folder folder = (Folder)request.getAttribute("view.jsp-folder");
+
 long folderId = GetterUtil.getLong((String)request.getAttribute("view.jsp-folderId"));
 
 long fileEntryTypeId = ParamUtil.getLong(request, "fileEntryTypeId", -1);
@@ -32,6 +34,8 @@ String searchContainerId = ParamUtil.getString(request, "searchContainerId");
 boolean search = mvcRenderCommandName.equals("/document_library/search");
 
 DLPortletInstanceSettingsHelper dlPortletInstanceSettingsHelper = new DLPortletInstanceSettingsHelper(dlRequestHelper);
+
+DLViewDisplayContext dlViewDisplayContext = dlDisplayContextProvider.getDLViewDisplayContext(request, response, folder);
 %>
 
 <liferay-frontend:management-bar
@@ -106,28 +110,13 @@ DLPortletInstanceSettingsHelper dlPortletInstanceSettingsHelper = new DLPortletI
 			<%
 			String orderByCol = GetterUtil.getString((String)request.getAttribute("view.jsp-orderByCol"));
 			String orderByType = GetterUtil.getString((String)request.getAttribute("view.jsp-orderByType"));
-
-			Map<String, String> orderColumns = new HashMap<String, String>();
-
-			orderColumns.put("creationDate", "create-date");
-			orderColumns.put("downloads", "downloads");
-			orderColumns.put("modifiedDate", "modified-date");
-			orderColumns.put("size", "size");
-			orderColumns.put("title", "title");
-
-			PortletURL sortURL = renderResponse.createRenderURL();
-
-			sortURL.setParameter("mvcRenderCommandName", (folderId == DLFolderConstants.DEFAULT_PARENT_FOLDER_ID) ? "/document_library/view" : "/document_library/view_folder");
-			sortURL.setParameter("navigation", navigation);
-			sortURL.setParameter("folderId", String.valueOf(folderId));
-			sortURL.setParameter("fileEntryTypeId", String.valueOf(fileEntryTypeId));
 			%>
 
 			<liferay-frontend:management-bar-sort
 				orderByCol="<%= orderByCol %>"
 				orderByType="<%= orderByType %>"
-				orderColumns="<%= orderColumns %>"
-				portletURL="<%= sortURL %>"
+				orderColumns="<%= dlViewDisplayContext.getOrderColumns() %>"
+				portletURL="<%= dlViewDisplayContext.getSortURL() %>"
 			/>
 		</c:if>
 	</liferay-frontend:management-bar-filters>
