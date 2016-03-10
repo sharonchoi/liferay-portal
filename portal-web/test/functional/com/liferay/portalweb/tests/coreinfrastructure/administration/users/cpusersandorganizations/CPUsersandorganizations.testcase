@@ -1614,6 +1614,8 @@
 			<var name="portlet" value="Users and Organizations" />
 		</execute>
 
+		<execute macro="UsersAndOrganizationsNavigator#gotoOrganizations" />
+
 		<execute macro="Organization#removeMemberCP">
 			<var name="orgName" value="Organization Name" />
 			<var name="userFirstName" value="userfn" />
@@ -1623,6 +1625,8 @@
 		<execute macro="ProductMenu#gotoControlPanelUsers">
 			<var name="portlet" value="Users and Organizations" />
 		</execute>
+
+		<execute macro="UsersAndOrganizationsNavigator#gotoOrganizations" />
 
 		<execute macro="Organization#viewRemoveMemberCP">
 			<var name="orgName" value="Organization Name" />
