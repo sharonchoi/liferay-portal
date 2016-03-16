@@ -1162,7 +1162,7 @@
 
 		<execute function="Click" locator1="ProductMenu#SITES_COMPASS" />
 
-		<execute function="AssertVisible" locator1="ProductMenu#SITES_POPUP" />
+		<execute function="AssertTextEquals" locator1="ProductMenu#SITES_MODAL_TITLE" value1="Select Site" />
 
 		<var name="key_site" value="www.able.com" />
 
@@ -1207,7 +1207,7 @@
 
 		<execute function="Click" locator1="ProductMenu#SITES_COMPASS" />
 
-		<execute function="AssertVisible" locator1="ProductMenu#SITES_POPUP" />
+		<execute function="AssertTextEquals" locator1="ProductMenu#SITES_MODAL_TITLE" value1="Select Site" />
 
 		<var name="key_site" value="www.able.com" />
 
