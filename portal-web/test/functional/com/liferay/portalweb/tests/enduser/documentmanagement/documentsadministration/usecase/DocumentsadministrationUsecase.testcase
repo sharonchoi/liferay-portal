@@ -764,6 +764,8 @@
 	</command>
 
 	<command name="UpdateDocumentTypeWithPermissions" priority="3">
+		<property name="portal.acceptance" value="sharon" />
+		
 		<execute macro="ProductMenu#gotoSitesContent">
 			<var name="portlet" value="Documents and Media" />
 		</execute>
