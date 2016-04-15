@@ -1259,7 +1259,15 @@
 		<execute function="Type" locator1="UsersAndOrganizationsEditUser#PASSWORD_NEW_PASSWORD_FIELD" value1="${newPassword}" />
 		<execute function="Type" locator1="UsersAndOrganizationsEditUser#PASSWORD_ENTER_AGAIN_FIELD" value1="${newPassword}" />
 
-		<execute macro="PortletEntry#save" />
+		<execute function="Pause" locator1="3000" />
+
+		<execute function="AssertClick" locator1="Button#SUBMIT" value1="Save" />
+
+		<execute macro="Alert#viewSuccessMessage" />
+
+		<!-- <execute macro="PortletEntry#save" /> -->
+
+		<execute function="Pause" locator1="3000" />
 
 		<execute macro="User#logoutPG" />
 
