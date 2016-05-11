@@ -10,7 +10,7 @@
 <tbody>
 <tr>
 	<td>IFRAME</td>
-	<td>//iframe[contains(@id,'knowledgebaseportlet') and contains(@class,'iframe')]</td>
+	<td>//iframe[contains(@id,'AdminPortlet_selectKBObject') and contains(@class,'iframe')]</td>
 	<td></td>
 </tr>
 <tr>
