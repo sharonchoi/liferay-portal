@@ -44,6 +44,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>DESCRIPTIVE_VIEW_ACTIVE</td>
+	<td>//div[contains(@class,'management-bar')]//a[contains(@class,'active')]//span[contains(.,'Descriptive')]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>NAVBAR_CONTAINER</td>
 	<td>//div[@class='navbar ' or contains(@class,'navbar-default')]//div[contains(@class,'container')]</td>
 	<td></td>
@@ -365,6 +370,17 @@
 <tr>
 	<td>SEARCH_PARENT_FOLDER</td>
 	<td>//a[@class='entry-link' and contains(.,'${dmDocumentTitle}')]//dd</td>
+	<td></td>
+</tr>
+<tr>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
+<!--REPOSITORY-->
+<tr>
+	<td>REPOSITORY_FOLDER_NAME_DESCRIPTIVE_VIEW</td>
+	<td>//a[contains(.,'${key_dmRepositoryName}')]</td>
 	<td></td>
 </tr>
 </tbody>
