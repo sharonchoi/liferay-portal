@@ -9,13 +9,34 @@
 </thead>
 <tbody>
 <tr>
-	<td>ADD_ARTICLE_VIA_TEMPLATE</td>
-	<td>//a[@role='menuitem' and contains(.,'${kbTemplateTitle}')]</td>
+	<td>MESSAGE_NO_ARTICLES_FOUND</td>
+	<td>//div[contains(@class,'alert') and contains(.,'No articles were found.')]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>MESSAGE_NO_ARTICLES_FOUND</td>
-	<td>//div[contains(@class,'alert') and contains(.,'No articles were found.')]</td>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
+<!--ADD_BUTTON-->
+<tr>
+	<td>ADD_BASIC_ARTICLE</td>
+	<td>//a[contains(@id,'knowledge_base') and contains(.,'Basic Article')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>ADD_FOLDER</td>
+	<td>//a[contains(@id,'knowledge_base') and contains(.,'Folder')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>ADD_IMPORT_ARTICLES</td>
+	<td>//a[contains(@id,'knowledge_base') and contains(.,'Import')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>ADD_ARTICLE_VIA_TEMPLATE</td>
+	<td>//a[contains(@id,'knowledge_base') and contains(.,'${key_kbTemplateTitle}')]</td>
 	<td></td>
 </tr>
 <tr>
