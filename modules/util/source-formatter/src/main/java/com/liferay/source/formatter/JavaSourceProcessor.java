@@ -72,6 +72,32 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 		return content;
 	}
 
+	protected String checkAnnotationLineBreaks(
+		String content, String annotation) {
+
+		Matcher matcher = _annotationLineBreakPattern1.matcher(annotation);
+
+		if (matcher.find()) {
+			String replacement = StringUtil.replaceFirst(
+				annotation, matcher.group(1), StringPool.BLANK,
+				matcher.start());
+
+			return StringUtil.replace(content, annotation, replacement);
+		}
+
+		matcher = _annotationLineBreakPattern2.matcher(annotation);
+
+		if (matcher.find()) {
+			String replacement = StringUtil.replaceFirst(
+				annotation, matcher.group(1), StringPool.SPACE,
+				matcher.start());
+
+			return StringUtil.replace(content, annotation, replacement);
+		}
+
+		return content;
+	}
+
 	protected String checkAnnotationMetaTypeProperties(
 		String content, String annotation) {
 
@@ -1616,6 +1642,9 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 					newContent = checkAnnotationMetaTypeProperties(
 						newContent, annotation);
 
+					newContent = checkAnnotationLineBreaks(
+						newContent, annotation);
+
 					if (!newContent.equals(content)) {
 						return formatAnnotations(
 							fileName, javaTermName, newContent, indent);
@@ -2311,7 +2340,7 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 				}
 
 				checkInefficientStringMethods(
-					line, fileName, absolutePath, lineCount);
+					line, fileName, absolutePath, lineCount, true);
 
 				if (trimmedLine.startsWith(StringPool.EQUAL)) {
 					processErrorMessage(
@@ -2554,8 +2583,8 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 					}
 
 					if (line.endsWith(" throws") ||
-						(previousLine.endsWith(
-							StringPool.OPEN_PARENTHESIS) &&
+						((previousLine.endsWith(StringPool.COMMA) ||
+						  previousLine.endsWith(StringPool.OPEN_PARENTHESIS)) &&
 						 line.contains(" throws ") &&
 						 (line.endsWith(StringPool.OPEN_CURLY_BRACE) ||
 						  line.endsWith(StringPool.SEMICOLON)))) {
@@ -3656,9 +3685,10 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 		}
 
 		if ((getLevel(trimmedLine) < 0) &&
-			(line.endsWith(StringPool.COMMA) ||
-			 (trimmedPreviousLine.startsWith("new ") &&
-			  line.endsWith(") {")))) {
+			(line.matches(".*[|&^]") ||
+			 (line.endsWith(StringPool.COMMA) ||
+			  (trimmedPreviousLine.startsWith("new ") &&
+			   line.endsWith(") {"))))) {
 
 			return getCombinedLinesContent(
 				content, fileName, line, trimmedLine, lineLength, lineCount,
@@ -4519,6 +4549,10 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 
 	private boolean _addMissingDeprecationReleaseVersion;
 	private boolean _allowUseServiceUtilInServiceImpl;
+	private final Pattern _annotationLineBreakPattern1 = Pattern.compile(
+		"[{=]\n.*(\" \\+\n\t*\")");
+	private final Pattern _annotationLineBreakPattern2 = Pattern.compile(
+		"=(\n\t*)\"");
 	private final Pattern _annotationMetaTypePattern = Pattern.compile(
 		"\\s(name|description) = \"%");
 	private final Pattern _anonymousClassPattern = Pattern.compile(

@@ -17,6 +17,9 @@ package com.liferay.gradle.plugins;
 import aQute.bnd.osgi.Constants;
 import aQute.bnd.version.Version;
 
+import com.liferay.gradle.plugins.cache.CacheExtension;
+import com.liferay.gradle.plugins.cache.CachePlugin;
+import com.liferay.gradle.plugins.cache.task.TaskCache;
 import com.liferay.gradle.plugins.extensions.LiferayExtension;
 import com.liferay.gradle.plugins.extensions.LiferayOSGiExtension;
 import com.liferay.gradle.plugins.js.module.config.generator.ConfigJSModulesTask;
@@ -53,6 +56,7 @@ import java.io.File;
 
 import java.nio.charset.StandardCharsets;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -285,6 +289,11 @@ public class LiferayOSGiDefaultsPlugin implements Plugin<Project> {
 						updateFileVersionsTask, portalRootDir);
 
 					GradleUtil.setProjectSnapshotVersion(project);
+
+					if (GradleUtil.hasPlugin(project, CachePlugin.class)) {
+						configureTaskUpdateVersionForCachePlugin(
+							updateVersionTask);
+					}
 
 					// setProjectSnapshotVersion must be called before
 					// configureTaskUploadArchives, because the latter one needs
@@ -869,7 +878,6 @@ public class LiferayOSGiDefaultsPlugin implements Plugin<Project> {
 
 		replaceRegexTask.setDescription(
 			"Updates the project version in external files.");
-		replaceRegexTask.setIgnoreUnmatched(true);
 
 		replaceRegexTask.setReplacement(
 			new Callable<Object>() {
@@ -1088,6 +1096,7 @@ public class LiferayOSGiDefaultsPlugin implements Plugin<Project> {
 
 		Map<String, Object> bundleDefaultInstructions = new HashMap<>();
 
+		bundleDefaultInstructions.put("-check", "all");
 		bundleDefaultInstructions.put(Constants.BUNDLE_VENDOR, "Liferay, Inc.");
 		bundleDefaultInstructions.put(
 			Constants.DONOTCOPY,
@@ -1373,10 +1382,6 @@ public class LiferayOSGiDefaultsPlugin implements Plugin<Project> {
 		GradleUtil.setProperty(
 			project, "app.server.lib.portal.dir",
 			project.relativePath(appServerLibPortalDir));
-
-		GradleUtil.setProperty(
-			project, "plugin.full.version",
-			String.valueOf(project.getVersion()));
 	}
 
 	protected void configureSourceSetClassesDir(
@@ -1824,6 +1829,31 @@ public class LiferayOSGiDefaultsPlugin implements Plugin<Project> {
 		updateFileVersionsTask.match(regex, project.fileTree(args));
 	}
 
+	protected void configureTaskUpdateVersionForCachePlugin(
+		ReplaceRegexTask updateVersionTask) {
+
+		Project project = updateVersionTask.getProject();
+
+		CacheExtension cacheExtension = GradleUtil.getExtension(
+			project, CacheExtension.class);
+
+		for (TaskCache taskCache : cacheExtension.getTasks()) {
+			String regex = "\"" + project.getName() + "@(.+?)\\/";
+
+			Map<String, Object> args = new HashMap<>();
+
+			args.put("dir", taskCache.getCacheDir());
+			args.put(
+				"includes", Arrays.asList("config.json", "**/*.js"));
+
+			FileTree fileTree = project.fileTree(args);
+
+			updateVersionTask.match(regex, fileTree);
+
+			updateVersionTask.finalizedBy(taskCache.getRefreshDigestTaskName());
+		}
+	}
+
 	protected void configureTaskUploadArchives(
 		Project project, ReplaceRegexTask updateFileVersionsTask,
 		ReplaceRegexTask updateVersionTask) {
@@ -1981,7 +2011,7 @@ public class LiferayOSGiDefaultsPlugin implements Plugin<Project> {
 	}
 
 	protected String getModuleDependency(
-		Project project, boolean roundToMajorVersion) {
+		Project project, boolean roundToMinorVersion) {
 
 		StringBuilder sb = new StringBuilder();
 
@@ -1993,11 +2023,12 @@ public class LiferayOSGiDefaultsPlugin implements Plugin<Project> {
 
 		String versionString = String.valueOf(project.getVersion());
 
-		if (roundToMajorVersion) {
+		if (roundToMinorVersion) {
 			Version version = getVersion(versionString);
 
 			if (version != null) {
-				version = new Version(version.getMajor(), 0, 0);
+				version = new Version(
+					version.getMajor(), version.getMinor(), 0);
 
 				versionString = version.toString();
 			}
