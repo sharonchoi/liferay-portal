@@ -1748,7 +1748,6 @@ tell application "Safari" to quit
 				<matches pattern="http" string="${test.build.bundle.glassfish.zip.url}" />
 				<then>
 					<antcall inheritAll="false" target="prepare-test-bundle">
-						<param name="app.server.name" value="glassfish" />
 						<param name="app.server.type" value="glassfish" />
 						<param name="test.app.server.bin.dir" value="${app.server.glassfish.bin.dir}" />
 						<param name="test.build.bundle.zip.url" value="${test.build.bundle.glassfish.zip.url}" />
@@ -1816,7 +1815,6 @@ tell application "Safari" to quit
 				<matches pattern="http" string="${test.build.bundle.jetty.zip.url}" />
 				<then>
 					<antcall inheritAll="false" target="prepare-test-bundle">
-						<param name="app.server.name" value="jetty" />
 						<param name="app.server.type" value="jetty" />
 						<param name="test.app.server.bin.dir" value="${app.server.jetty.bin.dir}" />
 						<param name="test.build.bundle.zip.url" value="${test.build.bundle.jetty.zip.url}" />
@@ -1834,7 +1832,6 @@ tell application "Safari" to quit
 				<matches pattern="http" string="${test.build.bundle.jonas.zip.url}" />
 				<then>
 					<antcall inheritAll="false" target="prepare-test-bundle">
-						<param name="app.server.name" value="jonas" />
 						<param name="app.server.type" value="jonas" />
 						<param name="test.app.server.bin.dir" value="${app.server.jonas.bin.dir}" />
 						<param name="test.build.bundle.zip.url" value="${test.build.bundle.jonas.zip.url}" />
@@ -1852,7 +1849,6 @@ tell application "Safari" to quit
 				<matches pattern="http" string="${test.build.bundle.resin.zip.url}" />
 				<then>
 					<antcall inheritAll="false" target="prepare-test-bundle">
-						<param name="app.server.name" value="resin" />
 						<param name="app.server.type" value="resin" />
 						<param name="test.app.server.bin.dir" value="${app.server.resin.bin.dir}" />
 						<param name="test.build.bundle.zip.url" value="${test.build.bundle.resin.zip.url}" />
@@ -1892,7 +1888,6 @@ tell application "Safari" to quit
 					<set-tomcat-version-number liferay.portal.bundle="${liferay.portal.bundle}" />
 
 					<antcall inheritAll="false" target="prepare-test-bundle">
-						<param name="app.server.name" value="tomcat" />
 						<param name="app.server.type" value="tomcat" />
 						<param name="test.app.server.bin.dir" value="${app.server.tomcat.bin.dir}" />
 						<param name="test.build.bundle.zip.url" value="${test.build.bundle.tomcat.zip.url}" />
@@ -1981,7 +1976,6 @@ tell application "Safari" to quit
 				<matches pattern="http" string="${test.build.bundle.wildfly.zip.url}" />
 				<then>
 					<antcall inheritAll="false" target="prepare-test-bundle">
-						<param name="app.server.name" value="wildfly" />
 						<param name="app.server.type" value="wildfly" />
 						<param name="test.app.server.bin.dir" value="${app.server.wildfly.bin.dir}" />
 						<param name="test.build.bundle.zip.url" value="${test.build.bundle.wildfly.zip.url}" />
@@ -2263,7 +2257,7 @@ ${tomcat-gc-log}
 						directoryScanner.setBasedir(project.getBaseDir());
 						directoryScanner.setExcludes(
 							new String[] {
-								"modules/core/portal-lpkg-deployer-test/src/testIntegration/java/com/liferay/portal/lpkg/deployer/test/LPKGDeployerTest.java",
+								"modules/apps/static/portal-lpkg-deployer/portal-lpkg-deployer-test/src/testIntegration/java/com/liferay/portal/lpkg/deployer/test/LPKGDeployerTest.java",
 								"portal-kernel/test/unit/com/liferay/portal/log/assertor/PortalLogAssertorTest.java",
 								"*/pacl/test/[\\w]+Test.class",
 								"**/*ServiceHttpTest.java",
@@ -3292,7 +3286,7 @@ org.apache.catalina.startup.ClassLoaderFactory.level=INFO]]>
 
 			<echo>Waiting for ${app.server.waiting.url} to load</echo>
 
-			<waitfor maxwait="15" maxwaitunit="minute" timeoutproperty="app.server.waiting.timeout">
+			<waitfor maxwait="${timeout.app.server.wait}" maxwaitunit="second" timeoutproperty="app.server.waiting.timeout">
 				<http url="${app.server.waiting.url}" />
 			</waitfor>
 
@@ -3390,6 +3384,8 @@ org.apache.catalina.startup.ClassLoaderFactory.level=INFO]]>
 
 							System.out.println("Waiting for server startup message");
 
+							int timeout = Integer.parseInt(project.getProperty("timeout.app.server.wait"));
+
 							int second = 0;
 
 							while (true) {
@@ -3404,8 +3400,8 @@ org.apache.catalina.startup.ClassLoaderFactory.level=INFO]]>
 									e.printStackTrace();
 								}
 
-								if (second >= 900) {
-									project.setProperty("wait.for.app.server.log.timed.out.message", "Unable to find startup message after 15 minutes.");
+								if (second >= timeout) {
+									project.setProperty("wait.for.app.server.log.timed.out.message", "Unable to find startup message after " + (timeout / 60) + " minutes.");
 
 									break;
 								}
@@ -6572,36 +6568,59 @@ ANT_OPTS=${env.ANT_OPTS}</echo>
 		<ant antfile="build-dist.xml" inheritAll="false" target="unzip-${app.server.type}-custom" />
 
 		<if>
-			<equals arg1="${app.server.type}" arg2="websphere" />
+			<equals arg1="${app.server.type}" arg2="weblogic" />
 			<then>
-				<replace
-					dir="${app.server.websphere.dir}"
-					includes="**/*.js,**/*.metadata,**/*.properties,**/*.props,**/*.sh,**/*.txt,**/*.xml"
-				>
-					<replacefilter token="/opt/dev/projects/github/liferay-portal/bundles" value="${app.server.parent.dir}" />
-				</replace>
-
-				<replace
-					dir="${app.server.websphere.dir}"
-					includes="**/*.sh"
-				>
-					<replacefilter token="#!/bin/sh" value="#!/bin/bash" />
-				</replace>
+				<replaceregexp
+					file="${app.server.weblogic.bin.dir}/stopWebLogic.sh"
+					flags="g"
+					match="(t3:\/\/)[^\:]*(\:\d+)"
+					replace="\1${env.HOSTNAME}\2"
+				/>
 
 				<chmod perm="a+x">
-					<fileset dir="${app.server.websphere.dir}">
-						<include name="bin/**/*.sh" />
-						<include name="java*/bin/*" />
+					<fileset dir="${app.server.weblogic.bin.dir}">
+						<include name="**/*.sh" />
+					</fileset>
+				</chmod>
+
+				<chmod perm="a+x">
+					<fileset dir="${app.server.weblogic.instance.dir}">
+						<include name="**/*.sh" />
 					</fileset>
 				</chmod>
 			</then>
-		</if>
+			<elseif>
+				<equals arg1="${app.server.type}" arg2="websphere" />
+				<then>
+					<replace
+						dir="${app.server.websphere.dir}"
+						includes="**/*.js,**/*.metadata,**/*.properties,**/*.props,**/*.sh,**/*.txt,**/*.xml"
+					>
+						<replacefilter token="/opt/dev/projects/github/liferay-portal/bundles" value="${app.server.parent.dir}" />
+					</replace>
 
-		<chmod perm="a+x">
-			<fileset dir="${app.server.bin.dir}">
-				<include name="**/*.sh" />
-			</fileset>
-		</chmod>
+					<replace
+						dir="${app.server.websphere.dir}"
+						includes="**/*.sh"
+					>
+						<replacefilter token="#!/bin/sh" value="#!/bin/bash" />
+					</replace>
+
+					<chmod perm="a+x">
+						<fileset dir="${app.server.websphere.bin.dir}">
+							<include name="**/*.sh" />
+						</fileset>
+					</chmod>
+
+					<chmod perm="a+x">
+						<fileset dir="${app.server.websphere.dir}">
+							<include name="bin/**/*.sh" />
+							<include name="java*/bin/*" />
+						</fileset>
+					</chmod>
+				</then>
+			</elseif>
+		</if>
 
 		<ant inheritAll="false" target="deploy" />
 
@@ -6661,6 +6680,15 @@ ANT_OPTS=${env.ANT_OPTS}</echo>
 	</target>
 
 	<target name="prepare-test-bundle">
+		<if>
+			<not>
+				<isset property="app.server.name" />
+			</not>
+			<then>
+				<property name="app.server.name" value="${app.server.type}" />
+			</then>
+		</if>
+
 		<if>
 			<matches pattern="http" string="${test.build.bundle.zip.url}" />
 			<then>
@@ -6892,6 +6920,10 @@ cluster.link.bind.addr["cluster-link-udp"]=127.0.0.1</echo>
 							<os family="windows" />
 							<then>
 								<exec executable="${db2.executable}">
+									<arg line="/c /w db2 disconnect lportal" />
+								</exec>
+
+								<exec executable="${db2.executable}">
 									<arg line="/c /w db2 drop db lportal" />
 								</exec>
 
@@ -6900,6 +6932,10 @@ cluster.link.bind.addr["cluster-link-udp"]=127.0.0.1</echo>
 								</exec>
 							</then>
 							<else>
+								<exec executable="${db2.executable}">
+									<arg line="disconnect lportal" />
+								</exec>
+
 								<exec executable="${db2.executable}">
 									<arg line="drop db lportal" />
 								</exec>
@@ -7041,26 +7077,64 @@ cluster.link.bind.addr["cluster-link-udp"]=127.0.0.1</echo>
 		/>
 
 		<if>
-			<equals arg1="${database.type}" arg2="mysql" />
+			<equals arg1="${database.type}" arg2="db2" />
 			<then>
-				<antcall target="rebuild-database">
-					<param name="database.type" value="${database.type}" />
-					<param name="sql.dir" value="sql/create-bare/" />
-					<param name="sql.file" value="create-bare-${database.type}.sql" />
-				</antcall>
+				<echo>chmod -v 777 ${liferay.home}</echo>
 
-				<get-database-property property.name="database.password" />
-				<get-database-property property.name="database.schema" />
-				<get-database-property property.name="database.username" />
+				<chmod file="${liferay.home}" perm="777" type="dir" verbose="true" />
 
-				<exec executable="${mysql.executable}" input="${liferay.home}/${database.type}.sql">
-					<arg value="--database=${database.schema}" />
-					<arg value="--password=${database.password}" />
-					<arg value="--user=${database.username}" />
+				<echo>${db2.executable} restore database lportal from ${liferay.home} replace existing</echo>
+
+				<exec executable="${db2.executable}" outputproperty="db2.executable.output">
+					<arg line="restore database lportal from ${liferay.home} replace existing" />
 				</exec>
 
-				<exec executable="mysql_upgrade" />
+				<echo>${db2.executable.output}</echo>
 			</then>
+			<elseif>
+				<equals arg1="${database.type}" arg2="mariadb" />
+				<then>
+					<antcall target="rebuild-database">
+						<param name="database.type" value="${database.type}" />
+						<param name="sql.dir" value="sql/create-bare/" />
+						<param name="sql.file" value="create-bare-mysql.sql" />
+					</antcall>
+
+					<get-database-property property.name="database.password" />
+					<get-database-property property.name="database.schema" />
+					<get-database-property property.name="database.username" />
+
+					<exec executable="${mariadb.executable}" input="${liferay.home}/${database.type}.sql">
+						<arg value="--database=${database.schema}" />
+						<arg value="--password=${database.password}" />
+						<arg value="--user=${database.username}" />
+					</exec>
+
+					<exec executable="mysql_upgrade" />
+				</then>
+			</elseif>
+			<elseif>
+				<equals arg1="${database.type}" arg2="mysql" />
+				<then>
+					<antcall target="rebuild-database">
+						<param name="database.type" value="${database.type}" />
+						<param name="sql.dir" value="sql/create-bare/" />
+						<param name="sql.file" value="create-bare-mysql.sql" />
+					</antcall>
+
+					<get-database-property property.name="database.password" />
+					<get-database-property property.name="database.schema" />
+					<get-database-property property.name="database.username" />
+
+					<exec executable="${mysql.executable}" input="${liferay.home}/${database.type}.sql">
+						<arg value="--database=${database.schema}" />
+						<arg value="--password=${database.password}" />
+						<arg value="--user=${database.username}" />
+					</exec>
+
+					<exec executable="mysql_upgrade" />
+				</then>
+			</elseif>
 			<elseif>
 				<equals arg1="${database.type}" arg2="oracle" />
 				<then>
@@ -7152,7 +7226,6 @@ go</echo>
 
 					<delete file="import-sybase.sql" />
 					<delete file="lportal__srv.log" />
-
 				</then>
 			</elseif>
 		</if>
@@ -7832,6 +7905,15 @@ jdbc.default.password=${database.mysql.password}</echo>
 
 	<target name="run-simple-server">
 		<if>
+			<not>
+				<available file="tools/sdk" />
+			</not>
+			<then>
+				<antcall inheritAll="false" target="setup-sdk" />
+			</then>
+		</if>
+
+		<if>
 			<matches pattern="[0-9]+_[0-9]+" string="${test.class}" />
 			<then>
 				<get-test-class />
@@ -7950,7 +8032,6 @@ jdbc.default.password=${database.mysql.password}</echo>
 				<equals arg1="${os.name}" arg2="SunOS" />
 			</not>
 			<then>
-				<antcall inheritAll="false" target="clean-up-db2-processes" />
 				<antcall inheritAll="false" target="clean-up-java-processes" />
 			</then>
 		</if>
@@ -8329,13 +8410,6 @@ jdbc.default.password=${database.mysql.password}</echo>
 		<ant dir="portal-impl" inheritAll="false" target="test-unit" />
 
 		<ant dir="util-java" inheritAll="false" target="test-unit" />
-	</target>
-
-	<target name="update-test-gradle-properties">
-		<propertyfile file="${project.dir}/.gradle/gradle.properties">
-			<entry key="database.jdbc.drivers.url" value="${test.jdbc.drivers.url}" />
-			<entry key="database.oracle.version" value="${database.oracle.version}" />
-		</propertyfile>
 	</target>
 
 	<target name="upgrade-legacy-database">
