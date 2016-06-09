@@ -40,6 +40,7 @@ import com.liferay.exportimport.kernel.lar.PortletDataHandler;
 import com.liferay.exportimport.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.exportimport.kernel.lar.PortletDataHandlerStatusMessageSenderUtil;
 import com.liferay.exportimport.kernel.lar.StagedModelDataHandlerUtil;
+import com.liferay.exportimport.kernel.lar.StagedModelType;
 import com.liferay.exportimport.kernel.lar.UserIdStrategy;
 import com.liferay.exportimport.kernel.lifecycle.ExportImportLifecycleManager;
 import com.liferay.exportimport.kernel.model.ExportImportConfiguration;
@@ -1036,6 +1037,9 @@ public class LayoutImportController implements ImportController {
 			portletDataContext.addDeletionSystemEventStagedModelTypes(
 				portletDataHandler.getDeletionSystemEventStagedModelTypes());
 		}
+
+		portletDataContext.addDeletionSystemEventStagedModelTypes(
+			new StagedModelType(Layout.class));
 	}
 
 	@Reference(unbind = "-")
@@ -1367,6 +1371,10 @@ public class LayoutImportController implements ImportController {
 			PortletDataHandler portletDataHandler =
 				_portletDataHandlerProvider.provide(companyId, portletId);
 
+			if (portletDataHandler == null) {
+				continue;
+			}
+
 			if (!portletDataHandler.validateSchemaVersion(schemaVersion)) {
 				StringBundler sb = new StringBundler(6);
 
@@ -1409,6 +1417,20 @@ public class LayoutImportController implements ImportController {
 			Layout.class.getSimpleName());
 
 		validateLayoutPrototypes(companyId, headerElement, layoutsElement);
+	}
+
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link
+	 *             #validateLayoutPrototypes(long, Element, Element)}
+	 */
+	@Deprecated
+	protected void validateLayoutPrototypes(
+			long companyId, Element layoutsElement)
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method is deprecated and replaced by " +
+				"#validateLayoutPrototypes(long, Element, Element)");
 	}
 
 	protected void validateLayoutPrototypes(
