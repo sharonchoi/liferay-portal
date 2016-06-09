@@ -29,10 +29,14 @@ import com.liferay.gradle.util.copy.StripPathSegmentsAction;
 import groovy.lang.Closure;
 
 import java.io.File;
+import java.io.IOException;
 
+import java.util.Properties;
 import java.util.concurrent.Callable;
 
 import org.gradle.api.Action;
+import org.gradle.api.DomainObjectCollection;
+import org.gradle.api.GradleException;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
@@ -99,6 +103,17 @@ public class LiferayThemeDefaultsPlugin implements Plugin<Project> {
 		configureTasksExecuteGulp(
 			project, expandFrontendCSSCommonTask, frontendThemeStyledProject,
 			frontendThemeUnstyledProject, gulpBuildTaskCache);
+
+		GradleUtil.withPlugin(
+			project, CachePlugin.class,
+			new Action<CachePlugin>() {
+
+				@Override
+				public void execute(CachePlugin cachePlugin) {
+					configureTaskUpdateVersionForCachePlugin(updateVersionTask);
+				}
+
+			});
 
 		project.afterEvaluate(
 			new Action<Project>() {
@@ -268,16 +283,33 @@ public class LiferayThemeDefaultsPlugin implements Plugin<Project> {
 		final LiferayExtension liferayExtension = GradleUtil.getExtension(
 			project, LiferayExtension.class);
 
-		liferayExtension.setDeployDir(
-			new Callable<File>() {
+		boolean requiredForStartup = getPluginPackageProperty(
+			project, "required-for-startup");
 
-				@Override
-				public File call() throws Exception {
-					return new File(
-						liferayExtension.getLiferayHome(), "deploy");
-				}
+		if (requiredForStartup) {
+			liferayExtension.setDeployDir(
+				new Callable<File>() {
 
-			});
+					@Override
+					public File call() throws Exception {
+						return new File(
+							liferayExtension.getLiferayHome(), "osgi/war");
+					}
+
+				});
+		}
+		else {
+			liferayExtension.setDeployDir(
+				new Callable<File>() {
+
+					@Override
+					public File call() throws Exception {
+						return new File(
+							liferayExtension.getLiferayHome(), "deploy");
+					}
+
+				});
+		}
 	}
 
 	protected void configureProject(Project project) {
@@ -356,6 +388,27 @@ public class LiferayThemeDefaultsPlugin implements Plugin<Project> {
 			});
 	}
 
+	protected void configureTaskUpdateVersionForCachePlugin(
+		final ReplaceRegexTask updateVersionTask) {
+
+		CacheExtension cacheExtension = GradleUtil.getExtension(
+			updateVersionTask.getProject(), CacheExtension.class);
+
+		DomainObjectCollection<TaskCache> taskCaches =
+			cacheExtension.getTasks();
+
+		taskCaches.all(
+			new Action<TaskCache>() {
+
+				@Override
+				public void execute(TaskCache taskCache) {
+					updateVersionTask.finalizedBy(
+						taskCache.getRefreshDigestTaskName());
+				}
+
+			});
+	}
+
 	protected void configureTaskUploadArchives(
 		Project project, Task updateThemeVersionTask) {
 
@@ -367,6 +420,19 @@ public class LiferayThemeDefaultsPlugin implements Plugin<Project> {
 			project, BasePlugin.UPLOAD_ARCHIVES_TASK_NAME);
 
 		uploadArchivesTask.finalizedBy(updateThemeVersionTask);
+	}
+
+	protected boolean getPluginPackageProperty(Project project, String key) {
+		try {
+			Properties properties = FileUtil.readProperties(
+				project, "src/WEB-INF/liferay-plugin-package.properties");
+
+			return Boolean.parseBoolean(properties.getProperty(key));
+		}
+		catch (IOException ioe) {
+			throw new GradleException(
+				"Unable to read liferay-plugin-package.properties", ioe);
+		}
 	}
 
 	protected Project getThemeProject(Project project, String name) {
