@@ -137,110 +137,6 @@
 		</then>
 	</if>
 
-	<propertyselector
-		casesensitive="false"
-		delimiter="," match="app\.(.+)\.dir"
-		property="app.server.dir.property.list"
-		select="\1"
-	/>
-
-	<for list="${app.server.dir.property.list}" param="app.server.dir.property">
-		<sequential>
-
-			<!-- Original -->
-
-			<propertycopy
-				from="app.@{app.server.dir.property}.dir"
-				name="temp.app.server.dir.location"
-			/>
-
-			<!-- Absolute -->
-
-			<property
-				location="${temp.app.server.dir.location}"
-				name="temp.app.server.dir.location.absolute"
-			/>
-
-			<!-- Unix -->
-
-			<pathconvert property="temp.app.server.dir.location.unix" targetos="unix">
-				<path location="${temp.app.server.dir.location.absolute}" />
-			</pathconvert>
-
-			<propertycopy
-				from="temp.app.server.dir.location.unix"
-				name="app.@{app.server.dir.property}.dir.unix"
-				override="true"
-			/>
-
-			<!-- Windows -->
-
-			<pathconvert property="temp.app.server.dir.location.windows" targetos="windows">
-				<path location="${temp.app.server.dir.location.absolute}" />
-			</pathconvert>
-
-			<propertycopy
-				from="temp.app.server.dir.location.windows"
-				name="app.@{app.server.dir.property}.dir.windows"
-				override="true"
-			/>
-
-			<!-- Override -->
-
-			<propertycopy
-				from="temp.app.server.dir.location.unix"
-				name="app.@{app.server.dir.property}.dir"
-				override="true"
-			/>
-
-			<!-- Reset -->
-
-			<var name="temp.app.server.dir.location" unset="true" />
-			<var name="temp.app.server.dir.location.absolute" unset="true" />
-			<var name="temp.app.server.dir.location.unix" unset="true" />
-			<var name="temp.app.server.dir.location.windows" unset="true" />
-		</sequential>
-	</for>
-
-	<propertyselector
-		casesensitive="false"
-		delimiter="," match="app\.(.+)\.version"
-		property="app.server.version.property.list"
-		select="\1"
-	/>
-
-	<for list="${app.server.version.property.list}" param="app.server.version.property">
-		<sequential>
-
-			<!-- Version -->
-
-			<propertycopy
-				from="app.@{app.server.version.property}.version"
-				name="temp.app.server.version"
-			/>
-
-			<antelope:stringutil property="temp.app.server.major.version.endindex" string="${temp.app.server.version}">
-				<antelope:indexof string="." />
-			</antelope:stringutil>
-
-			<antelope:stringutil property="temp.app.server.major.version" string="${temp.app.server.version}">
-				<antelope:substring beginindex="0" endindex="${temp.app.server.major.version.endindex}" />
-			</antelope:stringutil>
-
-			<!-- Major version -->
-
-			<propertycopy
-				from="temp.app.server.major.version"
-				name="app.@{app.server.version.property}.major.version"
-			/>
-
-			<!-- Reset -->
-
-			<var name="temp.app.server.major.version" unset="true" />
-			<var name="temp.app.server.version" unset="true" />
-		</sequential>
-	</for>
-
 	<property name="liferay.home" value="${app.server.parent.dir}" />
 
 	<basename file="${basedir}" property="basedir.name" />
@@ -259,6 +155,35 @@
 
 	<condition else="" property="file.suffix.exe" value=".exe">
 		<contains casesensitive="false" string="${os.name}" substring="Windows" />
+	</condition>
+
+	<exec executable="git" outputproperty="liferay.releng.branch">
+		<arg value="rev-parse" />
+		<arg value="--abbrev-ref" />
+		<arg value="HEAD" />
+	</exec>
+
+	<condition property="liferay.releng.ee">
+		<or>
+			<istrue value="${ee.override}" />
+			<matches pattern="ee-.+" string="${liferay.releng.branch}" />
+		</or>
+	</condition>
+
+	<condition else="Liferay" property="liferay.releng.app.title.prefix" value="Liferay CE">
+		<not>
+			<istrue value="${liferay.releng.ee}" />
+		</not>
+	</condition>
+
+	<condition else="false" property="liferay.releng.public">
+		<not>
+			<istrue value="${liferay.releng.ee}" />
+		</not>
+	</condition>
+
+	<condition else="false" property="liferay.releng.supported">
+		<istrue value="${liferay.releng.ee}" />
 	</condition>
 
 	<property name="definitions.dir" value="${project.dir}/definitions" />
@@ -386,14 +311,13 @@
 		<antversion atleast="1.7.0" />
 	</condition>
 
-	<if>
-		<not>
-			<equals arg1="${correct.ant.version}" arg2="true" />
-		</not>
-		<then>
-			<fail>Please use Ant 1.7.0 or above.</fail>
-		</then>
-	</if>
+	<fail message="Please use Ant 1.7.0 or above.">
+		<condition>
+			<not>
+				<istrue value="${correct.ant.version}" />
+			</not>
+		</condition>
+	</fail>
 
 	<whichresource property="google.errorprone.compiler" resource="/com/google/errorprone/ErrorProneAntCompilerAdapter.class" />
 
@@ -897,6 +821,8 @@ Please set the environment variable ANT_OPTS to the recommended value of
 
 			<prepare-portal-artifact-pom snapshot.version.suffix="${snapshot.version.suffix}" />
 
+			<delete dir="${user.home}/.m2/repository/com/liferay/portal/com.liferay.${processed.artifact.name}" />
+
 			<artifact:install file="${artifact.name}.@{packaging}">
 				<attach-files />
 				<pom file="pom.xml" />
@@ -945,6 +871,7 @@ Please set the environment variable ANT_OPTS to the recommended value of
 				<sysproperty file="woven-classes" key="junit.aspectj.dump" />
 				<sysproperty key="junit.code.coverage" value="${junit.code.coverage}" />
 				<sysproperty if:true="${jvm.debug}" key="jvm.debug" value="true" />
+				<sysproperty key="liferay.lib.portal.dir" value="${app.server.tomcat.lib.portal.dir}" />
 				<sysproperty key="whip.agent" value="${whip.agent}" />
 				<sysproperty file="test-coverage/@{test.type}/whip.dat" key="whip.datafile" />
 				<sysproperty key="whip.instrument.dump" value="${whip.instrument.dump}" />
@@ -959,6 +886,7 @@ Please set the environment variable ANT_OPTS to the recommended value of
 				<jvmarg value="-Dliferay.log.dir=${liferay.home}/logs" />
 				<jvmarg value="-Dliferay.mode=test" />
 				<jvmarg value="-Dosgi.state.dir=${liferay.home}/osgi/state" />
+				<jvmarg value="-Drelease.versions.test.other.dir=${release.versions.test.other.dir}" />
 				<misc />
 				<jvmarg value="-Duser.timezone=GMT" />
 				<classpath location="test-coverage" />
@@ -1257,8 +1185,6 @@ Please set the environment variable ANT_OPTS to the recommended value of
 
 			<update-gradle-properties />
 
-			<ant antfile="build-test.xml" inheritAll="false" target="update-test-gradle-properties" />
-
 			<gradle-execute task="setupPortalTools">
 				<arg value="--build-file=${project.dir}/modules/util.gradle" />
 			</gradle-execute>
@@ -1456,39 +1382,20 @@ rerun your task.
 
 	<macrodef name="update-gradle-properties">
 		<sequential>
+			<property file="test.${user.name}.properties" />
+			<property file="test.${env.COMPUTERNAME}.properties" />
+			<property file="test.${env.HOST}.properties" />
+			<property file="test.${env.HOSTNAME}.properties" />
+			<property file="test.properties" />
+
 			<property location="${basedir}/.gradle/gradle.properties" name="gradle.properties.file" />
+
+			<mkdir dir="${basedir}/.gradle" />
 
 			<delete file="${gradle.properties.file}" />
 
 			<condition else="false" property="jsp.precompile.enabled">
 				<istrue value="${jsp.precompile}" />
-			</condition>
-
-			<exec executable="git" outputproperty="liferay.releng.branch">
-				<arg value="rev-parse" />
-				<arg value="--abbrev-ref" />
-				<arg value="HEAD" />
-			</exec>
-
-			<condition property="liferay.releng.ee">
-				<or>
-					<istrue value="${ee.override}" />
-					<matches pattern="ee-.+" string="${liferay.releng.branch}" />
-				</or>
-			</condition>
-
-			<condition else="Liferay" property="liferay.releng.app.title.prefix" value="Liferay CE">
-				<istrue value="${liferay.releng.ee}" />
-			</condition>
-
-			<condition else="false" property="liferay.releng.public">
-				<not>
-					<istrue value="${liferay.releng.ee}" />
-				</not>
-			</condition>
-
-			<condition else="false" property="liferay.releng.supported">
-				<istrue value="${liferay.releng.ee}" />
 			</condition>
 
 			<echoproperties destfile="${gradle.properties.file}" >
@@ -1513,6 +1420,7 @@ rerun your task.
 					<propertyref name="sass.precision" />
 					<propertyref name="source.formatter.max.line.length" />
 					<propertyref name="source.formatter.processor.thread.count" />
+					<propertyref name="timeout.app.server.wait" />
 					<propertyref prefix="ivy.pom." />
 					<propertyref prefix="sonatype." />
 					<propertyref regex="^\s*app\.server\.(?:glassfish|jboss|jetty|jonas|resin|tcat|tcserver|tomcat|weblogic|websphere|wildfly).*\.dir" />
@@ -1534,8 +1442,13 @@ rerun your task.
 			<record-artifact-version artifact.name="util-taglib" file="${gradle.properties.file}" />
 
 			<propertyfile file="${gradle.properties.file}">
+				<entry key="database.jdbc.drivers.url" value="${test.jdbc.drivers.url}" />
 				<entry key="database.jdbc.oracle.driver" value="${jdbc.oracle.driver}" />
+				<entry key="database.oracle.version" value="${database.oracle.version}" />
 				<entry key="systemProp.build.performance.logger.enabled" value="${build.performance.logger.enabled}" />
+				<entry key="systemProp.repository.private.password" value="${build.repository.private.password}" />
+				<entry key="systemProp.repository.private.url" value="${build.repository.private.url}" />
+				<entry key="systemProp.repository.private.username" value="${build.repository.private.username}" />
 			</propertyfile>
 
 			<replaceregexp file="${gradle.properties.file}" flags="g" match="\\([\:\=\!\\])" replace="\1" />
@@ -1544,6 +1457,12 @@ rerun your task.
 
 	<macrodef name="update-sdk-properties">
 		<sequential>
+			<property file="release.${user.name}.properties" />
+			<property file="release.${env.COMPUTERNAME}.properties" />
+			<property file="release.${env.HOST}.properties" />
+			<property file="release.${env.HOSTNAME}.properties" />
+			<property file="release.properties" />
+
 			<property location="${sdk.dir}/build.${env.COMPUTERNAME}.properties" name="sdk.properties.file" />
 
 			<delete file="${sdk.properties.file}" />
@@ -1557,6 +1476,7 @@ rerun your task.
 					<propertyref name="junit.java.unit.gc.logging" />
 					<propertyref name="junit.test.excludes" />
 					<propertyref name="liferay.home" />
+					<propertyref name="lp.version" />
 					<propertyref name="microsoft.translator.client.id" />
 					<propertyref name="microsoft.translator.client.secret" />
 					<propertyref name="sass.compiler.class.name" />
@@ -1573,6 +1493,9 @@ rerun your task.
 			</echoproperties>
 
 			<propertyfile file="${sdk.properties.file}">
+				<entry key="ivy.repository.liferay.private.password" value="${build.repository.private.password}" />
+				<entry key="ivy.repository.liferay.private.url" value="${build.repository.private.url}" />
+				<entry key="ivy.repository.liferay.private.username" value="${build.repository.private.username}" />
 				<entry key="lp.portal.project.dir" value="${project.dir}" />
 				<entry key="module.framework.base.dir" value="${liferay.home}/osgi" />
 			</propertyfile>
