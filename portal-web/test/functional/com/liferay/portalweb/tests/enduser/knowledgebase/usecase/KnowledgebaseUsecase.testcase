@@ -1715,6 +1715,8 @@
 			<var name="kbSuggestionBody" value="Knowledge Base Article Suggestion" />
 		</execute>
 
+		<execute macro="KBArticle#gotoSuggestionsNavigationCP" />
+
 		<execute macro="KBArticleSuggestion#gotoSuggestionStatusInProgress">
 			<var name="suggestionCount" value="1" />
 		</execute>
@@ -1723,6 +1725,8 @@
 			<var name="kbArticleTitle" value="Knowledge Base Article Title" />
 			<var name="kbSuggestionBody" value="Knowledge Base Article Suggestion" />
 		</execute>
+
+		<execute macro="KBArticle#gotoSuggestionsNavigationCP" />
 
 		<execute macro="KBArticleSuggestion#gotoSuggestionStatusResolved">
 			<var name="suggestionCount" value="1" />
