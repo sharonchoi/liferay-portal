@@ -589,17 +589,17 @@
 	</command>
 
 	<command name="editPGViaLocalizedKBDisplay">
+		<var name="key_editLocalized" value="Editar" />
 		<var name="key_kbArticleTitle" value="${kbArticleTitle}" />
+		<var name="key_localizedText" value="Editor de texto enriquecido" />
 
-		<execute function="Click" locator1="xpath=//div[@class='kb-article-container']//div//a[@title='Acciones']" />
-
-		<execute function="AssertClick" locator1="MenuItem#EDIT" value1="Editar" />
+		<execute function="AssertClick" locator1="MenuItem#EDIT_LOCALIZED" value1="Editar" />
 
 		<execute function="AssertTextEquals" locator1="PGKnowledgebasedisplayEditarticle#HEADER_TITLE" value1="${kbArticleTitle}" />
-		<execute function="Type#typeEditor" locator1="AlloyEditor#TITLE_FIELD" value1="${kbArticleTitleEdit}" />
-		<execute function="Type#typeEditor" locator1="AlloyEditor#CONTENT_FIELD" value1="${kbArticleContentEdit}" />
+		<execute function="Type#typeEditor" locator1="AlloyEditor#TITLE_FIELD_LOCALIZED" value1="${kbArticleTitleEdit}" />
+		<execute function="Type#typeEditor" locator1="AlloyEditor#CONTENT_FIELD_LOCALIZED" value1="${kbArticleContentEdit}" />
 
-		<execute function="AssertClick" locator1="xpath=//button[contains(@id,'_knowledgebaseportlet_publish')]" value1="Publicar" />
+		<execute function="AssertClick" locator1="Button#PUBLISH_LOCALIZED" value1="Publicar" />
 
 		<execute function="AssertElementPresent" locator1="Message#SUCCESS" />
 	</command>
