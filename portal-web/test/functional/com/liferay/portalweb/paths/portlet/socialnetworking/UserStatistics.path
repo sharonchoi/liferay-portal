@@ -28,6 +28,17 @@
 	<td>//div[contains(@class,'taglib-user-display') and contains(.,'${key_userName}')]//div[contains(.,'Participation Score') and contains(.,'${key_userParticipationScore}')]</td>
 	<td></td>
 </tr>
+<tr>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
+<!--CONFIGURATION_SETUP_COUNTERS-->
+<tr>
+	<td>DISPLAY_ACTIVITY_COUNTER_NAME_DROPDOWN</td>
+	<td>//select[contains(@id,'displayActivityCounterName0')]</td>
+	<td></td>
+</tr>
 </tbody>
 </table>
 </body>
