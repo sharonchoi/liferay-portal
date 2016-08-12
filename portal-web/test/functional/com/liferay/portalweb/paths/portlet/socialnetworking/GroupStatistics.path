@@ -1,0 +1,50 @@
+<html>
+<head>
+<title>GroupStatistics</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">GroupStatistics</td></tr>
+</thead>
+<tbody>
+<tr>
+	<td>SITE_STATISTICS_PANEL</td>
+	<td>//div[contains(@class,'panel-heading')]/div/span[contains(.,'Site Statistics: ${siteStatistics}')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
+<!--CONFIGURATION_SETUP_COUNTERS-->
+<tr>
+	<td>DISPLAY_ACTIVITY_COUNTER_NAME_DROPDOWN</td>
+	<td>//select[contains(@id,'displayActivityCounterName0')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>CHART_TYPE_DROPDOWN</td>
+	<td>//select[contains(@id,'chartType0')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>CHART_WIDTH_DROPDOWN</td>
+	<td>//select[contains(@id,'chartWidth0')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>DATA_RANGE_DROPDOWN</td>
+	<td>//select[contains(@id,'dataRange0')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>
