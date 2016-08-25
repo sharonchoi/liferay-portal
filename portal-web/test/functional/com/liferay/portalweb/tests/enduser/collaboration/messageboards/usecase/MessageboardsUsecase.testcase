@@ -1759,7 +1759,6 @@
 			<var name="threadSubject" value="Thread Subject" />
 		</execute>
 
-
 		<execute macro="MessageboardsPortlet#configureGeneralCP">
 			<var name="threadAsQuestionByDefaultEnabled" value="true" />
 		</execute>
