@@ -707,7 +707,7 @@
 		<execute function="Click" locator1="Button#PUBLISH" />
 
 		<execute macro="Alert#viewRequestFailedToComplete" />
-		
+
 		<execute function="AssertTextEquals#assertPartialText" locator1="Message#ERROR_2" value1="The source file does not have the same extension as the original file." />
 
 		<execute macro="Navigator#openURL" />
@@ -738,7 +738,7 @@
 			<var name="dmDocumentFile" value="Document_3.docx" />
 			<var name="dmDocumentTitle" value="Document_3.docx" />
 		</execute>
-		
+
 		<execute macro="DMNavigator#gotoEditDocument">
 			<var name="dmDocumentTitle" value="Document_3.docx" />
 		</execute>
@@ -750,7 +750,7 @@
 		<execute function="Click" locator1="Button#PUBLISH" />
 
 		<execute macro="Alert#viewRequestFailedToComplete" />
-		
+
 		<execute function="AssertTextEquals#assertPartialText" locator1="Message#ERROR_2" value1="The source file does not have the same extension as the original file." />
 
 		<execute macro="Navigator#openURL" />
