@@ -1,4 +1,6 @@
 <definition component-name="portal-knowledge-base">
+	<property name="portal.release" value="true" />
+	<property name="osgi.modules.includes" value="knowledge-base-api,knowledge-base-item-selector-api,knowledge-base-markdown-converter,knowledge-base-editor-configuration,knowledge-base-item-selector-web,knowledge-base-service,knowledge-base-web" />
 	<property name="testray.main.component.name" value="Knowledge Base" />
 
 	<set-up>
