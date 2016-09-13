@@ -115,6 +115,37 @@
 	<td>//div[@class='slider ']/span</td>
 	<td></td>
 </tr>
+<!--IMAGE_EDIT-->
+<tr>
+	<td>IMAGE_EDIT_BRIGHTNESS_25</td>
+	<td>portal/screenshots/imageeditor/image_brightness_25.png</td>
+	<td></td>
+</tr>
+<tr>
+	<td>IMAGE_EDIT_BRIGHTNESS_75</td>
+	<td>portal/screenshots/imageeditor/image_brightness_75.png</td>
+	<td></td>
+</tr>
+<tr>
+	<td>IMAGE_EDIT_CONTRAST_25</td>
+	<td>portal/screenshots/imageeditor/image_contrast_25.png</td>
+	<td></td>
+</tr>
+<tr>
+	<td>IMAGE_EDIT_CONTRAST_75</td>
+	<td>portal/screenshots/imageeditor/image_contrast_75.png</td>
+	<td></td>
+</tr>
+<tr>
+	<td>IMAGE_EDIT_SATURATION_25</td>
+	<td>portal/screenshots/imageeditor/image_saturation_25.png</td>
+	<td></td>
+</tr>
+<tr>
+	<td>IMAGE_EDIT_SATURATION_75</td>
+	<td>portal/screenshots/imageeditor/image_saturation_75.png</td>
+	<td></td>
+</tr>
 </tbody>
 </table>
 </body>
