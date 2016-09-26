@@ -993,10 +993,9 @@
 			<var name="pageName" value="Knowledge Base Display Page" />
 		</execute>
 
-		<execute macro="KBArticle#viewSourceURLPG">
-			<var name="kbArticleSourceURL" value="https://github.com/liferay/liferay-docs/blob/master/develop/tutorials/articles/adt/intro.markdown" />
-			<var name="kbArticleTitle" value="Knowledge Base Article Parent Title 1 Child 1" />
-		</execute>
+		<var name="key_kbTool" value="Edit on GitHub" />
+
+		<execute function="AssertClick" locator1="KnowledgeBase#KB_TOOLS" value1="Edit on GitHub" />
 	</command>
 
 	<command name="ViewKBArticleFriendlyURL" priority="4">
