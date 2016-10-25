@@ -100,6 +100,12 @@ public class JenkinsResultsParserUtil {
 		return URLDecoder.decode(url, "UTF-8");
 	}
 
+	public static String encode(String url) throws Exception {
+		URL encodedURL = encode(new URL(url));
+
+		return encodedURL.toExternalForm();
+	}
+
 	public static URL encode(URL url) throws Exception {
 		URI uri = new URI(
 			url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(),
@@ -334,6 +340,24 @@ public class JenkinsResultsParserUtil {
 					return parametersJSONObject.getString("value");
 				}
 			}
+		}
+
+		return "";
+	}
+
+	public static String getAxisVariable(String axisBuildURL) throws Exception {
+		String url = decode(axisBuildURL);
+
+		String label = "AXIS_VARIABLE=";
+
+		int x = url.indexOf(label);
+
+		if (x != -1) {
+			url = url.substring(x + label.length());
+
+			int y = url.indexOf(",");
+
+			return url.substring(0, y);
 		}
 
 		return "";

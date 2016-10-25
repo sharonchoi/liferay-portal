@@ -84,6 +84,7 @@ AUI.add(
 
 						fieldDefinition.dataProviders = builder.get('dataProviders');
 						fieldDefinition.evaluatorURL = builder.get('evaluatorURL');
+						fieldDefinition.locale = themeDisplay.getDefaultLanguageId();
 						fieldDefinition.parent = builder;
 						fieldDefinition.portletNamespace = builder.get('portletNamespace');
 						fieldDefinition.readOnly = true;
@@ -102,7 +103,7 @@ AUI.add(
 					_deserializePage: function(page) {
 						var instance = this;
 
-						var languageId = themeDisplay.getLanguageId();
+						var languageId = themeDisplay.getDefaultLanguageId();
 
 						var description = page.description && page.description[languageId];
 
