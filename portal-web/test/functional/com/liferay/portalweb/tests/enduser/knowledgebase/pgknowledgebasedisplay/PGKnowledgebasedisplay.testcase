@@ -1,6 +1,7 @@
 <definition component-name="portal-knowledge-base">
 	<property name="custom.properties" value="default.layout.template.id=1_column" />
 	<property name="testray.main.component.name" value="Knowledge Base" />
+	<property name="sharon" value="true" />
 
 	<var name="pageName" value="Knowledge Base Display Page" />
 	<var name="portletName" value="Knowledge Base Display" />
