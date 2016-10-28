@@ -100,7 +100,7 @@ import org.osgi.service.component.annotations.Reference;
 public class DisplayPortlet extends BaseKBPortlet {
 
 	@Override
-	public void render(
+	public void doRender(
 			RenderRequest renderRequest, RenderResponse renderResponse)
 		throws IOException, PortletException {
 
@@ -158,8 +158,6 @@ public class DisplayPortlet extends BaseKBPortlet {
 				throw new PortletException(e);
 			}
 		}
-
-		super.render(renderRequest, renderResponse);
 	}
 
 	public void updateRootKBFolderId(
