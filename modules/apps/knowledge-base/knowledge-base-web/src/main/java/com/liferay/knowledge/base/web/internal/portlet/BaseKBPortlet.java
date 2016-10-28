@@ -209,10 +209,6 @@ public abstract class BaseKBPortlet extends MVCPortlet {
 		writeJSON(actionRequest, actionResponse, jsonObject);
 	}
 
-	public abstract void doRender(
-			RenderRequest renderRequest, RenderResponse renderResponse)
-		throws IOException, PortletException;
-
 	public void moveKBObject(
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
@@ -593,6 +589,10 @@ public abstract class BaseKBPortlet extends MVCPortlet {
 
 		renderRequest.setAttribute(WebKeys.DIFF_HTML_RESULTS, diffHtmlResults);
 	}
+
+	protected abstract void doRender(
+			RenderRequest renderRequest, RenderResponse renderResponse)
+		throws IOException, PortletException;
 
 	@Override
 	protected boolean isSessionErrorException(Throwable cause) {
