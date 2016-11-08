@@ -1,5 +1,6 @@
 <definition component-name="portal-knowledge-base">
 	<property name="testray.main.component.name" value="Knowledge Base" />
+	<property name="sharon" value="true" />
 
 	<set-up>
 		<execute macro="TestCase#setUpPortalInstance" />
