@@ -1,4 +1,6 @@
 <definition component-name="portal-business-productivity-ee">
+	<property name="portal.release" value="true" />
+	<property name="test.run.environment" value="EE" />
 	<property name="testray.main.component.name" value="Reports" />
 
 	<set-up>
@@ -738,7 +740,7 @@
 
 		<execute macro="ReportsAdmin#gotoDefinitions" />
 
-		<execute macro="ReportsAdminNavigator#gotoAddDefinition" />
+		<execute macro="LexiconEntry#gotoAdd" />
 
 		<execute macro="ReportsAdmin#viewDefinitionParameterFields" />
 	</command>

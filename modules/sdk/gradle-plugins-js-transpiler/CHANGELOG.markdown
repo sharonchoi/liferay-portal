@@ -60,6 +60,12 @@ source files to `workingDir`.
 - [LPS-69026]: Set the `--logLevel` argument of `metal-cli` based on the Gradle
 log level.
 
+## 2.3.0 - 2016-11-21
+
+### Added
+- [LPS-69248]: Add the `jsCompile` configuration to provide additional
+JavaScript dependencies for the `transpileJS` task.
+
 [Liferay Gradle Plugins Node]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins-node
 [LPS-66906]: https://issues.liferay.com/browse/LPS-66906
 [LPS-67023]: https://issues.liferay.com/browse/LPS-67023
@@ -68,3 +74,4 @@ log level.
 [LPS-68917]: https://issues.liferay.com/browse/LPS-68917
 [LPS-68979]: https://issues.liferay.com/browse/LPS-68979
 [LPS-69026]: https://issues.liferay.com/browse/LPS-69026
+[LPS-69248]: https://issues.liferay.com/browse/LPS-69248

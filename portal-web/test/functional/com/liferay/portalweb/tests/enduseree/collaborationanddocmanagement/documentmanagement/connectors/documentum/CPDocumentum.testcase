@@ -2,6 +2,7 @@
 	<property name="portal.release" value="true" />
 	<property name="cmis.repository.type" value="documentum6" />
 	<property name="custom.properties" value="session.store.password=true${line.separator}company.security.auth.type=screenName" />
+	<property name="test.run.environment" value="EE" />
 	<property name="testray.main.component.name" value="Documents Management" />
 
 	<set-up>
@@ -136,10 +137,8 @@
 		</if>
 	</tear-down>
 
-	<!-- LPS-67985 -->
-
-	<!-- <command name="AddAllDocumentTypes" priority="5">
-		<for list="Document_1.doc,Document_1.docx,Document_1.jpeg,Document_1.jpg,Document_1.mp4,Document_1.pdf,Document_1.png,Document_1.ppt,Document_1.pptx,Document_1.txt,Document_1.xls,Document_1.xlsx,Document_1.mp3,Document_1.odt" param="dmDocumentTitle">
+	<command name="AddAllDocumentTypes" priority="5">
+		<for list="Document_1.doc,Document_1.docx,Document_1.jpeg,Document_1.jpg,Document_1.mp4,Document_1.pdf,Document_1.png,Document_1.ppt,Document_1.pptx,Document_1.txt,Document_1.xls,Document_1.xlsx" param="dmDocumentTitle">
 			<execute macro="DMRepository#gotoCP">
 				<var name="dmRepositoryName" value="Documentum Repository Name" />
 			</execute>
@@ -161,7 +160,7 @@
 				<var name="portlet" value="Documents and Media" />
 			</execute>
 		</for>
-	</command> -->
+	</command>
 
 	<command name="AddDocument" priority="5">
 		<execute macro="DMRepository#gotoCP">
@@ -597,7 +596,9 @@
 		</execute>
 	</command>
 
-	<command name="MoveCheckedoutDocumentToFolder" priority="5">
+	<!-- LPS-68658 -->
+
+	<!--<command name="MoveCheckedoutDocumentToFolder" priority="5">
 		<execute macro="Navigator#openURL" />
 
 		<execute macro="ProductMenu#gotoSitesContent">
@@ -690,7 +691,7 @@
 		<execute macro="DMDocument#viewCheckedoutCP" >
 			<var name="dmRepositoryName" value="true" />
 		</execute>
-	</command>
+	</command>-->
 
 	<command name="MoveDocumentToHome" priority="5">
 		<execute macro="DMRepository#gotoCP">

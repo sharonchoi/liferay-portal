@@ -693,6 +693,8 @@ public interface PropsKeys {
 
 	public static final String DL_FILE_INDEXING_IGNORE_EXTENSIONS = "dl.file.indexing.ignore.extensions";
 
+	public static final String DL_FILE_INDEXING_INTERVAL = "dl.file.indexing.interval";
+
 	public static final String DL_FILE_INDEXING_MAX_SIZE = "dl.file.indexing.max.size";
 
 	public static final String DL_FILE_MAX_SIZE = "dl.file.max.size";
@@ -2138,7 +2140,8 @@ public interface PropsKeys {
 	public static final String SYSTEM_SITE_ROLES = "system.site.roles";
 
 	/**
-	 * @deprecated As of 7.0.0, replaced by {@link #TABLE_MAPPER_CACHELESS_MAPPING_TABLE_NAMES}
+	 * @deprecated As of 7.0.0, replaced by {@link
+	 *             #TABLE_MAPPER_CACHELESS_MAPPING_TABLE_NAMES}
 	 */
 	@Deprecated
 	public static final String TABLE_MAPPER_CACHE_MAPPING_TABLE_NAMES = "table.mapper.cache.mapping.table.names";

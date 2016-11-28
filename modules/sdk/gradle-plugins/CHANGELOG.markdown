@@ -588,6 +588,10 @@ to version 1.0.46.
 ### Changed
 - [LPS-68298]: Update the [Liferay Gradle Plugins JS Module Config Generator]
 dependency to version 2.1.0.
+- [LPS-68923]: Update the [Liferay Gradle Plugins Source Formatter] dependency
+to version 1.0.47.
+- [LPS-68923]: Update the [Liferay Source Formatter] dependency to version
+1.0.313.
 
 ## 3.0.36 - 2016-11-04
 
@@ -595,12 +599,67 @@ dependency to version 2.1.0.
 - [LPS-68298]: Update the [Liferay Gradle Plugins JS Module Config Generator]
 dependency to version 2.1.1.
 
+## 3.0.37 - 2016-11-17
+
+### Changed
+- [LPS-66853]: Update the [Liferay Gradle Plugins Source Formatter] dependency
+to version 1.0.48.
+- [LPS-66853]: Update the [Liferay Source Formatter] dependency to version
+1.0.314.
+- [LPS-68289]: Update the [Liferay Gradle Plugins Service Builder] dependency to
+version 1.0.20.
+- [LPS-68289]: Update the [Liferay Portal Tools Service Builder] dependency to
+version 1.0.135.
+- [LPS-69223]: Update the [Liferay CSS Builder] dependency to version 1.0.21.
+- [LPS-69223]: Update the [Liferay Gradle Plugins CSS Builder] dependency to
+version 2.0.0.
+
+## 3.0.38 - 2016-11-21
+
+### Changed
+- [LPS-69248]: Update the [Liferay Gradle Plugins JS Transpiler] dependency to
+version 2.3.0.
+- [LPS-69271]: Update the [Liferay Gradle Plugins Source Formatter] dependency
+to version 1.0.49.
+- [LPS-69271]: Update the [Liferay Source Formatter] dependency to version
+1.0.315.
+
+## 3.0.39 - 2016-11-22
+
+### Changed
+- [LPS-66853]: Update the [Liferay Gradle Plugins Source Formatter] dependency
+to version 1.0.50.
+- [LPS-66853]: Update the [Liferay Source Formatter] dependency to version
+1.0.316.
+
+## 3.0.40 - 2016-11-23
+
+### Changed
+- [LPS-66853]: Update the [Liferay Gradle Plugins Source Formatter] dependency
+to version 1.0.51.
+- [LPS-66853]: Update the [Liferay Source Formatter] dependency to version
+1.0.317.
+
+## 3.0.41 - 2016-11-24
+
+### Changed
+- [LPS-69271]: Update the [Liferay Gradle Plugins Javadoc Formatter] dependency
+to version 1.0.12.
+- [LPS-69271]: Update the [Liferay Gradle Plugins Source Formatter] dependency
+to version 1.0.52.
+- [LPS-69271]: Update the [Liferay Javadoc Formatter] dependency to version
+1.0.17.
+- [LPS-69271]: Update the [Liferay Source Formatter] dependency to version
+1.0.318.
+
 [Gradle Bundle Plugin]: https://github.com/TomDmitriev/gradle-bundle-plugin
 [Liferay Ant BND]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/ant-bnd
 [Liferay CSS Builder]: https://github.com/liferay/liferay-portal/tree/master/modules/util/css-builder
+[Liferay Gradle Plugins CSS Builder]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins-css-builder
 [Liferay Gradle Plugins Gulp]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins-gulp
 [Liferay Gradle Plugins JS Module Config Generator]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins-js-module-config-generator
 [Liferay Gradle Plugins JS Transpiler]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins-js-transpiler
+[Liferay Gradle Plugins Javadoc Formatter]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins-javadoc-formatter
 [Liferay Gradle Plugins Service Builder]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins-service-builder
 [Liferay Gradle Plugins Source Formatter]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins-source-formatter
 [Liferay Gradle Plugins Theme Builder]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins-theme-builder
@@ -634,6 +693,7 @@ dependency to version 2.1.1.
 [LPS-68035]: https://issues.liferay.com/browse/LPS-68035
 [LPS-68131]: https://issues.liferay.com/browse/LPS-68131
 [LPS-68165]: https://issues.liferay.com/browse/LPS-68165
+[LPS-68289]: https://issues.liferay.com/browse/LPS-68289
 [LPS-68297]: https://issues.liferay.com/browse/LPS-68297
 [LPS-68298]: https://issues.liferay.com/browse/LPS-68298
 [LPS-68334]: https://issues.liferay.com/browse/LPS-68334
@@ -655,4 +715,7 @@ dependency to version 2.1.1.
 [LPS-68995]: https://issues.liferay.com/browse/LPS-68995
 [LPS-69013]: https://issues.liferay.com/browse/LPS-69013
 [LPS-69026]: https://issues.liferay.com/browse/LPS-69026
+[LPS-69223]: https://issues.liferay.com/browse/LPS-69223
+[LPS-69248]: https://issues.liferay.com/browse/LPS-69248
+[LPS-69271]: https://issues.liferay.com/browse/LPS-69271
 [LRDOCS-3023]: https://issues.liferay.com/browse/LRDOCS-3023

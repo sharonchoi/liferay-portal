@@ -44,11 +44,12 @@ public class ModulesIntegrationBatchBuild extends BatchBuild {
 	public void update() {
 		super.update();
 
-		if (badBuildNumbers.size() > 0) {
+		if (_notificationsComplete) {
 			return;
 		}
 
 		Build reinvokeErrorAxisBuild = null;
+		String reinvokeErrorMarker = null;
 
 		for (Build axisBuild : getDownstreamBuilds("completed")) {
 			if (verifiedAxisBuilds.contains(axisBuild)) {
@@ -68,6 +69,7 @@ public class ModulesIntegrationBatchBuild extends BatchBuild {
 			for (int i = 1; hasReinvokeErrorMarker(i); i++) {
 				if (axisBuildConsoleText.contains(getReinvokeErrorMarker(i))) {
 					reinvokeErrorAxisBuild = axisBuild;
+					reinvokeErrorMarker = getReinvokeErrorMarker(i);
 
 					break;
 				}
@@ -80,15 +82,48 @@ public class ModulesIntegrationBatchBuild extends BatchBuild {
 
 		if (reinvokeErrorAxisBuild != null) {
 			StringBuilder sb = new StringBuilder();
+			String subject = "Arquillian broken connection failure";
 
-			sb.append("Arquillian broken connection failure ");
-			sb.append("detected at ");
-			sb.append(reinvokeErrorAxisBuild.getBuildURL());
-			sb.append(". This batch will be reinvoked.");
+			if (badBuildNumbers.size() == 0) {
+				sb.append("Arquillian broken connection failure ");
+				sb.append("detected at ");
+				sb.append(reinvokeErrorAxisBuild.getBuildURL());
+				sb.append(". This batch will be reinvoked.");
+				sb.append("\n\nError marker:\n");
+				sb.append(reinvokeErrorMarker);
 
-			System.out.println(sb);
+				System.out.println(sb);
 
-			reinvoke();
+				reinvoke();
+			}
+			else {
+				subject = "Second " + subject;
+
+				List<String> badBuildURLs = getBadBuildURLs();
+
+				sb.append("Second Arquillian broken connection failure ");
+				sb.append("detected at ");
+				sb.append(reinvokeErrorAxisBuild.getBuildURL());
+				sb.append(". Previous failure was at ");
+				sb.append(badBuildURLs.get(0));
+				sb.append("\n\nError marker:\n");
+				sb.append(reinvokeErrorMarker);
+
+				System.out.println(sb);
+
+				_notificationsComplete = true;
+			}
+
+			try {
+				JenkinsResultsParserUtil.sendEmail(
+					sb.toString(),
+					"root@" + JenkinsResultsParserUtil.getHostName("UNKNOWN"),
+					subject, "peter.yoo@liferay.com, shuyang.zhou@liferay.com");
+			}
+			catch (Exception e) {
+				System.out.println(
+					"Unable to send email notification: " + e.getMessage());
+			}
 		}
 	}
 
@@ -113,5 +148,7 @@ public class ModulesIntegrationBatchBuild extends BatchBuild {
 
 	private static final String _REINVOKE_ERROR_MARKER_TEMPLATE =
 		"reinvoke.error.marker[modules-integration-?]";
+
+	private boolean _notificationsComplete;
 
 }

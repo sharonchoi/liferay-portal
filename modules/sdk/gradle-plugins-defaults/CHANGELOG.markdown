@@ -641,20 +641,63 @@ publishing.
 ### Changed
 - [LPS-68298]: Update the [Liferay Gradle Plugins] dependency to version 3.0.36.
 
+## 2.0.0 - 2016-11-17
+
+### Changed
+- [LPS-66762]: Apply [Liferay Gradle Plugins Baseline].
+- [LPS-67573]: Make most methods private in order to reduce API surface.
+- [LPS-69223]: Update the [Liferay Gradle Plugins] dependency to version 3.0.37.
+
+### Removed
+- [LPS-66762]: The `BaselineTask` class is no longer available. Use the class in
+[Liferay Gradle Plugins Baseline] instead.
+- [LPS-67573]: Remove all deprecated methods.
+
+## 2.0.1 - 2016-11-21
+
+### Added
+- [LPS-69288]: Set the `app.description` project property to override the
+project description if the `com.liferay.app.defaults.plugin` is applied.
+- [LPS-69288]: Set the `app.title` project property to override the title used
+in the `appJavadoc` task.
+- [LPS-69288]: Set the `app.version` project property to override the project
+version if the `com.liferay.app.defaults.plugin` is applied.
+
+### Changed
+- [LPS-69271]: Update the [Liferay Gradle Plugins] dependency to version 3.0.38.
+
+## 2.0.2 - 2016-11-22
+
+### Changed
+- [LPS-66853]: Update the [Liferay Gradle Plugins] dependency to version 3.0.39.
+
+## 2.0.3 - 2016-11-23
+
+### Changed
+- [LPS-66853]: Update the [Liferay Gradle Plugins] dependency to version 3.0.40.
+
+## 2.0.4 - 2016-11-24
+
+### Changed
+- [LPS-69271]: Update the [Liferay Gradle Plugins] dependency to version 3.0.38.
+
 [Liferay CDN]: https://cdn.lfrs.sl/repository.liferay.com/nexus/content/groups/public
 [Liferay Gradle Plugins]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins
 [Liferay Gradle Plugins App Javadoc Builder]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins-app-javadoc-builder
+[Liferay Gradle Plugins Baseline]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins-baseline
 [Liferay Gradle Plugins Node]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins-node
 [LPS-52675]: https://issues.liferay.com/browse/LPS-52675
 [LPS-58672]: https://issues.liferay.com/browse/LPS-58672
 [LPS-61099]: https://issues.liferay.com/browse/LPS-61099
 [LPS-66396]: https://issues.liferay.com/browse/LPS-66396
 [LPS-66396]: https://issues.liferay.com/browse/LPS-66396
+[LPS-66762]: https://issues.liferay.com/browse/LPS-66762
 [LPS-66853]: https://issues.liferay.com/browse/LPS-66853
 [LPS-66906]: https://issues.liferay.com/browse/LPS-66906
 [LPS-67023]: https://issues.liferay.com/browse/LPS-67023
 [LPS-67352]: https://issues.liferay.com/browse/LPS-67352
 [LPS-67434]: https://issues.liferay.com/browse/LPS-67434
+[LPS-67573]: https://issues.liferay.com/browse/LPS-67573
 [LPS-67658]: https://issues.liferay.com/browse/LPS-67658
 [LPS-67694]: https://issues.liferay.com/browse/LPS-67694
 [LPS-67766]: https://issues.liferay.com/browse/LPS-67766
@@ -695,6 +738,9 @@ publishing.
 [LPS-68980]: https://issues.liferay.com/browse/LPS-68980
 [LPS-69013]: https://issues.liferay.com/browse/LPS-69013
 [LPS-69026]: https://issues.liferay.com/browse/LPS-69026
+[LPS-69223]: https://issues.liferay.com/browse/LPS-69223
+[LPS-69271]: https://issues.liferay.com/browse/LPS-69271
+[LPS-69288]: https://issues.liferay.com/browse/LPS-69288
 [LRDOCS-2594]: https://issues.liferay.com/browse/LRDOCS-2594
 [LRDOCS-2841]: https://issues.liferay.com/browse/LRDOCS-2841
 [LRDOCS-2981]: https://issues.liferay.com/browse/LRDOCS-2981

@@ -358,6 +358,8 @@ public class JSPSourceProcessor extends BaseSourceProcessor {
 
 		newContent = formatMultilineTagAttributes(fileName, newContent);
 
+		newContent = fixUnparameterizedClassType(newContent);
+
 		Matcher matcher = _missingEmptyLinePattern.matcher(newContent);
 
 		if (matcher.find()) {
@@ -450,10 +452,9 @@ public class JSPSourceProcessor extends BaseSourceProcessor {
 
 		checkSubnames(fileName, newContent);
 
-		newContent = sortPutOrSetCalls(
-			newContent, jsonObjectPutBlockPattern, jsonObjectPutPattern);
-		newContent = sortPutOrSetCalls(
-			newContent, setAttributeBlockPattern, setAttributePattern);
+		newContent = sortMethodCalls(
+			newContent, "put", "HashMap<.*>", "JSONObject");
+		newContent = sortMethodCalls(newContent, "setAttribute");
 
 		newContent = formatStringBundler(fileName, newContent, -1);
 
