@@ -92,6 +92,37 @@
 		</for>
 	</command>
 
+	<command name="LRQA-stuff" priority="5">
+		<property name="portal.acceptance" value="true" />
+
+		<execute macro="Navigator#gotoPage">
+			<var name="pageName" value="Blogs Page" />
+		</execute>
+
+		<for list="1,2,3" param="entryCount" >
+			<execute macro="Blogs#addEntry">
+				<var name="entryContent" value="Blogs Entry${entryCount} Content" />
+				<var name="entryTitle" value="Blogs Entry${entryCount} Title" />
+			</execute>
+		</for>
+
+		<for list="1,2,3" param="entryCount" >
+			<execute macro="Navigator#gotoPage">
+				<var name="pageName" value="Blogs Page" />
+			</execute>
+
+			<execute macro="BlogsNavigator#gotoEntryPG">
+				<var name="entryContent" value="Blogs Entry${entryCount} Content" />
+				<var name="entryTitle" value="Blogs Entry${entryCount} Title" />
+			</execute>
+
+			<execute macro="BlogsEntry#viewEntry">
+				<var name="entryContent" value="Blogs Entry${entryCount} Content" />
+				<var name="entryTitle" value="Blogs Entry${entryCount} Title" />
+			</execute>
+		</for>
+	</command>
+
 	<command name="AddBlogsEntry" priority="5">
 		<property name="portal.acceptance" value="true" />
 
