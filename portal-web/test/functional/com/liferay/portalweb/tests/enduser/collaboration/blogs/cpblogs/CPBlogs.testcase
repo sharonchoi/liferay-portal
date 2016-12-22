@@ -673,6 +673,10 @@
 			<var name="uploadFileName" value="Document_1.jpg" />
 		</execute>
 
+		<execute function="AssertVisible" locator1="BlogsEntry#ENTRY_COVER_IMAGE_UNPUBLISHED">
+			<var name="key_uploadFileName" value="Document_1" />
+		</execute>
+
 		<execute macro="PortletEntry#publish" />
 
 		<execute macro="BlogsNavigator#gotoEntryCP">
@@ -708,6 +712,10 @@
 			<var name="uploadFileName" value="Document_1.jpg" />
 		</execute>
 
+		<execute function="AssertVisible" locator1="BlogsEntry#ENTRY_COVER_IMAGE_UNPUBLISHED">
+			<var name="key_uploadFileName" value="Document_1" />
+		</execute>
+
 		<execute macro="PortletEntry#publish" />
 
 		<execute macro="BlogsNavigator#gotoEntryCP">
@@ -741,6 +749,10 @@
 			<var name="entryTitle" value="Blogs Entry Title" />
 			<var name="navTab" value="Upload Image" />
 			<var name="uploadFileName" value="Document_1.jpg" />
+		</execute>
+
+		<execute function="AssertVisible" locator1="BlogsEntry#ENTRY_COVER_IMAGE_UNPUBLISHED">
+			<var name="key_uploadFileName" value="Document_1" />
 		</execute>
 
 		<execute function="Pause" locator1="1000" />
@@ -781,6 +793,10 @@
 			<var name="entryTitle" value="Blogs Entry Title" />
 			<var name="navTab" value="Upload Image" />
 			<var name="uploadFileName" value="Document_1.jpg" />
+		</execute>
+
+		<execute function="AssertVisible" locator1="BlogsEntry#ENTRY_COVER_IMAGE_UNPUBLISHED">
+			<var name="key_uploadFileName" value="Document_1" />
 		</execute>
 
 		<execute macro="PortletEntry#publish" />
