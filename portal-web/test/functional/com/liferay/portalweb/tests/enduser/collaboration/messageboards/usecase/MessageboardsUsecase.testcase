@@ -257,6 +257,8 @@
 	</command>
 
 	<command name="SplitMBThread" priority="3">
+		<property name="p.p" value="true" />
+
 		<execute macro="Page#add">
 			<var name="pageName" value="Message Boards Page" />
 		</execute>
@@ -331,6 +333,8 @@
 	</command>
 
 	<command name="ViewCategoriesAndThreadsOnTwoScopes" priority="3">
+		<property name="p.p" value="true" />
+
 		<execute macro="Page#add">
 			<var name="pageName" value="Message Boards Page" />
 		</execute>
@@ -953,6 +957,8 @@
 	</command>
 
 	<command name="ViewCorrectViewPermissionsInMessageBoardsQuickReplyInPrivateSite" priority="3">
+		<property name="p.p" value="true" />
+
 		<execute macro="ProductMenu#gotoControlPanelSites">
 			<var name="portlet" value="Sites" />
 		</execute>
@@ -1214,6 +1220,8 @@
 	</command>
 
 	<command name="ViewMessageBoardsBannedUsers" priority="3">
+		<property name="p.p" value="true" />
+
 		<execute macro="Page#add">
 			<var name="pageName" value="Message Boards Page" />
 		</execute>
@@ -1626,6 +1634,8 @@
 	</command>
 
 	<command name="ViewQuestionOnSplitThread" priority="3">
+		<property name="p.p" value="true" />
+
 		<execute macro="Page#add">
 			<var name="pageName" value="Message Boards Page" />
 		</execute>
@@ -1710,6 +1720,8 @@
 	</command>
 
 	<command name="ViewThreadDefaultQuestion" priority="3">
+		<property name="p.p" value="true" />
+
 		<execute macro="Page#add">
 			<var name="pageName" value="Message Boards Page" />
 		</execute>
