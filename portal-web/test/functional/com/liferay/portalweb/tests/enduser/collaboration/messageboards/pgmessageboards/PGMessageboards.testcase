@@ -353,6 +353,8 @@
 	</command>
 
 	<command name="AddMBThreadGuestReply" priority="5">
+		<property name="p.p" value="true" />
+
 		<execute macro="Navigator#gotoPage">
 			<var name="pageName" value="Message Boards Page" />
 		</execute>
@@ -440,6 +442,8 @@
 	</command>
 
 	<command name="AddMBThreadReply" priority="5">
+		<property name="p.p" value="true" />
+
 		<execute macro="Navigator#gotoPage">
 			<var name="pageName" value="Message Boards Page" />
 		</execute>
@@ -837,6 +841,7 @@
 
 	<command name="ReplyAfterDownloadingMBThreadAttachmentTwice" priority="5">
 		<description message="This is a use case for LPS-67722." />
+		<property name="p.p" value="true" />
 
 		<execute macro="Navigator#gotoPage">
 			<var name="pageName" value="Message Boards Page" />
@@ -1000,6 +1005,7 @@
 
 	<command name="ViewMBThreadReplyViaMoreMessages" priority="4">
 		<property name="custom.properties" value="discussion.comments.delta.value=5" />
+		<property name="p.p" value="true" />
 
 		<execute macro="Navigator#gotoPage">
 			<var name="pageName" value="Message Boards Page" />
