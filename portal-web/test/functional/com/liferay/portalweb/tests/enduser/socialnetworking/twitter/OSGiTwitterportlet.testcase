@@ -18,6 +18,8 @@
 	</tear-down>
 
 	<command name="TwitterPortletSmoke" priority="4">
+		<property name="portal.acceptance" value="twitter" />
+		
 		<var name="appName" value="Twitter" />
 
 		<execute macro="Navigator#gotoPage">
@@ -32,6 +34,8 @@
 	</command>
 
 	<command name="ViewEntry" priority="5">
+		<property name="portal.acceptance" value="twitter" />
+
 		<execute macro="UserBar#gotoProfile" />
 
 		<execute macro="Portlet#addPG">
