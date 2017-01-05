@@ -681,6 +681,7 @@
 
 	<command name="AddWikiPageFormatJSPWiki" priority="4">
 		<property name="osgi.modules.includes" value="wiki-engine-jspwiki" />
+		<property name="portal.acceptance" value="jspwiki" />
 
 		<execute macro="ProductMenu#gotoControlPanelApps">
 			<var name="portlet" value="App Manager" />
@@ -750,7 +751,7 @@
 
 		<execute function="AssertTextEquals" locator1="WikiEntry#BODY_BOLD_TEXT" value1="JSPWiki Bold Text" />
 	</command>
-	
+
 	<command name="AddWikiPages" priority="5">
 		<execute macro="Navigator#gotoPage">
 			<var name="pageName" value="Wiki Test Page" />
