@@ -39,6 +39,8 @@
 	</tear-down>
 
 	<command name="SubscribeAndUnsubscribetoBookmarksRootFolder">
+		<property name="portal.acceptance" value="twitter" />
+		
 		<execute macro="Page#add">
 			<var name="pageName" value="Bookmarks Page" />
 		</execute>

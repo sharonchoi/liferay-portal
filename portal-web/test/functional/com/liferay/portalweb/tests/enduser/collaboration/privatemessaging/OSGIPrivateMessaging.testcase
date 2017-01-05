@@ -14,6 +14,8 @@
 	</tear-down>
 
 	<command name="PrivateMessagingSmoke" priority="4">
+		<property name="portal.acceptance" value="twitter" />
+		
 		<execute macro="UserBar#gotoDashboard" />
 
 		<execute macro="Portlet#addPG">

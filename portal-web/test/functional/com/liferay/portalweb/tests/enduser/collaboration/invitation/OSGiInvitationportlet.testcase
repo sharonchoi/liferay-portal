@@ -18,6 +18,8 @@
 	</tear-down>
 
 	<command name="InvitationPortletSmoke" priority="">
+		<property name="portal.acceptance" value="twitter" />
+		
 		<var name="appName" value="Invitation" />
 
 		<execute macro="Navigator#gotoPage">
