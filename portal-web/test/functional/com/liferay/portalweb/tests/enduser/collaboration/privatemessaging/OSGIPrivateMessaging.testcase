@@ -2,6 +2,7 @@
 	<property name="portal.release" value="true" />
 	<property name="portal.upstream" value="true" />
 	<property name="plugins.deployment.type" value="osgi" />
+	<property name="test.assert.warning.exceptions" value="true" />
 	<property name="testray.main.component.name" value="Private Messaging" />
 
 	<set-up>
@@ -13,6 +14,8 @@
 	</tear-down>
 
 	<command name="PrivateMessagingSmoke" priority="4">
+		<property name="portal.acceptance" value="twitter" />
+		
 		<execute macro="UserBar#gotoDashboard" />
 
 		<execute macro="Portlet#addPG">

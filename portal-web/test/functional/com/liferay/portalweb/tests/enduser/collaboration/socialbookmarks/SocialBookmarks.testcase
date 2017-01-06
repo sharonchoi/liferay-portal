@@ -3,7 +3,9 @@
 	<property name="hook.plugins.includes" value="social-bookmarks-hook" />
 	<property name="portal.release" value="true" />
 	<property name="portal.upstream" value="true" />
+	<property name="test.assert.warning.exceptions" value="true" />
 	<property name="testray.main.component.name" value="Social Bookmarks" />
+	<property name="portal.acceptance" value="twitter" />
 
 	<set-up>
 		<execute macro="TestCase#setUpPortalInstance" />
