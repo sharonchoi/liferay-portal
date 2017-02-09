@@ -93,6 +93,7 @@ import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.systemevent.SystemEvent;
+import com.liferay.portal.kernel.transaction.TransactionCommitCallbackUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.DateRange;
@@ -2604,9 +2605,14 @@ public class DLFileEntryLocalServiceImpl
 				(dlFileEntry.getFolderId() !=
 					DLFolderConstants.DEFAULT_PARENT_FOLDER_ID)) {
 
-				dlFolderLocalService.updateLastPostDate(
-					dlFileEntry.getFolderId(),
-					serviceContext.getModifiedDate(now));
+				long folderId = dlFileEntry.getFolderId();
+
+				TransactionCommitCallbackUtil.registerCallback(() -> {
+					dlFolderLocalService.updateLastPostDate(
+						folderId, serviceContext.getModifiedDate(now));
+
+					return null;
+				});
 			}
 
 			// File
