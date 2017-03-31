@@ -107,34 +107,6 @@
 		</if>
 	</tear-down>
 
-	<command name="AddDocument" priority="4">
-		<execute macro="DMRepository#gotoCP">
-			<var name="dmRepositoryName" value="Sharepoint Repository Name" />
-		</execute>
-
-		<execute macro="DMDocument#addCP">
-			<var name="dmDocumentFile" value="Document_1.txt" />
-			<var name="dmDocumentTitle" value="Document_1.txt" />
-		</execute>
-
-		<execute macro="DMNavigator#gotoDocumentCP">
-			<var name="dmDocumentTitle" value="Document_1.txt" />
-		</execute>
-
-		<if>
-			<condition function="IsElementNotPresent" locator1="xpath=(//div[contains(@class,'document-info')])" />
-			<then>
-				<execute macro="DMNavigator#gotoDocumentCP">
-					<var name="dmDocumentTitle" value="Document_1.txt" />
-				</execute>
-			</then>
-		</if>
-
-		<execute macro="DMDocument#viewCP">
-			<var name="dmDocumentTitle" value="Document_1.txt" />
-		</execute>
-	</command>
-
 	<command name="AddDocumentInSubfolder" priority="4">
 		<execute macro="Navigator#openURL" />
 
