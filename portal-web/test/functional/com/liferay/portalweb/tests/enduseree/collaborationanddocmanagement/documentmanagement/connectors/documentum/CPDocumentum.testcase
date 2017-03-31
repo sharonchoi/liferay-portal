@@ -549,28 +549,6 @@
 		</execute>
 	</command>
 
-	<command name="SearchDocumentViaHome" priority="5">
-		<execute macro="DMRepository#gotoCP">
-			<var name="dmRepositoryName" value="Documentum Repository Name" />
-		</execute>
-
-		<execute macro="DMDocument#addCP">
-			<var name="dmDocumentFile" value="Document_3.doc" />
-			<var name="dmDocumentTitle" value="Document_3.doc" />
-		</execute>
-
-		<execute macro="DMNavigator#gotoHomeCP" />
-
-		<execute macro="DMDocument#searchCP">
-			<var name="dmDocumentKeyword" value="Document_3.doc" />
-		</execute>
-
-		<execute macro="DMDocument#viewSearchResultsCP">
-			<var name="dmDocumentTitle" value="Document_3.doc" />
-			<var name="dmRepositoryName" value="Documentum Repository Name" />
-		</execute>
-	</command>
-
 	<command ignore="true" name="ViewEditedCheckedoutDocument" priority="5">
 		<execute macro="DMRepository#gotoCP">
 			<var name="dmRepositoryName" value="Documentum Repository Name" />
