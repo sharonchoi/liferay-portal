@@ -1182,6 +1182,136 @@ their dependencies published before enabling the `printArtifactPublishCommands`
 task.
 - [LPS-71005]: Update the [Liferay Gradle Plugins] dependency to version 3.2.15.
 
+## 3.2.5 - 2017-03-08
+
+### Added
+- [LPS-63943]: Print the file path for the `writeArtifactPublishCommands` task's
+resulting `.sh` file.
+
+### Changed
+- [LPS-68405]: Update the [Liferay Gradle Plugins] dependency to version 3.2.16.
+
+### Fixed
+- [LPS-63943]: Avoid executing `writeArtifactPublishCommands` tasks if they're
+not explicitly invoked.
+
+## 3.3.0 - 2017-03-09
+
+### Added
+- [LPS-70634]: Automatically publish public themes to the NPM registry while
+executing the `uploadArchives` task.
+
+### Changed
+- [LPS-70634]: Update the [Liferay Gradle Plugins] dependency to version 3.2.17.
+
+## 3.3.1 - 2017-03-09
+
+### Changed
+- [LPS-67688]: Update the [Liferay Gradle Plugins] dependency to version 3.2.18.
+
+## 3.4.0 - 2017-03-11
+
+### Added
+- [LPS-71201]: Fail release tasks if the project is being published from the
+master branch, but it was previously already published from a release branch.
+
+### Changed
+- [LPS-71164]: Update the [Liferay Gradle Plugins] dependency to version 3.2.19.
+
+## 3.4.1 - 2017-03-13
+
+### Changed
+- [LPS-71222]: Update the [Liferay Gradle Plugins] dependency to version 3.2.20.
+
+## 3.4.2 - 2017-03-14
+
+### Fixed
+- [LPS-71224]: Always point the `artifact.url` property of `artifact.properties`
+to the primary artifact, even when the `application` plugin is applied.
+
+## 3.4.3 - 2017-03-15
+
+### Changed
+- [LPS-71118]: Update the [Liferay Gradle Plugins Baseline] dependency to
+version 1.1.3.
+- [LPS-71164]: Update the [Liferay Gradle Plugins] dependency to version 3.2.21.
+
+## 3.5.0 - 2017-03-16
+
+### Added
+- [LPS-71303]: Set the `liferayThemeDefaults.useLocalDependencies` property to
+`false` to avoid providing the `--css-common-path`, `--styled-path`, and
+`--unstyled-path` arguments to the Gulp tasks. The dependencies declared in the
+`package.json` are used instead.
+
+### Changed
+- [LPS-71164]: Update the [Liferay Gradle Plugins] dependency to version 3.2.22.
+
+### Fixed
+- [LPS-71264]: Use the Maven local repository's actual directory as the
+default value for the `InstallCacheTask`'s `mavenRootDir` property.
+
+## 3.5.1 - 2017-03-17
+
+### Changed
+- [LPS-71331]: Update the [Liferay Gradle Plugins] dependency to version 3.2.23.
+
+## 3.5.2 - 2017-03-17
+
+### Changed
+- [LPS-66891]: Update the [Liferay Gradle Plugins] dependency to version 3.2.24.
+
+## 3.5.3 - 2017-03-21
+
+### Added
+- [LPS-70146]: Disable the `printDependentArtifact` task for `*-test` projects.
+- [LPS-71376]: Disable the `uploadArchives` task for `*-test` projects.
+
+### Changed
+- [LPS-71164]: Update the [Liferay Gradle Plugins] dependency to version 3.2.25.
+
+### Fixed
+- [LPS-63943]: Avoid failing the build when running
+`gradlew writeArtifactPublishCommands` from a directory that does not contain
+any publishable subprojects.
+
+## 3.5.4 - 2017-03-22
+
+### Added
+- [LPS-71354]: Add the ability to set specific directories to include for
+multi-project builds by setting the `build.include.dirs` system property.
+
+## 3.5.5 - 2017-03-22
+
+### Changed
+- [LPS-71164]: Update the [Liferay Gradle Plugins] dependency to version 3.2.26.
+
+## 3.5.6 - 2017-03-24
+
+### Changed
+- [LPS-71164]: Update the [Liferay Gradle Plugins] dependency to version 3.2.27.
+
+## 3.5.7 - 2017-03-27
+
+### Changed
+- [LPS-71164]: Update the [Liferay Gradle Plugins] dependency to version 3.2.28.
+
+## 3.5.8 - 2017-03-28
+
+### Changed
+- [LPS-71164]: Update the [Liferay Gradle Plugins] dependency to version 3.2.29.
+- [LPS-71535]: Update the [Liferay Gradle Plugins Baseline] dependency to
+version 1.1.4.
+
+## 3.5.9 - 2017-03-30
+
+### Changed
+- [LPS-71558]: Update the [Liferay Gradle Plugins] dependency to version 3.2.30.
+
+### Removed
+- [LPS-70819]: Avoid publishing the JAR file with the compiled JSP classes of an
+OSGi project snapshot with the `install` and `uploadArchives` tasks.
+
 [Liferay CDN]: https://cdn.lfrs.sl/repository.liferay.com/nexus/content/groups/public
 [Liferay Gradle Plugins]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins
 [Liferay Gradle Plugins App Javadoc Builder]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins-app-javadoc-builder
@@ -1199,6 +1329,7 @@ task.
 [LPS-66396]: https://issues.liferay.com/browse/LPS-66396
 [LPS-66762]: https://issues.liferay.com/browse/LPS-66762
 [LPS-66853]: https://issues.liferay.com/browse/LPS-66853
+[LPS-66891]: https://issues.liferay.com/browse/LPS-66891
 [LPS-66906]: https://issues.liferay.com/browse/LPS-66906
 [LPS-67023]: https://issues.liferay.com/browse/LPS-67023
 [LPS-67039]: https://issues.liferay.com/browse/LPS-67039
@@ -1206,6 +1337,7 @@ task.
 [LPS-67434]: https://issues.liferay.com/browse/LPS-67434
 [LPS-67573]: https://issues.liferay.com/browse/LPS-67573
 [LPS-67658]: https://issues.liferay.com/browse/LPS-67658
+[LPS-67688]: https://issues.liferay.com/browse/LPS-67688
 [LPS-67694]: https://issues.liferay.com/browse/LPS-67694
 [LPS-67766]: https://issues.liferay.com/browse/LPS-67766
 [LPS-67804]: https://issues.liferay.com/browse/LPS-67804
@@ -1224,6 +1356,7 @@ task.
 [LPS-68306]: https://issues.liferay.com/browse/LPS-68306
 [LPS-68334]: https://issues.liferay.com/browse/LPS-68334
 [LPS-68402]: https://issues.liferay.com/browse/LPS-68402
+[LPS-68405]: https://issues.liferay.com/browse/LPS-68405
 [LPS-68415]: https://issues.liferay.com/browse/LPS-68415
 [LPS-68448]: https://issues.liferay.com/browse/LPS-68448
 [LPS-68485]: https://issues.liferay.com/browse/LPS-68485
@@ -1289,6 +1422,7 @@ task.
 [LPS-70584]: https://issues.liferay.com/browse/LPS-70584
 [LPS-70604]: https://issues.liferay.com/browse/LPS-70604
 [LPS-70618]: https://issues.liferay.com/browse/LPS-70618
+[LPS-70634]: https://issues.liferay.com/browse/LPS-70634
 [LPS-70677]: https://issues.liferay.com/browse/LPS-70677
 [LPS-70699]: https://issues.liferay.com/browse/LPS-70699
 [LPS-70707]: https://issues.liferay.com/browse/LPS-70707
@@ -1299,6 +1433,18 @@ task.
 [LPS-70941]: https://issues.liferay.com/browse/LPS-70941
 [LPS-71005]: https://issues.liferay.com/browse/LPS-71005
 [LPS-71048]: https://issues.liferay.com/browse/LPS-71048
+[LPS-71118]: https://issues.liferay.com/browse/LPS-71118
+[LPS-71164]: https://issues.liferay.com/browse/LPS-71164
+[LPS-71201]: https://issues.liferay.com/browse/LPS-71201
+[LPS-71222]: https://issues.liferay.com/browse/LPS-71222
+[LPS-71224]: https://issues.liferay.com/browse/LPS-71224
+[LPS-71264]: https://issues.liferay.com/browse/LPS-71264
+[LPS-71303]: https://issues.liferay.com/browse/LPS-71303
+[LPS-71331]: https://issues.liferay.com/browse/LPS-71331
+[LPS-71354]: https://issues.liferay.com/browse/LPS-71354
+[LPS-71376]: https://issues.liferay.com/browse/LPS-71376
+[LPS-71535]: https://issues.liferay.com/browse/LPS-71535
+[LPS-71558]: https://issues.liferay.com/browse/LPS-71558
 [LRDOCS-2594]: https://issues.liferay.com/browse/LRDOCS-2594
 [LRDOCS-2841]: https://issues.liferay.com/browse/LRDOCS-2841
 [LRDOCS-2981]: https://issues.liferay.com/browse/LRDOCS-2981

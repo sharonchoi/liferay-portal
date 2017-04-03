@@ -676,9 +676,8 @@ public class DDMStructureLocalServiceImpl
 	 */
 	@Override
 	public DDMStructure fetchStructure(
-			long groupId, long classNameId, String structureKey,
-			boolean includeAncestorStructures)
-		throws PortalException {
+		long groupId, long classNameId, String structureKey,
+		boolean includeAncestorStructures) {
 
 		structureKey = getStructureKey(structureKey);
 
@@ -2004,7 +2003,7 @@ public class DDMStructureLocalServiceImpl
 	protected DDMXML ddmXML;
 
 	private final Pattern _callFunctionPattern = Pattern.compile(
-		"call\\(\\s*\"([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-" +
-			"[0-9a-f]{12})\"\\s*,\\s*\"(.*)\"\\s*,\\s*\"(.*)\"\\s*\\)");
+		"call\\(\\s*\'([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-" +
+			"[0-9a-f]{12})\'\\s*,\\s*\'(.*)\'\\s*,\\s*\'(.*)\'\\s*\\)");
 
 }

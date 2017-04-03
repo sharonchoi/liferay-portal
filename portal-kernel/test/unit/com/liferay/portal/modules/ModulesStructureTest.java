@@ -16,6 +16,7 @@ package com.liferay.portal.modules;
 
 import com.liferay.portal.kernel.io.unsync.UnsyncBufferedReader;
 import com.liferay.portal.kernel.util.CharPool;
+import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -34,7 +35,7 @@ import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -98,7 +99,7 @@ public class ModulesStructureTest {
 					Path buildGradlePath = dirPath.resolve("build.gradle");
 					Path buildXMLPath = dirPath.resolve("build.xml");
 
-					if (Files.exists(dirPath.resolve(".gitrepo"))) {
+					if (Files.exists(dirPath.resolve(_GIT_REPO_FILE_NAME))) {
 						_testGitRepoBuildScripts(
 							dirPath, gitRepoBuildGradleTemplate,
 							gitRepoGitAttributesTemplate,
@@ -152,6 +153,9 @@ public class ModulesStructureTest {
 		final String themeGitIgnoreTemplate = StringUtil.read(
 			classLoader,
 			"com/liferay/portal/modules/dependencies/theme_gitignore.tmpl");
+		final String themeNpmIgnoreTemplate = StringUtil.read(
+			classLoader,
+			"com/liferay/portal/modules/dependencies/theme_npmignore.tmpl");
 
 		Files.walkFileTree(
 			_modulesDirPath,
@@ -169,7 +173,7 @@ public class ModulesStructureTest {
 					}
 
 					if (dirPath.equals(_modulesDirPath) ||
-						Files.exists(dirPath.resolve(".gitrepo"))) {
+						Files.exists(dirPath.resolve(_GIT_REPO_FILE_NAME))) {
 
 						_testGitRepoIgnoreFiles(
 							dirPath, gitRepoGitIgnoreTemplate);
@@ -182,7 +186,9 @@ public class ModulesStructureTest {
 					else if (dirName.startsWith("frontend-theme-") &&
 							 Files.exists(dirPath.resolve("gulpfile.js"))) {
 
-						_testThemeIgnoreFiles(dirPath, themeGitIgnoreTemplate);
+						_testThemeIgnoreFiles(
+							dirPath, themeGitIgnoreTemplate,
+							themeNpmIgnoreTemplate);
 					}
 
 					return FileVisitResult.CONTINUE;
@@ -441,7 +447,7 @@ public class ModulesStructureTest {
 					Path buildGradlePath = dirPath.resolve("build.gradle");
 
 					if (Files.exists(buildGradlePath) &&
-						Files.notExists(dirPath.resolve(".gitrepo"))) {
+						Files.notExists(dirPath.resolve(_GIT_REPO_FILE_NAME))) {
 
 						_addGradlePluginNames(
 							pluginNames, "com.liferay.gradle.plugins.",
@@ -493,7 +499,7 @@ public class ModulesStructureTest {
 
 	private boolean _isInGitRepo(Path dirPath) {
 		while (dirPath != null) {
-			if (Files.exists(dirPath.resolve(".gitrepo"))) {
+			if (Files.exists(dirPath.resolve(_GIT_REPO_FILE_NAME))) {
 				return true;
 			}
 
@@ -581,6 +587,12 @@ public class ModulesStructureTest {
 			String gitAttributesTemplate, String settingsGradleTemplate)
 		throws IOException {
 
+		for (String fileName : _GRADLE_WRAPPER_FILE_NAMES) {
+			Path path = dirPath.resolve(fileName);
+
+			Assert.assertFalse("Forbidden " + path, Files.exists(path));
+		}
+
 		Path buildGradlePath = dirPath.resolve("build.gradle");
 		Path gradlePropertiesPath = dirPath.resolve("gradle.properties");
 		Path settingsGradlePath = dirPath.resolve("settings.gradle");
@@ -613,7 +625,7 @@ public class ModulesStructureTest {
 				line.trim(), line);
 
 			Assert.assertFalse(
-				"Forbbiden empty line in " + gradlePropertiesPath,
+				"Forbidden empty line in " + gradlePropertiesPath,
 				Validator.isNull(line));
 
 			int pos = line.indexOf(CharPool.EQUAL);
@@ -726,7 +738,8 @@ public class ModulesStructureTest {
 			"Missing " + gulpfileJsPath, Files.exists(gulpfileJsPath));
 	}
 
-	private void _testThemeIgnoreFiles(Path dirPath, String gitIgnoreTemplate)
+	private void _testThemeIgnoreFiles(
+			Path dirPath, String gitIgnoreTemplate, String npmIgnoreTemplate)
 		throws IOException {
 
 		Path resourcesImporterDirPath = dirPath.resolve("resources-importer");
@@ -740,16 +753,29 @@ public class ModulesStructureTest {
 				Files.exists(resourcesImporterIgnorePath));
 		}
 
-		Path gitIgnorePath = dirPath.resolve(".gitignore");
+		if (!dirPath.startsWith("private")) {
+			Path gitIgnorePath = dirPath.resolve(".gitignore");
 
-		String gitIgnore = _read(gitIgnorePath);
+			String gitIgnore = _read(gitIgnorePath);
 
-		Assert.assertEquals(
-			"Incorrect " + gitIgnorePath, gitIgnoreTemplate, gitIgnore);
+			Assert.assertEquals(
+				"Incorrect " + gitIgnorePath, gitIgnoreTemplate, gitIgnore);
+		}
+
+		if (!dirPath.startsWith("private")) {
+			Path npmIgnorePath = dirPath.resolve(".npmignore");
+
+			String npmIgnore = _read(npmIgnorePath);
+
+			Assert.assertEquals(
+				"Incorrect " + npmIgnorePath, npmIgnoreTemplate, npmIgnore);
+		}
 	}
 
 	private static final String _APP_BUILD_GRADLE =
 		"apply plugin: \"com.liferay.app.defaults.plugin\"";
+
+	private static final String _GIT_REPO_FILE_NAME = ".gitrepo";
 
 	private static final String _GIT_REPO_GRADLE_PROJECT_GROUP_KEY =
 		"project.group";
@@ -762,13 +788,22 @@ public class ModulesStructureTest {
 	private static final String _GIT_REPO_GRADLE_PROJECT_PATH_PREFIX_KEY =
 		"project.path.prefix";
 
+	private static final String[] _GRADLE_WRAPPER_FILE_NAMES = {
+		"gradle", "gradlew", "gradlew.bat"
+	};
+
 	private static final String _SOURCE_FORMATTER_IGNORE_FILE_NAME =
 		"source_formatter.ignore";
 
 	private static final Pattern _gitRepoGradleProjectGroupPattern =
 		Pattern.compile("com\\.liferay(?:\\.[a-z]+)+");
 	private static final Set<String> _gitRepoGradlePropertiesKeys =
-		Collections.singleton("com.liferay.source.formatter.version");
+		SetUtil.fromList(
+			Arrays.asList(
+				"com.liferay.source.formatter.version",
+				"systemProp.repository.private.password",
+				"systemProp.repository.private.url",
+				"systemProp.repository.private.username"));
 	private static Path _modulesDirPath;
 
 }

@@ -14,6 +14,8 @@
 
 package com.liferay.gradle.plugins.defaults.internal;
 
+import com.liferay.gradle.plugins.LiferayAntPlugin;
+import com.liferay.gradle.plugins.LiferayThemePlugin;
 import com.liferay.gradle.plugins.cache.CacheExtension;
 import com.liferay.gradle.plugins.cache.CachePlugin;
 import com.liferay.gradle.plugins.cache.WriteDigestTask;
@@ -67,6 +69,7 @@ import org.gradle.api.plugins.JavaBasePlugin;
 import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.api.plugins.MavenPlugin;
 import org.gradle.api.plugins.MavenRepositoryHandlerConvention;
+import org.gradle.api.plugins.WarPlugin;
 import org.gradle.api.specs.Spec;
 import org.gradle.api.tasks.Copy;
 import org.gradle.api.tasks.Delete;
@@ -101,17 +104,20 @@ public class LiferayRelengPlugin implements Plugin<Project> {
 	public static final String WRITE_ARTIFACT_PUBLISH_COMMANDS =
 		"writeArtifactPublishCommands";
 
-	public static File getRelengDir(Project project) {
-		File rootDir = GradleUtil.getRootDir(project, ".releng");
+	public static File getRelengDir(File projectDir) {
+		File rootDir = GradleUtil.getRootDir(projectDir, _RELENG_DIR_NAME);
 
 		if (rootDir == null) {
 			return null;
 		}
 
-		File relengDir = new File(rootDir, ".releng");
+		File relengDir = new File(rootDir, _RELENG_DIR_NAME);
 
-		return new File(
-			relengDir, FileUtil.relativize(project.getProjectDir(), rootDir));
+		return new File(relengDir, FileUtil.relativize(projectDir, rootDir));
+	}
+
+	public static File getRelengDir(Project project) {
+		return getRelengDir(project.getProjectDir());
 	}
 
 	@Override
@@ -144,7 +150,7 @@ public class LiferayRelengPlugin implements Plugin<Project> {
 				project, recordArtifactTask, cleanArtifactsPublishCommandsTask,
 				mergeArtifactsPublishCommandsTask);
 
-		mergeArtifactsPublishCommandsTask.dependsOn(
+		mergeArtifactsPublishCommandsTask.mustRunAfter(
 			writeArtifactPublishCommandsTask);
 
 		_addTaskPrintStaleArtifact(project, recordArtifactTask);
@@ -227,22 +233,37 @@ public class LiferayRelengPlugin implements Plugin<Project> {
 				public void execute(Task task) {
 					MergeFilesTask mergeFilesTask = (MergeFilesTask)task;
 
+					Logger logger = mergeFilesTask.getLogger();
+
 					File file = mergeFilesTask.getOutputFile();
 
-					boolean success = file.setExecutable(true);
+					if (file.exists()) {
+						boolean success = file.setExecutable(true);
 
-					if (!success) {
-						Logger logger = mergeFilesTask.getLogger();
+						if (!success) {
+							logger.error(
+								"Unable to set the owner's execute " +
+									"permission for {}",
+								file);
+						}
 
-						logger.error(
-							"Unable to set the owner's execute permission " +
-								"for " + file);
+						if (logger.isLifecycleEnabled()) {
+							logger.lifecycle(
+								"Artifacts publish commands written in {}.",
+								file);
+						}
+					}
+					else {
+						if (logger.isLifecycleEnabled()) {
+							logger.lifecycle(
+								"No artifacts publish commands are available.");
+						}
 					}
 				}
 
 			});
 
-		mergeFilesTask.setDescription("Merges the artifacts publish commands");
+		mergeFilesTask.setDescription("Merges the artifacts publish commands.");
 		mergeFilesTask.setHeader(
 			"#!/bin/bash" + System.lineSeparator() + System.lineSeparator() +
 				"set -e" + System.lineSeparator());
@@ -280,7 +301,11 @@ public class LiferayRelengPlugin implements Plugin<Project> {
 
 				@Override
 				public boolean isSatisfiedBy(Task task) {
-					if (_hasProjectDependencies(task.getProject())) {
+					Project project = task.getProject();
+
+					if (!GradleUtil.isTestProject(project) &&
+						_hasProjectDependencies(project)) {
+
 						return true;
 					}
 
@@ -377,6 +402,26 @@ public class LiferayRelengPlugin implements Plugin<Project> {
 						@Override
 						public String call() throws Exception {
 							String key = publishArtifact.getClassifier();
+
+							if (Validator.isNull(key)) {
+								key = publishArtifact.getType();
+
+								Project project =
+									writePropertiesTask.getProject();
+
+								if ((JavaPlugin.JAR_TASK_NAME.equals(key) &&
+										GradleUtil.hasPlugin(
+											project, JavaPlugin.class)) ||
+									(WarPlugin.WAR_TASK_NAME.equals(key) &&
+										(GradleUtil.hasPlugin(
+											project, LiferayAntPlugin.class) ||
+										GradleUtil.hasPlugin(
+											project,
+											LiferayThemePlugin.class)))) {
+
+									key = null;
+								}
+							}
 
 							if (Validator.isNull(key)) {
 								key = "artifact.url";
@@ -860,5 +905,7 @@ public class LiferayRelengPlugin implements Plugin<Project> {
 
 		return false;
 	}
+
+	private static final String _RELENG_DIR_NAME = ".releng";
 
 }

@@ -1,6 +1,7 @@
 <definition component-name="portal-wcm">
 	<property name="portal.release" value="true" />
 	<property name="portal.upstream" value="true" />
+	<property name="testray.component.names" value="Site Administration" />
 	<property name="testray.main.component.name" value="Site Administration" />
 
 	<set-up>
@@ -196,9 +197,7 @@
 		</execute>
 	</command>
 
-	<command description="Ensure that the super admin can add a Blank Site" name="AddSite" priority="5">
-		<property name="portal.acceptance" value="true" />
-
+	<command description="Ensure that the super admin can add a Blank Site" name="AddSite" priority="4">
 		<execute macro="ProductMenu#gotoControlPanelSites">
 			<var name="portlet" value="Sites" />
 		</execute>

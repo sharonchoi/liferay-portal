@@ -70,7 +70,6 @@
 			<message key="name.invalidPattern" value="Class, interface, enum or annotation ''{0}'' must match pattern ''{1}''" />
 		</module>
 		<module name="UnnecessaryParentheses" />
-		<module name="UpperEll" />
 		<module name="WhitespaceAfter">
 			<property name="tokens" value="COMMA, SEMI" />
 		</module>
@@ -117,8 +116,8 @@
 			<message key="javadoc.multiple" value="''{0}'' has multiple javadocs" />
 		</module>
 		<module name="com.liferay.source.formatter.checkstyle.checks.JSONNaming">
-			<message key="variable.name.reserved" value="Variable name ending with ''{0}'' is reserved for object ''{1}''" />
-			<message key="variable.rename" value="Rename variable ''{0}'' to ''{1}''" />
+			<message key="variable.name.reserved" value="{0} name ending with ''{1}'' is reserved for object ''{2}''" />
+			<message key="variable.rename" value="Rename {0} ''{1}'' to ''{2}''" />
 		</module>
 		<module name="com.liferay.source.formatter.checkstyle.checks.LocalPattern">
 			<message key="pattern.local" value="Create a global variable for Pattern ''{0}''" />
@@ -155,6 +154,9 @@
 		</module>-->
 		<module name="com.liferay.source.formatter.checkstyle.checks.NotRequireThis">
 			<message key="variable.not.require.this" value="Reference to variable ''{0}'' does not need ''.this''" />
+		</module>
+		<module name="com.liferay.source.formatter.checkstyle.checks.NumberSuffix">
+			<message key="suffix.incorrect" value="Use uppercase ''{0}'' as suffix for the type ''{1}''" />
 		</module>
 		<module name="com.liferay.source.formatter.checkstyle.checks.OperatorOrder">
 			<message key="left.argument.literal.or.num" value="''{0}'' should be on the right hand side of the operator" />

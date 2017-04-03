@@ -24,11 +24,16 @@ AUI.add(
 					_isValidAction: function(action) {
 						var instance = this;
 
-						if (instance._isPropertyAction(action.action) && action.target) {
-							return true;
+						if (action.action === '') {
+							return false;
 						}
 
-						return false;
+						if (instance._isPropertyAction(action.action)) {
+							return action.target;
+						}
+						else {
+							return true;
+						}
 					},
 
 					_isValidActions: function(actions) {

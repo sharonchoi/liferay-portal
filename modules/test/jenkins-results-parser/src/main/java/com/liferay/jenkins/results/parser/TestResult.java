@@ -61,7 +61,7 @@ public class TestResult {
 
 		className = caseJSONObject.getString("className");
 
-		duration = (long)(caseJSONObject.getDouble("duration") * 1000d);
+		duration = (long)(caseJSONObject.getDouble("duration") * 1000D);
 
 		int x = className.lastIndexOf(".");
 
@@ -166,7 +166,7 @@ public class TestResult {
 		encodedTestName = encodedTestName.replace("]", "_");
 		encodedTestName = encodedTestName.replace("#", "_");
 
-		if (simpleClassName.equals("junit.framework")) {
+		if (packageName.equals("junit.framework")) {
 			encodedTestName = encodedTestName.replace(".", "_");
 		}
 

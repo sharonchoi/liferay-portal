@@ -14,8 +14,12 @@
 
 package com.liferay.source.formatter;
 
+import com.liferay.source.formatter.checks.FileCheck;
+import com.liferay.source.formatter.checks.WhitespaceCheck;
+
 import java.io.File;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,7 +32,7 @@ public class SoySourceProcessor extends BaseSourceProcessor {
 			File file, String fileName, String absolutePath, String content)
 		throws Exception {
 
-		return trimContent(content, false);
+		return content;
 	}
 
 	@Override
@@ -41,6 +45,18 @@ public class SoySourceProcessor extends BaseSourceProcessor {
 		return _INCLUDES;
 	}
 
+	@Override
+	protected List<FileCheck> getFileChecks() {
+		return _fileChecks;
+	}
+
+	@Override
+	protected void populateFileChecks() {
+		_fileChecks.add(new WhitespaceCheck());
+	}
+
 	private static final String[] _INCLUDES = new String[] {"**/*.soy"};
+
+	private final List<FileCheck> _fileChecks = new ArrayList<>();
 
 }

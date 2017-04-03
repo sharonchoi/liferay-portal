@@ -378,9 +378,7 @@ public class PortalUtil {
 			canonicalURL, themeDisplay, locale, layout);
 	}
 
-	public static long[] getAncestorSiteGroupIds(long groupId)
-		throws PortalException {
-
+	public static long[] getAncestorSiteGroupIds(long groupId) {
 		return getPortal().getAncestorSiteGroupIds(groupId);
 	}
 
@@ -1127,6 +1125,12 @@ public class PortalUtil {
 		throws PortalException {
 
 		return getPortal().getLayoutFriendlyURL(layout, themeDisplay, locale);
+	}
+
+	public static String getLayoutFriendlyURL(ThemeDisplay themeDisplay)
+		throws PortalException {
+
+		return getPortal().getLayoutFriendlyURL(themeDisplay);
 	}
 
 	public static LayoutFriendlyURLComposite getLayoutFriendlyURLComposite(

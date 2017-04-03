@@ -16,6 +16,9 @@ package com.liferay.jenkins.results.parser;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -86,6 +89,48 @@ public class JenkinsResultsParserUtil {
 		return sb.toString();
 	}
 
+	public static void copy(File source, File target) throws IOException {
+		try {
+			if (!source.exists()) {
+				throw new FileNotFoundException(
+					source.getPath() + " does not exist");
+			}
+
+			if (target.exists()) {
+				delete(target);
+			}
+
+			if (source.isDirectory()) {
+				target.mkdir();
+
+				for (File file : source.listFiles()) {
+					copy(file, new File(target, file.getName()));
+				}
+
+				return;
+			}
+
+			try (FileInputStream fileInputStream =
+					new FileInputStream(source)) {
+
+				try (FileOutputStream fileOutputStream =
+						new FileOutputStream(target)) {
+
+					Files.copy(Paths.get(source.toURI()), fileOutputStream);
+
+					fileOutputStream.flush();
+				}
+			}
+		}
+		catch (IOException ioe) {
+			if (target.exists()) {
+				delete(target);
+			}
+
+			throw ioe;
+		}
+	}
+
 	public static JSONObject createJSONObject(String jsonString)
 		throws IOException {
 
@@ -128,6 +173,24 @@ public class JenkinsResultsParserUtil {
 		throws UnsupportedEncodingException {
 
 		return URLDecoder.decode(url, "UTF-8");
+	}
+
+	public static void delete(File file) throws IOException {
+		if (!file.exists()) {
+			System.out.println(
+				"Unable to delete because file does not exist " +
+					file.getPath());
+
+			return;
+		}
+
+		if (file.isDirectory()) {
+			for (File subfile : file.listFiles()) {
+				delete(subfile);
+			}
+		}
+
+		file.delete();
 	}
 
 	public static String encode(String url)
@@ -190,15 +253,26 @@ public class JenkinsResultsParserUtil {
 		Process process = processBuilder.start();
 
 		if (debug) {
+			InputStream inputStream = process.getInputStream();
+
+			inputStream.mark(inputStream.available());
+
 			System.out.println(
-				"Output stream: " + readInputStream(process.getInputStream()));
+				"Output stream: " + readInputStream(inputStream));
+
+			inputStream.reset();
 		}
 
 		int returnCode = process.waitFor();
 
 		if (debug && (returnCode != 0)) {
-			System.out.println(
-				"Error stream: " + readInputStream(process.getErrorStream()));
+			InputStream inputStream = process.getErrorStream();
+
+			inputStream.mark(inputStream.available());
+
+			System.out.println("Error stream: " + readInputStream(inputStream));
+
+			inputStream.reset();
 		}
 
 		return process;
@@ -484,33 +558,40 @@ public class JenkinsResultsParserUtil {
 			remoteURL = fixFileName(remoteURL);
 		}
 
-		Matcher matcher = _localURLPattern1.matcher(remoteURL);
+		String localURL = remoteURL;
+		String localURLQueryString = "";
 
-		if (matcher.find()) {
-			StringBuilder sb = new StringBuilder();
+		int x = remoteURL.indexOf("?");
 
-			sb.append("http://test-");
-			sb.append(matcher.group(1));
-			sb.append("/");
-			sb.append(matcher.group(1));
-			sb.append("/");
-
-			return remoteURL.replaceAll(matcher.group(0), sb.toString());
+		if (x != -1) {
+			localURL = remoteURL.substring(0, x);
+			localURLQueryString = remoteURL.substring(x);
 		}
 
-		matcher = _localURLPattern2.matcher(remoteURL);
+		Matcher remoteURLAuthorityMatcher1 =
+			_remoteURLAuthorityPattern1.matcher(localURL);
+		Matcher remoteURLAuthorityMatcher2 =
+			_remoteURLAuthorityPattern2.matcher(localURL);
 
-		if (matcher.find()) {
-			StringBuilder sb = new StringBuilder();
+		if (remoteURLAuthorityMatcher1.find()) {
+			String localURLAuthority = combine(
+				"http://test-", remoteURLAuthorityMatcher1.group(1), "/",
+				remoteURLAuthorityMatcher1.group(1), "/");
+			String remoteURLAuthority = remoteURLAuthorityMatcher1.group(0);
 
-			sb.append("http://");
-			sb.append(matcher.group(1));
-			sb.append("/");
+			localURL = localURL.replaceAll(
+				remoteURLAuthority, localURLAuthority);
+		}
+		else if (remoteURLAuthorityMatcher2.find()) {
+			String localURLAuthority = combine(
+				"http://", remoteURLAuthorityMatcher2.group(1), "/");
+			String remoteURLAuthority = remoteURLAuthorityMatcher2.group(0);
 
-			return remoteURL.replaceAll(matcher.group(0), sb.toString());
+			localURL = localURL.replaceAll(
+				remoteURLAuthority, localURLAuthority);
 		}
 
-		return remoteURL;
+		return localURL + localURLQueryString;
 	}
 
 	public static List<String> getMasters(
@@ -750,6 +831,8 @@ public class JenkinsResultsParserUtil {
 
 		duration = _appendDurationStringForUnit(
 			duration, _MILLIS_IN_SECOND, sb, "second", "seconds");
+
+		duration = _appendDurationStringForUnit(duration, 1, sb, "ms", "ms");
 
 		String durationString = sb.toString();
 
@@ -1001,9 +1084,8 @@ public class JenkinsResultsParserUtil {
 					throw ioe;
 				}
 
-				if (debug) {
-					System.out.println("Retry in " + retryPeriod + " seconds");
-				}
+				System.out.println(
+					"Retrying " + url + " in " + retryPeriod + " seconds");
 
 				sleep(1000 * retryPeriod);
 			}
@@ -1051,7 +1133,7 @@ public class JenkinsResultsParserUtil {
 
 	protected static final String DEPENDENCIES_URL_HTTP =
 		"http://mirrors-no-cache.lax.liferay.com/github.com/liferay" +
-			"/liferay-jenkins-results-parser-samples-ee/4/";
+			"/liferay-jenkins-results-parser-samples-ee/5/";
 
 	static {
 		File dependenciesDir = new File("src/test/resources/dependencies/");
@@ -1112,9 +1194,9 @@ public class JenkinsResultsParserUtil {
 
 	private static Hashtable<?, ?> _buildProperties;
 	private static String[] _buildPropertiesURLs;
-	private static final Pattern _localURLPattern1 = Pattern.compile(
+	private static final Pattern _remoteURLAuthorityPattern1 = Pattern.compile(
 		"https://test.liferay.com/([0-9]+)/");
-	private static final Pattern _localURLPattern2 = Pattern.compile(
+	private static final Pattern _remoteURLAuthorityPattern2 = Pattern.compile(
 		"https://(test-[0-9]+-[0-9]+).liferay.com/");
 
 	private static final Map<String, String> _toStringCache =

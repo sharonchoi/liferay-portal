@@ -4141,7 +4141,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 		if (roleName.equals(RoleConstants.USER) ||
 			(roleName.equals(RoleConstants.ADMINISTRATOR) &&
-			 getRoleUsersCount(role.getRoleId()) <= 1)) {
+			 (getRoleUsersCount(role.getRoleId()) <= 1))) {
 
 			return;
 		}
@@ -4683,9 +4683,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		user.setLastLoginDate(lastLoginDate);
 		user.setLastLoginIP(lastLoginIP);
 
-		resetFailedLoginAttempts(user, true);
-
-		return user;
+		return resetFailedLoginAttempts(user, true);
 	}
 
 	/**

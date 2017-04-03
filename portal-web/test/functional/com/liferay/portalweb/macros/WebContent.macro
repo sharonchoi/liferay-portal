@@ -807,7 +807,7 @@
 		</if>
 	</command>
 
-	<command name="editDisplayPageCP">
+	<command name="editDisplayPage">
 		<execute macro="Panel#expandPanel">
 			<var name="panelHeading" value="Display Page" />
 		</execute>
@@ -816,21 +816,39 @@
 
 		<execute function="Pause" locator1="5000" />
 
-		<var name="key_pageName" value="${pageName}" />
+		<execute function="SelectFrameTop" />
 
 		<execute function="SelectFrame" locator1="WCSelectDisplayPage#DISPLAY_PAGE_CONFIGURATION_IFRAME" />
 
-		<execute function="AssertClick" locator1="WCSelectDisplayPage#PUBLIC_PAGES_SELECTION" value1="${pageName}" />
+		<while>
+			<condition function="IsElementPresent" locator1="PagesConfiguration#PAGE_TREE_NODE_COLLAPSED" />
+			<then>
+				<execute function="Click" locator1="PagesConfiguration#PAGE_TREE_NODE_COLLAPSED" />
+			</then>
+		</while>
 
-		<execute function="SelectFrame" value1="relative=top" />
+		<execute function="AssertElementPresent" locator1="PagesConfiguration#PAGE_TREE_NODE_EXPANDED" />
+
+		<execute function="Click#mouseOverClick" locator1="PagesConfiguration#PAGE_TREE_LINK">
+			<var name="key_pageName" value="${pageName}" />
+		</execute>
+
+		<execute function="SelectFrameTop" />
 
 		<execute macro="Button#clickDone" />
 
 		<execute function="SelectFrame" value1="relative=top" />
 
+		<if>
+			<condition function="IsElementPresent" locator1="IFrame#EDIT_ASSET" />
+			<then>
+				<execute function="SelectFrame" locator1="IFrame#EDIT_ASSET" />
+			</then>
+		</if>
+
 		<execute function="AssertTextEquals" locator1="WCEditWebContent#DISPLAY_PAGE_SELECTION" value1="Public Pages > ${pageName}" />
 
-		<execute macro="PortletEntry#publish" />
+		<execute macro="Button#clickPublish" />
 	</command>
 
 	<command name="editDisplayPagePGViaAP">
@@ -842,29 +860,9 @@
 
 		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 
-		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Display Page" />
+		<execute macro="WebContent#editDisplayPage">
+			<var name="pageName" value="${displayPageName}" />
 		</execute>
-
-		<var name="key_displayPageName" value="${displayPageName}" />
-
-		<execute function="Click" locator1="Button#CHOOSE" />
-
-		<execute function="SelectFrame" value1="relative=top" />
-
-		<execute function="SelectFrame" locator1="WCSelectDisplayPage#DISPLAY_PAGE_CONFIGURATION_IFRAME" />
-
-		<execute function="AssertClick" locator1="WCSelectDisplayPage#PUBLIC_DISPLAY_PAGE_SELECTION" value1="${displayPageName}" />
-
-		<execute function="SelectFrame" value1="relative=top" />
-
-		<execute macro="Button#clickDone" />
-
-		<execute function="SelectFrame" value1="relative=top" />
-
-		<execute function="SelectFrame" locator1="IFrame#EDIT_ASSET" />
-
-		<execute function="AssertClick" locator1="Button#PUBLISH" value1="Publish" />
 
 		<execute function="Pause" locator1="3000" />
 

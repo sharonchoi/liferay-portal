@@ -311,7 +311,7 @@ public interface Portal {
 			Layout layout)
 		throws PortalException;
 
-	public long[] getAncestorSiteGroupIds(long groupId) throws PortalException;
+	public long[] getAncestorSiteGroupIds(long groupId);
 
 	/**
 	 * Returns the base model instance for the resource permission.
@@ -764,6 +764,9 @@ public interface Portal {
 
 	public String getLayoutFriendlyURL(
 			Layout layout, ThemeDisplay themeDisplay, Locale locale)
+		throws PortalException;
+
+	public String getLayoutFriendlyURL(ThemeDisplay themeDisplay)
 		throws PortalException;
 
 	public LayoutFriendlyURLComposite getLayoutFriendlyURLComposite(

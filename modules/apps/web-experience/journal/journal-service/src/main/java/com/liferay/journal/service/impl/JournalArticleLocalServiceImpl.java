@@ -166,6 +166,7 @@ import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.kernel.xml.XPath;
 import com.liferay.portal.spring.extender.service.ServiceReference;
 import com.liferay.social.kernel.model.SocialActivityConstants;
+import com.liferay.subscription.service.SubscriptionLocalService;
 import com.liferay.trash.kernel.exception.RestoreEntryException;
 import com.liferay.trash.kernel.exception.TrashEntryException;
 import com.liferay.trash.kernel.model.TrashEntry;
@@ -853,9 +854,28 @@ public class JournalArticleLocalServiceImpl
 
 		// Article localization
 
+		String urlTitle = JournalUtil.getUrlTitle(id, oldArticle.getUrlTitle());
+
+		int uniqueUrlTitleCount = _getUniqueUrlTitleCount(
+			groupId, newArticleId, urlTitle);
+
+		Map<Locale, String> newTitleMap = oldArticle.getTitleMap();
+
+		for (Locale locale : newTitleMap.keySet()) {
+			StringBundler sb = new StringBundler(5);
+
+			sb.append(newTitleMap.get(locale));
+			sb.append(StringPool.SPACE);
+			sb.append(LanguageUtil.get(locale, "duplicate"));
+			sb.append(StringPool.SPACE);
+			sb.append(uniqueUrlTitleCount);
+
+			newTitleMap.put(locale, sb.toString());
+		}
+
 		_addArticleLocalizedFields(
-			newArticle.getCompanyId(), newArticle.getId(),
-			oldArticle.getTitleMap(), oldArticle.getDescriptionMap());
+			newArticle.getCompanyId(), newArticle.getId(), newTitleMap,
+			oldArticle.getDescriptionMap());
 
 		// Resources
 
@@ -3294,6 +3314,16 @@ public class JournalArticleLocalServiceImpl
 	}
 
 	/**
+	 * @deprecated As of 4.0.0, with no direct replacement
+	 */
+	@Deprecated
+	public com.liferay.portal.kernel.service.SubscriptionLocalService
+		getSubscriptionLocalService() {
+
+		return subscriptionLocalService;
+	}
+
+	/**
 	 * Returns the web content articles matching the group and DDM template key.
 	 *
 	 * @param  groupId the primary key of the web content article's group
@@ -4924,6 +4954,17 @@ public class JournalArticleLocalServiceImpl
 		return searchJournalArticles(searchContext);
 	}
 
+	/**
+	 * @deprecated As of 4.0.0, with no direct replacement
+	 */
+	@Deprecated
+	public void setSubscriptionLocalService(
+		com.liferay.portal.kernel.service.SubscriptionLocalService
+			subscriptionLocalService) {
+
+		this.subscriptionLocalService = subscriptionLocalService;
+	}
+
 	@Override
 	public void setTreePaths(
 			final long folderId, final String treePath, final boolean reindex)
@@ -4999,7 +5040,7 @@ public class JournalArticleLocalServiceImpl
 			long groupId, long userId, long ddmStructureId)
 		throws PortalException {
 
-		subscriptionLocalService.addSubscription(
+		_subscriptionLocalService.addSubscription(
 			userId, groupId, DDMStructure.class.getName(), ddmStructureId);
 	}
 
@@ -5016,7 +5057,7 @@ public class JournalArticleLocalServiceImpl
 			long groupId, long userId, long ddmStructureId)
 		throws PortalException {
 
-		subscriptionLocalService.deleteSubscription(
+		_subscriptionLocalService.deleteSubscription(
 			userId, DDMStructure.class.getName(), ddmStructureId);
 	}
 
@@ -5758,6 +5799,12 @@ public class JournalArticleLocalServiceImpl
 				article.getLayoutUuid(), 0, 0, priority);
 		}
 		else {
+			Date publishDate = null;
+
+			if (article.isApproved()) {
+				publishDate = article.getDisplayDate();
+			}
+
 			JournalArticleResource journalArticleResource =
 				journalArticleResourceLocalService.getArticleResource(
 					article.getResourcePrimKey());
@@ -5768,7 +5815,7 @@ public class JournalArticleLocalServiceImpl
 				journalArticleResource.getResourcePrimKey(),
 				journalArticleResource.getUuid(), getClassTypeId(article),
 				assetCategoryIds, assetTagNames, isListable(article), visible,
-				null, null, null, null, ContentTypes.TEXT_HTML, title,
+				null, null, publishDate, null, ContentTypes.TEXT_HTML, title,
 				description, description, null, article.getLayoutUuid(), 0, 0,
 				priority);
 		}
@@ -8142,6 +8189,16 @@ public class JournalArticleLocalServiceImpl
 	@ServiceReference(type = JournalConverter.class)
 	protected JournalConverter journalConverter;
 
+	/**
+	 * @deprecated As of 4.0.0, with no direct replacement
+	 */
+	@Deprecated
+	@ServiceReference(
+		type = com.liferay.portal.kernel.service.SubscriptionLocalService.class
+	)
+	protected com.liferay.portal.kernel.service.SubscriptionLocalService
+		subscriptionLocalService;
+
 	private List<JournalArticleLocalization> _addArticleLocalizedFields(
 			long companyId, long articlePK, Map<Locale, String> titleMap,
 			Map<Locale, String> descriptionMap)
@@ -8222,6 +8279,33 @@ public class JournalArticleLocalServiceImpl
 		return journalServiceConfiguration.checkInterval();
 	}
 
+	private int _getUniqueUrlTitleCount(
+			long groupId, String articleId, String urlTitle)
+		throws PortalException {
+
+		for (int i = 1;; i++) {
+			JournalArticle article = fetchArticleByUrlTitle(groupId, urlTitle);
+
+			if ((article == null) ||
+				Objects.equals(articleId, article.getArticleId())) {
+
+				return i - 1;
+			}
+			else {
+				String suffix = StringPool.DASH + i;
+
+				String prefix = urlTitle;
+
+				if (urlTitle.length() > suffix.length()) {
+					prefix = urlTitle.substring(
+						0, urlTitle.length() - suffix.length());
+				}
+
+				urlTitle = prefix + suffix;
+			}
+		}
+	}
+
 	private List<JournalArticleLocalization> _updateArticleLocalizedFields(
 			long companyId, long articleId, Map<Locale, String> titleMap,
 			Map<Locale, String> descriptionMap)
@@ -8277,5 +8361,8 @@ public class JournalArticleLocalServiceImpl
 	private JournalFileUploadsConfiguration _journalFileUploadsConfiguration;
 
 	private Date _previousCheckDate;
+
+	@ServiceReference(type = SubscriptionLocalService.class)
+	private SubscriptionLocalService _subscriptionLocalService;
 
 }

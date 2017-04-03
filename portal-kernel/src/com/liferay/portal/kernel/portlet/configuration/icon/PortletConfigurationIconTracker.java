@@ -15,7 +15,9 @@
 package com.liferay.portal.kernel.portlet.configuration.icon;
 
 import com.liferay.portal.kernel.portlet.configuration.icon.locator.PortletConfigurationIconLocator;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.registry.collections.ServiceTrackerCollections;
 import com.liferay.registry.collections.ServiceTrackerList;
 import com.liferay.registry.collections.ServiceTrackerMap;
@@ -28,6 +30,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.portlet.PortletRequest;
+import javax.portlet.filter.PortletRequestWrapper;
 
 /**
  * @author Eudaldo Alonso
@@ -69,18 +72,21 @@ public class PortletConfigurationIconTracker {
 			String path = portletConfigurationIconLocator.getPath(
 				portletRequest);
 
-			if (!path.isEmpty() && !path.equals(StringPool.DASH)) {
+			if (!path.isEmpty()) {
 				if (paths == _defaultPaths) {
 					paths = new HashSet<>();
 				}
 
 				paths.add(path);
 
-				List<String> defaultViews =
-					portletConfigurationIconLocator.getDefaultViews(portletId);
+				if (!path.equals(StringPool.DASH)) {
+					List<String> defaultViews =
+						portletConfigurationIconLocator.getDefaultViews(
+							portletId);
 
-				if (defaultViews.contains(path)) {
-					paths.add(StringPool.DASH);
+					if (defaultViews.contains(path)) {
+						paths.add(StringPool.DASH);
+					}
 				}
 			}
 		}
@@ -94,6 +100,23 @@ public class PortletConfigurationIconTracker {
 		List<PortletConfigurationIcon> portletConfigurationIcons =
 			new ArrayList<>();
 
+		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		PortletRequestWrapper portletRequestWrapper =
+			new PortletRequestWrapper(portletRequest) {
+
+				@Override
+				public Object getAttribute(String name) {
+					if (name == WebKeys.THEME_DISPLAY) {
+						return themeDisplay;
+					}
+
+					return super.getAttribute(name);
+				}
+
+			};
+
 		for (String path : getPaths(portletId, portletRequest)) {
 			List<PortletConfigurationIcon> portletPortletConfigurationIcons =
 				_serviceTrackerMap.getService(getKey(StringPool.STAR, path));
@@ -103,7 +126,8 @@ public class PortletConfigurationIconTracker {
 						portletPortletConfigurationIcons) {
 
 					if (!filter ||
-						portletConfigurationIcon.isShow(portletRequest)) {
+						portletConfigurationIcon.isShow(
+							portletRequestWrapper)) {
 
 						portletConfigurationIcons.add(portletConfigurationIcon);
 					}
@@ -123,7 +147,7 @@ public class PortletConfigurationIconTracker {
 				if (!portletConfigurationIcons.contains(
 						portletConfigurationIcon) &&
 					(!filter ||
-					 portletConfigurationIcon.isShow(portletRequest))) {
+					 portletConfigurationIcon.isShow(portletRequestWrapper))) {
 
 					portletConfigurationIcons.add(portletConfigurationIcon);
 				}

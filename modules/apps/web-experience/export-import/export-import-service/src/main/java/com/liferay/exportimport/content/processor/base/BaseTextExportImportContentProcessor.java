@@ -71,7 +71,10 @@ import java.util.regex.Pattern;
 
 /**
  * @author Gergely Mathe
+ *
+ * @deprecated As of 4.0.0
  */
+@Deprecated
 public class BaseTextExportImportContentProcessor
 	implements ExportImportContentProcessor<String> {
 
@@ -540,6 +543,10 @@ public class BaseTextExportImportContentProcessor
 			}
 
 			String url = content.substring(beginPos + offset, endPos);
+
+			if (url.endsWith(StringPool.SLASH)) {
+				url = url.substring(0, url.length() - 1);
+			}
 
 			StringBundler urlSB = new StringBundler(6);
 
@@ -1225,6 +1232,10 @@ public class BaseTextExportImportContentProcessor
 
 			if (endPos != -1) {
 				url = url.substring(0, endPos);
+			}
+
+			if (url.endsWith(StringPool.SLASH)) {
+				url = url.substring(0, url.length() - 1);
 			}
 
 			StringBundler urlSB = new StringBundler(1);

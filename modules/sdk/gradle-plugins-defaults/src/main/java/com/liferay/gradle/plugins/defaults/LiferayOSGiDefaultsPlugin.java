@@ -247,6 +247,9 @@ public class LiferayOSGiDefaultsPlugin implements Plugin<Project> {
 
 	public static final String PORTAL_TEST_CONFIGURATION_NAME = "portalTest";
 
+	public static final String RELEASE_PORTAL_ROOT_DIR_PROPERTY_NAME =
+		"release.versions.test.other.dir";
+
 	public static final String SNAPSHOT_IF_STALE_PROPERTY_NAME =
 		"snapshotIfStale";
 
@@ -268,7 +271,7 @@ public class LiferayOSGiDefaultsPlugin implements Plugin<Project> {
 			project, LiferayExtension.class);
 
 		final GitRepo gitRepo = _getGitRepo(project.getProjectDir());
-		boolean testProject = GradleUtil.isTestProject(project);
+		final boolean testProject = GradleUtil.isTestProject(project);
 
 		File versionOverrideFile = _getVersionOverrideFile(project, gitRepo);
 
@@ -453,7 +456,7 @@ public class LiferayOSGiDefaultsPlugin implements Plugin<Project> {
 						updateFileVersionsTask, portalRootDir);
 
 					GradleUtil.setProjectSnapshotVersion(
-						project, SNAPSHOT_IF_STALE_PROPERTY_NAME);
+						project, _SNAPSHOT_PROPERTY_NAMES);
 
 					if (GradleUtil.hasPlugin(project, CachePlugin.class)) {
 						_configureTaskUpdateVersionForCachePlugin(
@@ -467,7 +470,8 @@ public class LiferayOSGiDefaultsPlugin implements Plugin<Project> {
 					// to know if we are publishing a snapshot or not.
 
 					_configureTaskUploadArchives(
-						project, updateFileVersionsTask, updateVersionTask);
+						project, testProject, updateFileVersionsTask,
+						updateVersionTask);
 
 					_configureProjectBndProperties(project, liferayExtension);
 				}
@@ -1464,31 +1468,34 @@ public class LiferayOSGiDefaultsPlugin implements Plugin<Project> {
 
 		ArtifactHandler artifactHandler = project.getArtifacts();
 
-		SourceSet sourceSet = GradleUtil.getSourceSet(
-			project, SourceSet.MAIN_SOURCE_SET_NAME);
+		if (!GradleUtil.isSnapshot(project, _SNAPSHOT_PROPERTY_NAMES)) {
+			SourceSet sourceSet = GradleUtil.getSourceSet(
+				project, SourceSet.MAIN_SOURCE_SET_NAME);
 
-		FileCollection resourcesFileCollection = sourceSet.getResources();
+			FileCollection resourcesFileCollection = sourceSet.getResources();
 
-		FileCollection jspFileCollection = resourcesFileCollection.filter(
-			new Spec<File>() {
+			FileCollection jspFileCollection = resourcesFileCollection.filter(
+				new Spec<File>() {
 
-				@Override
-				public boolean isSatisfiedBy(File file) {
-					String fileName = file.getName();
+					@Override
+					public boolean isSatisfiedBy(File file) {
+						String fileName = file.getName();
 
-					if (fileName.endsWith(".jsp") ||
-						fileName.endsWith(".jspf")) {
+						if (fileName.endsWith(".jsp") ||
+							fileName.endsWith(".jspf")) {
 
-						return true;
+							return true;
+						}
+
+						return false;
 					}
 
-					return false;
-				}
+				});
 
-			});
-
-		if (!jspFileCollection.isEmpty()) {
-			artifactHandler.add(Dependency.ARCHIVES_CONFIGURATION, jarJSPTask);
+			if (!jspFileCollection.isEmpty()) {
+				artifactHandler.add(
+					Dependency.ARCHIVES_CONFIGURATION, jarJSPTask);
+			}
 		}
 
 		Spec<File> spec = new Spec<File>() {
@@ -3087,15 +3094,24 @@ public class LiferayOSGiDefaultsPlugin implements Plugin<Project> {
 	}
 
 	private void _configureTaskUploadArchives(
-		Project project, ReplaceRegexTask updateFileVersionsTask,
+		Project project, boolean testProject,
+		ReplaceRegexTask updateFileVersionsTask,
 		ReplaceRegexTask updateVersionTask) {
+
+		Task uploadArchivesTask = GradleUtil.getTask(
+			project, BasePlugin.UPLOAD_ARCHIVES_TASK_NAME);
+
+		if (testProject) {
+			uploadArchivesTask.setDependsOn(Collections.emptySet());
+			uploadArchivesTask.setEnabled(false);
+			uploadArchivesTask.setFinalizedBy(Collections.emptySet());
+
+			return;
+		}
 
 		if (GradleUtil.isSnapshot(project)) {
 			return;
 		}
-
-		Task uploadArchivesTask = GradleUtil.getTask(
-			project, BasePlugin.UPLOAD_ARCHIVES_TASK_NAME);
 
 		TaskContainer taskContainer = project.getTasks();
 
@@ -3652,12 +3668,12 @@ public class LiferayOSGiDefaultsPlugin implements Plugin<Project> {
 		}
 
 		File releasePortalRootDir = GradleUtil.getProperty(
-			project, _RELEASE_PORTAL_ROOT_DIR_PROPERTY_NAME, (File)null);
+			project, RELEASE_PORTAL_ROOT_DIR_PROPERTY_NAME, (File)null);
 
 		if (releasePortalRootDir == null) {
 			throw new GradleException(
 				"Please set the property \"" +
-					_RELEASE_PORTAL_ROOT_DIR_PROPERTY_NAME + "\".");
+					RELEASE_PORTAL_ROOT_DIR_PROPERTY_NAME + "\".");
 		}
 
 		Logger logger = project.getLogger();
@@ -3756,9 +3772,6 @@ public class LiferayOSGiDefaultsPlugin implements Plugin<Project> {
 	private static final Duration _PORTAL_TOOL_MAX_AGE = TimeCategory.getDays(
 		30);
 
-	private static final String _RELEASE_PORTAL_ROOT_DIR_PROPERTY_NAME =
-		"release.versions.test.other.dir";
-
 	private static final String _REPOSITORY_PRIVATE_PASSWORD =
 		System.getProperty("repository.private.password");
 
@@ -3773,6 +3786,10 @@ public class LiferayOSGiDefaultsPlugin implements Plugin<Project> {
 
 	private static final String _SERVICE_BUILDER_PORTAL_TOOL_NAME =
 		"com.liferay.portal.tools.service.builder";
+
+	private static final String[] _SNAPSHOT_PROPERTY_NAMES = {
+		SNAPSHOT_IF_STALE_PROPERTY_NAME
+	};
 
 	private static final String _SOURCE_FORMATTER_PORTAL_TOOL_NAME =
 		"com.liferay.source.formatter";

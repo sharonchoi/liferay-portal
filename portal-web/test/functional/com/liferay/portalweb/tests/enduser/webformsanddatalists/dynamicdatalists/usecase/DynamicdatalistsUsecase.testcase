@@ -497,7 +497,7 @@
 
 	<command name="AddRecordWithPopulatedWebContentField" priority="5">
 		<description message="This is a use case for LPS-66439." />
-		<property name="portal.acceptance" value="false" />
+		<property name="portal.acceptance" value="quarantine" />
 
 		<execute macro="Navigator#openURL" />
 
@@ -3235,9 +3235,19 @@
 			<var name="parentPage" value="Parent Page Name" />
 		</execute>
 
-		<execute macro="DDLRecord#selectLinkToPageRadio">
-			<var name="ddlRecordFieldData" value="Child Page Name" />
-		</execute>
+		<toggle name="LPS-68869">
+			<on>
+				<execute macro="DDLRecord#selectLinkToPagePage">
+					<var name="ddlRecordFieldData" value="Child Page Name" />
+				</execute>
+			</on>
+
+			<off>
+				<execute macro="DDLRecord#selectLinkToPageRadio">
+					<var name="ddlRecordFieldData" value="Child Page Name" />
+				</execute>
+			</off>
+		</toggle>
 
 		<execute macro="DDLRecord#viewLinkToPageBreadcrumbCount">
 			<var name="count" value="2" />

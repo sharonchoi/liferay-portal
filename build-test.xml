@@ -2681,13 +2681,13 @@ ${tomcat-gc-log}
 
 									<delete dir="${tstamp.value}" />
 								</then>
+								<else>
+									<propertyfile file="${project.dir}/modules/private/apps/documentum/documentum-hook/docroot/WEB-INF/src/dfc.properties">
+										<entry key="dfc.docbroker.host[0]" value="${cmis.repository.vm.host.name}" />
+									</propertyfile>
+								</else>
 							</if>
 						</then>
-						<else>
-							<propertyfile file="${project.dir}/modules/private/apps/documentum/documentum-hook/docroot/WEB-INF/src/dfc.properties">
-								<entry key="dfc.docbroker.host[0]" value="${cmis.repository.vm.host.name}" />
-							</propertyfile>
-						</else>
 					</if>
 				</then>
 			</if>
@@ -4408,7 +4408,6 @@ go]]></replacevalue>
 								}
 							}
 
-
 							FileWriter fileWriter = new FileWriter(file);
 
 							BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
@@ -4905,13 +4904,33 @@ go]]></replacevalue>
 						/>
 
 						<if>
-							<available file="${project.dir}/plugins/marketplace/${app.file.name}" />
+							<and>
+								<available file="${project.dir}/plugins/marketplace/${app.file.name}" />
+								<not>
+									<contains string="${test.latest.marketplace.apps.exclude}" substring="${app.file.name}" />
+								</not>
+							</and>
 							<then>
-								<echo>Copying ${project.dir}/plugins/marketplace/${app.file.name} to ${liferay.home}/osgi/marketplace/${app.file.name}</echo>
+								<echo>Copying ${project.dir}/plugins/marketplace/${app.file.name} to ${liferay.home}/osgi/marketplace/${app.file.name}.</echo>
 
 								<delete file="${liferay.home}/osgi/marketplace/${app.file.name}" />
 
 								<copy file="${project.dir}/plugins/marketplace/${app.file.name}" tofile="${liferay.home}/osgi/marketplace/${app.file.name}" />
+							</then>
+						</if>
+					</sequential>
+				</for>
+
+				<for list="${test.latest.marketplace.apps.include}" param="app.file.name">
+					<sequential>
+						<if>
+							<available file="${project.dir}/plugins/marketplace/@{app.file.name}" />
+							<then>
+								<echo>Copying ${project.dir}/plugins/marketplace/@{app.file.name} to ${liferay.home}/osgi/marketplace/@{app.file.name}.</echo>
+
+								<delete failonerror="false" file="${liferay.home}/osgi/marketplace/@{app.file.name}" />
+
+								<copy file="${project.dir}/plugins/marketplace/@{app.file.name}" tofile="${liferay.home}/osgi/marketplace/@{app.file.name}" />
 							</then>
 						</if>
 					</sequential>
@@ -5107,6 +5126,15 @@ go]]></replacevalue>
 
 						<dirname file="${osgi.module.build.file}" property="osgi.module.dir" />
 
+						<if>
+							<equals arg1="@{osgi.module}" arg2="documentum-hook" />
+							<then>
+								<propertyfile file="${osgi.module.dir}/docroot/WEB-INF/src/dfc.properties">
+									<entry key="dfc.docbroker.host[0]" value="${cmis.repository.vm.host.name}" />
+								</propertyfile>
+							</then>
+						</if>
+
 						<gradle-execute dir="${osgi.module.dir}" task="deploy">
 							<arg value="clean" />
 						</gradle-execute>
@@ -5121,6 +5149,18 @@ go]]></replacevalue>
 		<!--
 		Deploy plugin files to the deploy directory.
 		-->
+
+		<get-testcase-property property.name="ext.plugins.includes" />
+
+		<if>
+			<isset property="ext.plugins.includes" />
+			<then>
+				<ant antfile="build-test-plugins.xml" target="deploy-simple-server-plugins">
+					<property name="plugin.types" value="ext" />
+					<property name="plugins.includes" value="${ext.plugins.includes}" />
+				</ant>
+			</then>
+		</if>
 
 		<get-testcase-property property.name="hook.plugins.includes" />
 
@@ -5998,8 +6038,6 @@ osb.lcs.portlet.oauth.consumer.secret=${osb.lcs.portlet.oauth.consumer.secret}</
 	</target>
 
 	<target name="prepare-portal-ext-properties">
-		<prepare-fix-pack-bundle />
-
 		<delete file="portal-impl/src/portal-ext.properties" />
 
 		<if>
@@ -7938,8 +7976,6 @@ ANT_OPTS=${env.ANT_OPTS}</echo>
 				/>
 
 				<delete dir="dist" />
-
-				<ant antfile="build.xml" inheritAll="false" target="deploy-additional-jars" />
 
 				<ant antfile="build.xml" inheritAll="false" target="update-app-server-scripts" />
 
