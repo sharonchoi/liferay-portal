@@ -375,4 +375,34 @@
 			<var name="imageVariantID" value="custom-id" />
 		</execute>
 	</command>
+
+	<command name="ViewSpecialCharactersInEntryName" priority="4">
+		<execute macro="ProductMenu#gotoControlPanelConfiguration">
+			<var name="portlet" value="Adaptive Media" />
+		</execute>
+
+		<execute macro="AdaptiveMedia#addImageResolution">
+			<var name="imageName" value="abcdefghijklmnopqrstuvwxyz" />
+			<var name="maxHeight" value="25" />
+			<var name="maxWidth" value="25" />
+		</execute>
+
+		<execute macro="AdaptiveMedia#addImageResolution">
+			<var name="imageName" value="ABCDEFGHIJKLMNOPQRSTUVWXYZ" />
+			<var name="maxHeight" value="50" />
+			<var name="maxWidth" value="50" />
+		</execute>
+
+		<execute macro="AdaptiveMedia#addImageResolution">
+			<var name="imageName" value="1234567890!@#$%^&amp;*()~`" />
+			<var name="maxHeight" value="75" />
+			<var name="maxWidth" value="75" />
+		</execute>
+
+		<execute macro="AdaptiveMedia#addImageResolution">
+			<var name="imageName" value="[]\{}|:&quot;;',./&gt;&lt;?" />
+			<var name="maxHeight" value="100" />
+			<var name="maxWidth" value="100" />
+		</execute>
+	</command>
 </definition>
