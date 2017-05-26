@@ -107,95 +107,6 @@
 		</if>
 	</tear-down>
 
-	<command name="AddDocument" priority="4">
-		<execute macro="DMRepository#gotoCP">
-			<var name="dmRepositoryName" value="Sharepoint Repository Name" />
-		</execute>
-
-		<execute macro="DMDocument#addCP">
-			<var name="dmDocumentFile" value="Document_1.txt" />
-			<var name="dmDocumentTitle" value="Document_1.txt" />
-		</execute>
-
-		<execute macro="DMNavigator#gotoDocumentCP">
-			<var name="dmDocumentTitle" value="Document_1.txt" />
-		</execute>
-
-		<if>
-			<condition function="IsElementNotPresent" locator1="xpath=(//div[contains(@class,'document-info')])" />
-			<then>
-				<execute macro="DMNavigator#gotoDocumentCP">
-					<var name="dmDocumentTitle" value="Document_1.txt" />
-				</execute>
-			</then>
-		</if>
-
-		<execute macro="DMDocument#viewCP">
-			<var name="dmDocumentTitle" value="Document_1.txt" />
-		</execute>
-	</command>
-
-	<command name="AddDocumentInSubfolder" priority="4">
-		<execute macro="Navigator#openURL" />
-
-		<execute macro="ProductMenu#gotoSitesContent">
-			<var name="portlet" value="Documents and Media" />
-		</execute>
-
-		<execute macro="DMRepository#gotoCP">
-			<var name="dmRepositoryName" value="Sharepoint Repository Name" />
-		</execute>
-
-		<execute macro="DMFolder#addSubfolderCP">
-			<var name="dmSubFolderName" value="DM Folder2 Name" />
-		</execute>
-
-		<execute macro="DMNavigator#gotoFolder">
-			<var name="dmFolderName" value="DM Folder2 Name" />
-		</execute>
-
-		<execute macro="DMDocument#addCP">
-			<var name="dmDocumentFile" value="Document_2.txt" />
-			<var name="dmDocumentTitle" value="Document_2.txt" />
-		</execute>
-
-		<execute macro="Navigator#openURL" />
-
-		<execute macro="ProductMenu#gotoSitesContent">
-			<var name="portlet" value="Documents and Media" />
-		</execute>
-
-		<execute macro="DMRepository#gotoCP">
-			<var name="dmRepositoryName" value="Sharepoint Repository Name" />
-		</execute>
-
-		<execute macro="DMNavigator#gotoFolder">
-			<var name="dmFolderName" value="DM Folder2 Name" />
-		</execute>
-
-		<execute macro="DMNavigator#gotoDocumentCP">
-			<var name="dmDocumentTitle" value="Document_2.txt" />
-		</execute>
-
-		<execute macro="DMDocument#viewCP">
-			<var name="dmDocumentTitle" value="Document_2.txt" />
-		</execute>
-	</command>
-
-	<command name="AddSubfolder" priority="4">
-		<execute macro="DMRepository#gotoCP">
-			<var name="dmRepositoryName" value="Sharepoint Repository Name" />
-		</execute>
-
-		<execute macro="DMFolder#addSubfolderCP">
-			<var name="dmSubFolderName" value="DM Folder Name" />
-		</execute>
-
-		<execute macro="DMFolder#viewCP">
-			<var name="dmFolderName" value="DM Folder Name" />
-		</execute>
-	</command>
-
 	<command name="CheckinDocument" priority="4">
 		<execute macro="DMRepository#gotoCP">
 			<var name="dmRepositoryName" value="Sharepoint Repository Name" />
@@ -255,78 +166,6 @@
 			<var name="dmDocumentVersionNumber" value="2.0" />
 			<var name="dmRepositoryName" value="true" />
 		</execute>
-	</command>
-
-	<command name="CheckoutDocument" priority="4">
-		<execute macro="DMRepository#gotoCP">
-			<var name="dmRepositoryName" value="Sharepoint Repository Name" />
-		</execute>
-
-		<execute macro="DMDocument#addCP">
-			<var name="dmDocumentFile" value="Document_4.txt" />
-			<var name="dmDocumentTitle" value="Document_4.txt" />
-		</execute>
-
-		<execute function="Refresh" />
-
-		<execute macro="DMDocument#checkoutCP">
-			<var name="dmDocumentTitle" value="Document_4.txt" />
-			<var name="dmRepositoryName" value="true" />
-		</execute>
-
-		<execute macro="Navigator#openURL" />
-
-		<execute macro="ProductMenu#gotoSitesContent">
-			<var name="portlet" value="Documents and Media" />
-		</execute>
-
-		<execute macro="DMRepository#gotoCP">
-			<var name="dmRepositoryName" value="Sharepoint Repository Name" />
-		</execute>
-
-		<execute macro="DMDocument#viewIconLockedCP">
-			<var name="dmDocumentTitle" value="Document_4.txt" />
-		</execute>
-
-		<execute macro="DMNavigator#gotoDocumentCP">
-			<var name="dmDocumentTitle" value="Document_4.txt" />
-		</execute>
-
-		<execute macro="DMDocument#viewCheckedoutCP" >
-			<var name="dmRepositoryName" value="true" />
-		</execute>
-	</command>
-
-	<command name="DeleteDocument" priority="4">
-		<execute macro="DMRepository#gotoCP">
-			<var name="dmRepositoryName" value="Sharepoint Repository Name" />
-		</execute>
-
-		<execute macro="DMDocument#addCP">
-			<var name="dmDocumentFile" value="Document_1.doc" />
-			<var name="dmDocumentTitle" value="Document_1.doc" />
-		</execute>
-
-		<execute macro="DMDocument#deleteCP">
-			<var name="dmDocumentTitle" value="Document_1.doc" />
-			<var name="recycleBinDisabled" value="true" />
-		</execute>
-
-		<execute macro="Navigator#openURL" />
-
-		<execute macro="ProductMenu#gotoSitesContent">
-			<var name="portlet" value="Documents and Media" />
-		</execute>
-
-		<execute macro="DMRepository#gotoCP">
-			<var name="dmRepositoryName" value="Sharepoint Repository Name" />
-		</execute>
-
-		<execute macro="DMDocument#cannotViewCP">
-			<var name="dmDocumentTitle" value="Document_1.doc" />
-		</execute>
-
-		<execute macro="DMDocument#viewDefaultCP" />
 	</command>
 
 	<command name="DeleteDocumentInSubfolder" priority="4">
@@ -619,32 +458,6 @@
 
 		<execute macro="DMDocument#viewSearchResultsCP">
 			<var name="dmDocumentTitle" value="Document_2.odt" />
-		</execute>
-	</command>
-
-	<command name="SearchDocumentViaHome" priority="4">
-		<execute macro="DMRepository#gotoCP">
-			<var name="dmRepositoryName" value="Sharepoint Repository Name" />
-		</execute>
-
-		<execute macro="DMDocument#addCP">
-			<var name="dmDocumentFile" value="Document_3.odt" />
-			<var name="dmDocumentTitle" value="Document_3.odt" />
-		</execute>
-
-		<execute macro="Navigator#openURL" />
-
-		<execute macro="ProductMenu#gotoSitesContent">
-			<var name="portlet" value="Documents and Media" />
-		</execute>
-
-		<execute macro="DMDocument#searchCP">
-			<var name="dmDocumentKeyword" value="Document_3.odt" />
-		</execute>
-
-		<execute macro="DMDocument#viewSearchResultsCP">
-			<var name="dmDocumentTitle" value="Document_3.odt" />
-			<var name="dmRepositoryName" value="Sharepoint Repository Name" />
 		</execute>
 	</command>
 
